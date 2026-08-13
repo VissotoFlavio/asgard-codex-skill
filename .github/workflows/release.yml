@@ -37,7 +37,27 @@ jobs:
           fi
 
           tag="v${version}"
-          tag_object="$(gh api "repos/${GITHUB_REPOSITORY}/git/ref/tags/${tag}" --jq '[.object.type,.object.sha] | @tsv' 2>/dev/null || true)"
+          tag_endpoint="repos/${GITHUB_REPOSITORY}/git/ref/tags/${tag}"
+          tag_probe="$(mktemp)"
+          trap 'rm -f "$tag_probe"' EXIT
+          if gh api --include --silent "$tag_endpoint" >"$tag_probe" 2>&1; then
+            tag_status="$(awk '/^HTTP\// { status=$2 } END { print status }' "$tag_probe" | tr -d '\r')"
+          else
+            tag_status="$(awk '/^HTTP\// { status=$2 } END { print status }' "$tag_probe" | tr -d '\r')"
+            if [[ "$tag_status" != "404" ]]; then
+              echo "Unable to inspect ${tag}; GitHub API status: ${tag_status:-unknown}."
+              sed -n '1,20p' "$tag_probe"
+              exit 1
+            fi
+          fi
+
+          tag_object=""
+          if [[ "$tag_status" == "200" ]]; then
+            tag_object="$(gh api "$tag_endpoint" --jq '[.object.type,.object.sha] | @tsv')"
+          elif [[ "$tag_status" != "404" ]]; then
+            echo "Unexpected GitHub API status while inspecting ${tag}: ${tag_status:-unknown}."
+            exit 1
+          fi
           existing_sha=""
           if [[ -n "$tag_object" ]]; then
             read -r object_type existing_sha <<< "$tag_object"
