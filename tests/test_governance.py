@@ -61,6 +61,7 @@ class WorkflowGovernanceTests(unittest.TestCase):
         self.assertIn("base.ref == 'master'", text)
         self.assertIn('while [[ "$object_type" == "tag" ]]', text)
         self.assertIn('gh release view "$tag"', text)
+        self.assertIn("GH_REPO: ${{ github.repository }}", text)
 
     def test_release_treats_only_exact_404_as_missing_tag(self) -> None:
         text = (ROOT / ".github" / "workflows" / "release.yml").read_text(encoding="utf-8")
