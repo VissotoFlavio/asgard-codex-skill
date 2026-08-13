@@ -54,9 +54,10 @@ class ContainedPathTests(unittest.TestCase):
 class WorkflowGovernanceTests(unittest.TestCase):
     def test_release_has_no_push_trigger_or_checkout(self) -> None:
         text = (ROOT / ".github" / "workflows" / "release.yml").read_text(encoding="utf-8")
+        privileged_release_job = text.split("\n  create-backport:", 1)[0]
         self.assertIn("pull_request_target:", text)
         self.assertNotIn("\n  push:", text)
-        self.assertNotIn("actions/checkout", text)
+        self.assertNotIn("actions/checkout", privileged_release_job)
         self.assertIn("head.ref == 'develop'", text)
         self.assertIn("base.ref == 'master'", text)
         self.assertIn('while [[ "$object_type" == "tag" ]]', text)
@@ -70,6 +71,32 @@ class WorkflowGovernanceTests(unittest.TestCase):
         self.assertIn('if [[ "$tag_status" == "200" ]]', text)
         self.assertIn('elif [[ "$tag_status" != "404" ]]', text)
         self.assertNotIn("2>/dev/null || true", text)
+
+    def test_release_opens_verified_backport_after_publication(self) -> None:
+        text = (ROOT / ".github" / "workflows" / "release.yml").read_text(encoding="utf-8")
+        self.assertIn("create-backport:", text)
+        self.assertIn("needs: release", text)
+        self.assertIn("BACKPORT_TOKEN: ${{ secrets.BACKPORT_TOKEN }}", text)
+        self.assertIn('tag_sha="$(git rev-list -n 1 "$tag")"', text)
+        self.assertIn('if [[ "$tag_sha" != "$PUBLISHED_SHA" ]]', text)
+        self.assertIn('preferred="backport/${VERSION}"', text)
+        self.assertIn("--json headRefName,headRefOid,headRepository,url", text)
+        self.assertIn('pr_repo" == "$GITHUB_REPOSITORY', text)
+        self.assertIn('validate_branch "$pr_branch" "$pr_oid"', text)
+        self.assertIn('echo "skip=true" >> "$GITHUB_OUTPUT"', text)
+        self.assertIn('echo "reuse=true" >> "$GITHUB_OUTPUT"', text)
+        self.assertIn('git rev-list --parents -n 1 "$branch_sha"', text)
+        self.assertIn('"${#ancestry[@]}" -eq 2', text)
+        self.assertIn('git diff --quiet "$PUBLISHED_SHA" "$branch_sha"', text)
+        self.assertIn("--limit 1000", text)
+        self.assertIn('"refs/heads/${preferred}" "refs/heads/${preferred}-*"', text)
+        self.assertIn('branch="${preferred}-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"', text)
+        self.assertIn('if git ls-remote --exit-code --heads origin "refs/heads/${branch}"', text)
+        self.assertIn("if: steps.backport.outputs.skip != 'true' && steps.backport.outputs.reuse != 'true'", text)
+        self.assertIn("if: steps.backport.outputs.skip != 'true'", text)
+        self.assertIn('git commit --allow-empty --message "chore: backport v${VERSION} to develop"', text)
+        self.assertIn("--base develop", text)
+        self.assertIn("--head \"$BRANCH\"", text)
 
     def test_external_actions_are_commit_pinned(self) -> None:
         for path in (ROOT / ".github" / "workflows").glob("*.yml"):
