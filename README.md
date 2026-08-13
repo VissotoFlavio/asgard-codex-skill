@@ -36,24 +36,72 @@ Any finding -> Odin -> original implementer -> affected reviews
 
 Approval of the execution graph covers the described implementation and internal correction cycles. The workflow returns to the user for changed scope, product decisions, protected operations, or genuine blockers—not for every internal handoff.
 
-## Install only the skill
+## Install the plugin
 
-Ask Codex to install:
+The `master` branch contains the latest stable release. Clone it, register the repository as a Codex marketplace, and install Asgard:
+
+```bash
+git clone --branch master https://github.com/VissotoFlavio/asgard-codex-skill.git
+cd asgard-codex-skill
+codex plugin marketplace add .
+codex plugin add asgard@asgard-community
+```
+
+Start a new Codex task after installation so the plugin and its skill are loaded. You can then invoke it explicitly:
 
 ```text
-https://github.com/VissotoFlavio/asgard-codex-skill/tree/main/plugins/asgard/skills/asgard
+Use $asgard to plan and coordinate this software delivery.
+```
+
+You can also describe a substantial multi-agent delivery naturally; Codex may select Asgard when the request matches its purpose.
+
+## Update the plugin
+
+Pull the latest stable release and reinstall the marketplace entry:
+
+```bash
+cd asgard-codex-skill
+git switch master
+git pull --ff-only origin master
+codex plugin add asgard@asgard-community
+```
+
+Open a new Codex task after updating so the new version is picked up.
+
+## Install only the skill
+
+If you do not want the complete plugin, ask Codex to install the skill directly from:
+
+```text
+https://github.com/VissotoFlavio/asgard-codex-skill/tree/master/plugins/asgard/skills/asgard
 ```
 
 Then start a new task and invoke `$asgard`.
 
-## Install the plugin from the repository marketplace
+## Repository channels
 
-```text
-codex plugin marketplace add <path-to-this-repository>
-codex plugin add asgard@asgard-community
+- `master`: stable, versioned releases intended for installation.
+- `develop`: upcoming changes that may not yet be released.
+- [GitHub Releases](https://github.com/VissotoFlavio/asgard-codex-skill/releases): published versions and release history.
+
+## Prepare a release version
+
+Maintainers can increment the plugin manifest without creating a commit, tag, or release automatically:
+
+```bash
+python scripts/bump_version.py patch
+python scripts/bump_version.py minor
+python scripts/bump_version.py major
 ```
 
-Start a new task after installation so Codex can load the skill.
+An explicit stable version and a dry run are also supported:
+
+```bash
+python scripts/bump_version.py 1.0.0
+python scripts/bump_version.py patch --dry-run
+```
+
+Commit the updated manifest through the normal `develop` pull-request flow. The release workflow remains responsible for creating the tag and GitHub Release after the approved `develop` to `master` merge.
 
 ## Portability
 
