@@ -1,0 +1,33 @@
+{
+  "name": "asgard",
+  "version": "0.0.0",
+  "description": "Multi-agent software delivery orchestration with independent quality and security gates.",
+  "author": {
+    "name": "Flavio Vissoto",
+    "url": "https://github.com/VissotoFlavio"
+  },
+  "homepage": "https://github.com/VissotoFlavio/asgard-codex-skill",
+  "repository": "https://github.com/VissotoFlavio/asgard-codex-skill",
+  "license": "MIT",
+  "keywords": ["multi-agent", "orchestration", "software-delivery", "security-review", "quality-gates"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Asgard",
+    "shortDescription": "Orchestrate multi-agent software delivery.",
+    "longDescription": "Plan and coordinate substantial software deliveries through bounded implementation, Definition of Done validation, adversarial testing, security review, correction loops, and explicit publication gates.",
+    "developerName": "Flavio Vissoto",
+    "category": "Productivity",
+    "capabilities": ["Write"],
+    "websiteURL": "https://github.com/VissotoFlavio/asgard-codex-skill",
+    "defaultPrompt": [
+      "Use $asgard to plan and coordinate this software delivery.",
+      "Use $asgard to decompose and review this multi-agent implementation."
+    ],
+    "brandColor": "#C9973E",
+    "composerIcon": "./assets/logo.png",
+    "logo": "./assets/logo_asgard.png",
+    "screenshots": [
+      "./assets/asgard-agents.png"
+    ]
+  }
+}

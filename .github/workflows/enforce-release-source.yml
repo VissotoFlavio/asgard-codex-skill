@@ -1,0 +1,45 @@
+name: Enforce release source
+
+on:
+  pull_request:
+    branches: [master]
+    types: [opened, synchronize, reopened, ready_for_review, edited]
+
+permissions:
+  contents: read
+
+jobs:
+  source:
+    name: develop to master only
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require same-repository develop to master
+        env:
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+          HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
+          BASE_REF: ${{ github.event.pull_request.base.ref }}
+          BASE_REPO: ${{ github.event.pull_request.base.repo.full_name }}
+          REPOSITORY: ${{ github.repository }}
+        run: |
+          if [[ "$BASE_REF" != "master" || "$BASE_REPO" != "$REPOSITORY" || "$HEAD_REF" != "develop" || "$HEAD_REPO" != "$REPOSITORY" ]]; then
+            echo "Release PRs must be same-repository develop -> master."
+            exit 1
+          fi
+
+  version:
+    name: stable version increases
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require a strictly newer stable SemVer
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        shell: bash
+        run: |
+          read_version() {
+            gh api "repos/${GITHUB_REPOSITORY}/contents/plugins/asgard/.codex-plugin/plugin.json?ref=$1" --jq .content | base64 --decode | jq -er .version
+          }
+          candidate="$(read_version "$HEAD_SHA")"
+          current="$(read_version "$BASE_SHA")"
+          python -c 'import re,sys; p=re.compile(r"^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$"); a,b=sys.argv[1:]; assert p.fullmatch(a), "Release versions must be stable SemVer (no prerelease/build metadata)"; assert p.fullmatch(b), "Current master version is not stable SemVer"; assert tuple(map(int,a.split("."))) > tuple(map(int,b.split("."))), f"Candidate {a} must be greater than master {b}"' "$candidate" "$current"

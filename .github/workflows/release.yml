@@ -1,0 +1,61 @@
+name: Publish release
+
+on:
+  pull_request_target:
+    branches: [master]
+    types: [closed]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    name: Tag and create GitHub Release
+    if: >-
+      github.event.pull_request.merged == true &&
+      github.event.pull_request.base.ref == 'master' &&
+      github.event.pull_request.base.repo.full_name == github.repository &&
+      github.event.pull_request.head.ref == 'develop' &&
+      github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    steps:
+      - name: Publish the merged candidate
+        env:
+          GH_TOKEN: ${{ github.token }}
+          MERGE_SHA: ${{ github.event.pull_request.merge_commit_sha }}
+        shell: bash
+        run: |
+          content="$(gh api "repos/${GITHUB_REPOSITORY}/contents/plugins/asgard/.codex-plugin/plugin.json?ref=${MERGE_SHA}" --jq .content | base64 --decode)"
+          version="$(jq -er .version <<< "$content")"
+          if [[ ! "$version" =~ ^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]]; then
+            echo "Release versions must be stable Semantic Versioning values."
+            exit 1
+          fi
+
+          tag="v${version}"
+          tag_object="$(gh api "repos/${GITHUB_REPOSITORY}/git/ref/tags/${tag}" --jq '[.object.type,.object.sha] | @tsv' 2>/dev/null || true)"
+          existing_sha=""
+          if [[ -n "$tag_object" ]]; then
+            read -r object_type existing_sha <<< "$tag_object"
+            while [[ "$object_type" == "tag" ]]; do
+              tag_object="$(gh api "repos/${GITHUB_REPOSITORY}/git/tags/${existing_sha}" --jq '[.object.type,.object.sha] | @tsv')"
+              read -r object_type existing_sha <<< "$tag_object"
+            done
+            if [[ "$object_type" != "commit" ]]; then
+              echo "${tag} resolves to unsupported Git object type ${object_type}."
+              exit 1
+            fi
+          fi
+          if [[ -n "$existing_sha" && "$existing_sha" != "$MERGE_SHA" ]]; then
+            echo "${tag} already points to ${existing_sha}, not merged commit ${MERGE_SHA}."
+            exit 1
+          fi
+          if gh release view "$tag" >/dev/null 2>&1; then
+            echo "Release ${tag} already exists; nothing to do."
+            exit 0
+          fi
+          gh release create "$tag" --target "$MERGE_SHA" --generate-notes --title "Asgard ${tag}"
