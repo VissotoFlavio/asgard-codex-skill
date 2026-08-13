@@ -62,6 +62,14 @@ class WorkflowGovernanceTests(unittest.TestCase):
         self.assertIn('while [[ "$object_type" == "tag" ]]', text)
         self.assertIn('gh release view "$tag"', text)
 
+    def test_release_treats_only_exact_404_as_missing_tag(self) -> None:
+        text = (ROOT / ".github" / "workflows" / "release.yml").read_text(encoding="utf-8")
+        self.assertIn('gh api --include --silent "$tag_endpoint"', text)
+        self.assertIn('if [[ "$tag_status" != "404" ]]', text)
+        self.assertIn('if [[ "$tag_status" == "200" ]]', text)
+        self.assertIn('elif [[ "$tag_status" != "404" ]]', text)
+        self.assertNotIn("2>/dev/null || true", text)
+
     def test_external_actions_are_commit_pinned(self) -> None:
         for path in (ROOT / ".github" / "workflows").glob("*.yml"):
             for line in path.read_text(encoding="utf-8").splitlines():
