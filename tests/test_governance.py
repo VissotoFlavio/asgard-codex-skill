@@ -58,7 +58,11 @@ class WorkflowGovernanceTests(unittest.TestCase):
         self.assertIn("pull_request_target:", text)
         self.assertNotIn("\n  push:", text)
         self.assertNotIn("actions/checkout", privileged_release_job)
-        self.assertIn("head.ref == 'develop'", text)
+        self.assertIn("startsWith(github.event.pull_request.head.ref, 'release/')", text)
+        self.assertIn("github.event.pull_request.head.ref != 'release/'", text)
+        self.assertIn("startsWith(github.event.pull_request.head.ref, 'hotfix/')", text)
+        self.assertIn("github.event.pull_request.head.ref != 'hotfix/'", text)
+        self.assertIn("head.repo.full_name == github.repository", text)
         self.assertIn("base.ref == 'master'", text)
         self.assertIn('while [[ "$object_type" == "tag" ]]', text)
         self.assertIn('gh release view "$tag"', text)
@@ -114,8 +118,25 @@ class WorkflowGovernanceTests(unittest.TestCase):
     def test_source_gate_handles_edited_events_and_explicit_base(self) -> None:
         text = (ROOT / ".github" / "workflows" / "enforce-release-source.yml").read_text(encoding="utf-8")
         self.assertIn("edited", text)
+        self.assertIn("branches: [develop, master]", text)
+        self.assertIn("name: develop to master only", text)
         self.assertIn("BASE_REF", text)
-        self.assertIn('"$BASE_REF" != "master"', text)
+        self.assertIn('case "$BASE_REF" in', text)
+
+    def test_source_gate_allows_only_named_prefixes_to_develop(self) -> None:
+        text = (ROOT / ".github" / "workflows" / "enforce-release-source.yml").read_text(encoding="utf-8")
+        self.assertIn("feature/?*|fix/?*|docs/?*|chore/?*|refactor/?*|test/?*|backport/?*", text)
+        self.assertIn("PRs to develop require one of:", text)
+        develop_policy = text.split("develop)", 1)[1].split("master)", 1)[0]
+        self.assertNotIn("HEAD_REPO", develop_policy)
+
+    def test_source_gate_restricts_master_to_same_repo_release_or_hotfix(self) -> None:
+        text = (ROOT / ".github" / "workflows" / "enforce-release-source.yml").read_text(encoding="utf-8")
+        master_policy = text.split("master)", 1)[1]
+        self.assertIn('"$HEAD_REPO" != "$REPOSITORY"', master_policy)
+        self.assertIn("release/?*|hotfix/?*", master_policy)
+        self.assertIn("PRs to master require a release/ or hotfix/ branch.", master_policy)
+        self.assertIn("if: github.event.pull_request.base.ref == 'master'", text)
 
     def test_source_gate_requires_base_manifest_without_fallback(self) -> None:
         text = (ROOT / ".github" / "workflows" / "enforce-release-source.yml").read_text(encoding="utf-8")
