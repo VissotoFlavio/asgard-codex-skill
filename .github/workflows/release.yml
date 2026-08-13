@@ -93,7 +93,7 @@ jobs:
     needs: release
     permissions:
       actions: read
-      contents: read
+      contents: write
     runs-on: ubuntu-latest
     steps:
       - name: Require backport token
@@ -102,7 +102,7 @@ jobs:
         shell: bash
         run: |
           if [[ -z "$BACKPORT_TOKEN" ]]; then
-            echo "BACKPORT_TOKEN is required to push a branch and open a PR that triggers CI."
+            echo "BACKPORT_TOKEN is required to open a PR that triggers CI."
             exit 1
           fi
 
@@ -111,13 +111,13 @@ jobs:
         with:
           ref: ${{ needs.release.outputs.published-sha }}
           fetch-depth: 0
-          token: ${{ secrets.BACKPORT_TOKEN }}
+          token: ${{ github.token }}
 
       - name: Verify release and select branch
         id: backport
         env:
           GH_REPO: ${{ github.repository }}
-          GH_TOKEN: ${{ secrets.BACKPORT_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
           PUBLISHED_SHA: ${{ needs.release.outputs.published-sha }}
           VERSION: ${{ needs.release.outputs.version }}
         shell: bash
