@@ -84,6 +84,25 @@ Then start a new task and invoke `$asgard`.
 - `develop`: upcoming changes that may not yet be released.
 - [GitHub Releases](https://github.com/VissotoFlavio/asgard-codex-skill/releases): published versions and release history.
 
+## Prepare a release version
+
+Maintainers can increment the plugin manifest without creating a commit, tag, or release automatically:
+
+```bash
+python scripts/bump_version.py patch
+python scripts/bump_version.py minor
+python scripts/bump_version.py major
+```
+
+An explicit stable version and a dry run are also supported:
+
+```bash
+python scripts/bump_version.py 1.0.0
+python scripts/bump_version.py patch --dry-run
+```
+
+Commit the updated manifest through the normal `develop` pull-request flow. The release workflow remains responsible for creating the tag and GitHub Release after the approved `develop` to `master` merge.
+
 ## Portability
 
 Asgard adapts to available agent slots, version-control systems, isolation mechanisms, and publication workflows. Git branches, worktrees, pull requests, and merges are optional. Repository instructions and user permissions always take precedence.
