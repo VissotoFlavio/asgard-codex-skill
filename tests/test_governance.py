@@ -55,18 +55,12 @@ class ContainedPathTests(unittest.TestCase):
 
 
 class WorkflowGovernanceTests(unittest.TestCase):
-    def test_release_has_no_push_trigger_or_checkout(self) -> None:
+    def test_release_runs_from_master_push_without_checkout(self) -> None:
         text = (ROOT / ".github" / "workflows" / "release.yml").read_text(encoding="utf-8")
-        privileged_release_job = text.split("\n  create-backport:", 1)[0]
-        self.assertIn("pull_request_target:", text)
-        self.assertNotIn("\n  push:", text)
-        self.assertNotIn("actions/checkout", privileged_release_job)
-        self.assertIn("startsWith(github.event.pull_request.head.ref, 'release/')", text)
-        self.assertIn("github.event.pull_request.head.ref != 'release/'", text)
-        self.assertIn("startsWith(github.event.pull_request.head.ref, 'hotfix/')", text)
-        self.assertIn("github.event.pull_request.head.ref != 'hotfix/'", text)
-        self.assertIn("head.repo.full_name == github.repository", text)
-        self.assertIn("base.ref == 'master'", text)
+        self.assertIn("\n  push:\n    branches: [master]", text)
+        self.assertNotIn("pull_request_target:", text)
+        self.assertNotIn("actions/checkout", text)
+        self.assertIn("MERGE_SHA: ${{ github.sha }}", text)
         self.assertIn('while [[ "$object_type" == "tag" ]]', text)
         self.assertIn('gh release view "$tag"', text)
         self.assertIn("GH_REPO: ${{ github.repository }}", text)
@@ -81,35 +75,22 @@ class WorkflowGovernanceTests(unittest.TestCase):
 
     def test_release_opens_verified_backport_after_publication(self) -> None:
         text = (ROOT / ".github" / "workflows" / "release.yml").read_text(encoding="utf-8")
+        backport = text.split("\n  create-backport:", 1)[1]
         self.assertIn("create-backport:", text)
         self.assertIn("needs: release", text)
         self.assertIn("BACKPORT_TOKEN: ${{ secrets.BACKPORT_TOKEN }}", text)
-        self.assertIn("contents: write", text.split("\n  create-backport:", 1)[1])
-        self.assertIn("token: ${{ github.token }}", text)
+        self.assertIn("contents: read", backport)
         self.assertEqual(text.count("GH_TOKEN: ${{ secrets.BACKPORT_TOKEN }}"), 1)
-        self.assertGreaterEqual(text.count("GH_TOKEN: ${{ github.token }}"), 2)
         self.assertIn("BACKPORT_TOKEN is required to open a PR that triggers CI.", text)
-        self.assertNotIn("BACKPORT_TOKEN is required to push a branch", text)
-        self.assertIn('tag_sha="$(git rev-list -n 1 "$tag")"', text)
-        self.assertIn('if [[ "$tag_sha" != "$PUBLISHED_SHA" ]]', text)
-        self.assertIn('preferred="backport/${VERSION}"', text)
-        self.assertIn("--json headRefName,headRefOid,headRepository,url", text)
-        self.assertIn('pr_repo" == "$GITHUB_REPOSITORY', text)
-        self.assertIn('validate_branch "$pr_branch" "$pr_oid"', text)
-        self.assertIn('echo "skip=true" >> "$GITHUB_OUTPUT"', text)
-        self.assertIn('echo "reuse=true" >> "$GITHUB_OUTPUT"', text)
-        self.assertIn('git rev-list --parents -n 1 "$branch_sha"', text)
-        self.assertIn('"${#ancestry[@]}" -eq 2', text)
-        self.assertIn('git diff --quiet "$PUBLISHED_SHA" "$branch_sha"', text)
-        self.assertIn("--limit 1000", text)
-        self.assertIn('"refs/heads/${preferred}" "refs/heads/${preferred}-*"', text)
-        self.assertIn('branch="${preferred}-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"', text)
-        self.assertIn('if git ls-remote --exit-code --heads origin "refs/heads/${branch}"', text)
-        self.assertIn("if: steps.backport.outputs.skip != 'true' && steps.backport.outputs.reuse != 'true'", text)
-        self.assertIn("if: steps.backport.outputs.skip != 'true'", text)
-        self.assertIn('git commit --allow-empty --message "chore: backport v${VERSION} to develop"', text)
-        self.assertIn("--base develop", text)
-        self.assertIn("--head \"$BRANCH\"", text)
+        self.assertIn('git/ref/heads/master" --jq .object.sha', backport)
+        self.assertIn("gh api --paginate", backport)
+        self.assertIn("state=open&base=develop&head=${owner}%3Amaster", backport)
+        self.assertIn("--method POST", backport)
+        self.assertIn("-f head='master'", backport)
+        self.assertIn("-f base='develop'", backport)
+        self.assertNotIn("git switch", backport)
+        self.assertNotIn("git push", backport)
+        self.assertNotIn("gh pr create", backport)
 
     def test_external_actions_are_commit_pinned(self) -> None:
         for path in (ROOT / ".github" / "workflows").glob("*.yml"):
@@ -126,12 +107,12 @@ class WorkflowGovernanceTests(unittest.TestCase):
         self.assertIn("BASE_REF", text)
         self.assertIn('case "$BASE_REF" in', text)
 
-    def test_source_gate_allows_only_named_prefixes_to_develop(self) -> None:
+    def test_source_gate_allows_named_prefixes_and_internal_master_to_develop(self) -> None:
         text = (ROOT / ".github" / "workflows" / "enforce-release-source.yml").read_text(encoding="utf-8")
         self.assertIn("feature/?*|fix/?*|docs/?*|chore/?*|refactor/?*|test/?*|backport/?*", text)
-        self.assertIn("PRs to develop require one of:", text)
-        develop_policy = text.split("develop)", 1)[1].split("master)", 1)[0]
-        self.assertNotIn("HEAD_REPO", develop_policy)
+        self.assertIn('master)', text)
+        self.assertIn("Only this repository's master branch may backport to develop.", text)
+        self.assertIn('if [[ "$HEAD_REPO" != "$REPOSITORY" ]]', text)
 
     def test_source_gate_restricts_master_to_same_repo_release_or_hotfix(self) -> None:
         text = (ROOT / ".github" / "workflows" / "enforce-release-source.yml").read_text(encoding="utf-8")
