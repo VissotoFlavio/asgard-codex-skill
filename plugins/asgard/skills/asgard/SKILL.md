@@ -28,8 +28,10 @@ Use these roles:
 - **Tyr:** independently validate domain rules, contracts, compatibility, state transitions, and cross-module, cross-service, cross-package, or cross-project consistency.
 - **Loki:** adversarially test behavior, edge cases, invalid inputs, concurrency, and inconsistent states without fixing the implementation.
 - **Heimdall:** review the candidate independently and read-only for security, privacy, isolation, abuse, and availability risks.
+- **Hermod:** promote an approved delivery through version control, release versioning, required CI, production publication, and backport integration without changing product code or bypassing repository protections.
 
 Read [roles-and-packets.md](references/roles-and-packets.md) completely before dispatching any role.
+Read [release-promotion.md](references/release-promotion.md) completely before asking Hermod to publish or promote a delivery.
 
 ## Build and approve the execution graph
 
@@ -64,6 +66,8 @@ Optional publication: APPROVED -> CHANGE_OPEN -> PUBLISHED -> INTEGRATED
 Any finding: CHANGES_REQUIRED -> original implementer -> affected reviews
 ```
 
+When publication includes a Git-hosted release flow, Odin may dispatch Hermod only after the final candidate is approved and the exact commit, push, pull-request, merge, tag, release, and monitoring authorities are recorded. Hermod owns promotion mechanics, never delivery acceptance.
+
 Require the implementer to stop at `IMPLEMENTER_COMPLETE` and return changed artifacts, decisions, deviations, validation results, risks, unresolved questions, and confirmation of excluded operations not performed.
 
 Odin must inspect the complete candidate and verify every DoD criterion independently. Passing tests alone is insufficient. Send confirmed findings to the original implementer with exact scope. Do not let Loki, Heimdall, Tyr, or Odin silently fix another role's implementation.
@@ -79,6 +83,8 @@ After corrections, compare the new candidate, rerun affected validation, and rep
 Microactivity approval does not approve the integrated wave. After integration, run cross-boundary tests and require Odin, Loki, and Heimdall to inspect the same final wave candidate; require Tyr when integrated contracts or rules are material.
 
 Do not commit, push, open a change request, merge, publish, migrate, deploy, mutate infrastructure, add dependencies, or perform destructive operations unless applicable rules and user authorization permit the exact action. Quality approval never grants publication authority.
+
+Hermod may merge only the pull requests and targets explicitly authorized in its packet and only after every required review and check for the current revision passes. CI performs deployment; Hermod monitors it, reports any failure to Odin, and does not modify implementation or CI configuration to recover.
 
 Treat states precisely:
 

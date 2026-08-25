@@ -25,6 +25,7 @@ SEMVER = re.compile(
     r"(?:\.(?:0|[1-9]\d*|\d*[A-Za-z-][0-9A-Za-z-]*))*)?"
     r"(?:\+[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?$"
 )
+MARKDOWN_LINK = re.compile(r"\[[^\]]+\]\(([^)]+)\)")
 
 
 def is_semver(value: Any) -> bool:
@@ -67,6 +68,20 @@ def record_path(errors: list[str], base: Path, value: Any, *, label: str, kind: 
         contained_path(base, value, kind=kind)
     except ValueError as exc:
         errors.append(f"{label}: {exc}")
+
+
+def validate_local_markdown_links(path: Path) -> list[str]:
+    text = path.read_text(encoding="utf-8")
+    errors: list[str] = []
+    for target in MARKDOWN_LINK.findall(text):
+        if "://" in target or target.startswith("#"):
+            continue
+        relative = target.split("#", 1)[0]
+        try:
+            contained_path(path.parent, relative, kind="file")
+        except ValueError as exc:
+            errors.append(f"broken local link {target!r} in {path.relative_to(ROOT)}: {exc}")
+    return errors
 
 
 def validate() -> str:
@@ -127,6 +142,7 @@ def validate() -> str:
             errors.append("SKILL.md frontmatter name must be 'asgard'")
         if not re.search(r"(?m)^description:\s*\S", header):
             errors.append("SKILL.md frontmatter must include a description")
+        errors.extend(validate_local_markdown_links(SKILL))
     except (FileNotFoundError, UnicodeDecodeError, IndexError) as exc:
         errors.append(f"cannot read skill definition: {exc}")
 
