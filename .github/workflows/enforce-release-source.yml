@@ -1,8 +1,8 @@
-name: Enforce release source
+name: Enforce branch policy
 
 on:
   pull_request:
-    branches: [master]
+    branches: [develop, master]
     types: [opened, synchronize, reopened, ready_for_review, edited]
 
 permissions:
@@ -13,7 +13,7 @@ jobs:
     name: develop to master only
     runs-on: ubuntu-latest
     steps:
-      - name: Require same-repository develop to master
+      - name: Require an allowed source branch
         env:
           HEAD_REF: ${{ github.event.pull_request.head.ref }}
           HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
@@ -21,13 +21,49 @@ jobs:
           BASE_REPO: ${{ github.event.pull_request.base.repo.full_name }}
           REPOSITORY: ${{ github.repository }}
         run: |
-          if [[ "$BASE_REF" != "master" || "$BASE_REPO" != "$REPOSITORY" || "$HEAD_REF" != "develop" || "$HEAD_REPO" != "$REPOSITORY" ]]; then
-            echo "Release PRs must be same-repository develop -> master."
+          if [[ "$BASE_REPO" != "$REPOSITORY" ]]; then
+            echo "The PR base repository does not match ${REPOSITORY}."
             exit 1
           fi
 
+          case "$BASE_REF" in
+            develop)
+              case "$HEAD_REF" in
+                feature/?*|fix/?*|docs/?*|chore/?*|refactor/?*|test/?*|backport/?*) ;;
+                master)
+                  if [[ "$HEAD_REPO" != "$REPOSITORY" ]]; then
+                    echo "Only this repository's master branch may backport to develop."
+                    exit 1
+                  fi
+                  ;;
+                *)
+                  echo "PRs to develop require an allowed change prefix or this repository's master branch."
+                  exit 1
+                  ;;
+              esac
+              ;;
+            master)
+              if [[ "$HEAD_REPO" != "$REPOSITORY" ]]; then
+                echo "PRs to master must originate in the same repository."
+                exit 1
+              fi
+              case "$HEAD_REF" in
+                release/?*|hotfix/?*) ;;
+                *)
+                  echo "PRs to master require a release/ or hotfix/ branch."
+                  exit 1
+                  ;;
+              esac
+              ;;
+            *)
+              echo "Unsupported base branch: ${BASE_REF}."
+              exit 1
+              ;;
+          esac
+
   version:
     name: stable version increases
+    if: github.event.pull_request.base.ref == 'master'
     runs-on: ubuntu-latest
     steps:
       - name: Require a strictly newer stable SemVer

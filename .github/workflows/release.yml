@@ -1,9 +1,8 @@
 name: Publish release
 
 on:
-  pull_request_target:
+  push:
     branches: [master]
-    types: [closed]
 
 permissions: {}
 
@@ -16,12 +15,6 @@ jobs:
     name: Tag and create GitHub Release
     permissions:
       contents: write
-    if: >-
-      github.event.pull_request.merged == true &&
-      github.event.pull_request.base.ref == 'master' &&
-      github.event.pull_request.base.repo.full_name == github.repository &&
-      github.event.pull_request.head.ref == 'develop' &&
-      github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     outputs:
       published-sha: ${{ steps.publish.outputs.published-sha }}
@@ -32,7 +25,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
-          MERGE_SHA: ${{ github.event.pull_request.merge_commit_sha }}
+          MERGE_SHA: ${{ github.sha }}
         shell: bash
         run: |
           content="$(gh api "repos/${GITHUB_REPOSITORY}/contents/plugins/asgard/.codex-plugin/plugin.json?ref=${MERGE_SHA}" --jq .content | base64 --decode)"
@@ -93,7 +86,7 @@ jobs:
     needs: release
     permissions:
       actions: read
-      contents: write
+      contents: read
     runs-on: ubuntu-latest
     steps:
       - name: Require backport token
@@ -106,110 +99,46 @@ jobs:
             exit 1
           fi
 
-      - name: Checkout published commit
-        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
-        with:
-          ref: ${{ needs.release.outputs.published-sha }}
-          fetch-depth: 0
-          token: ${{ github.token }}
-
-      - name: Verify release and select branch
+      - name: Open master backport to develop
         id: backport
         env:
-          GH_REPO: ${{ github.repository }}
-          GH_TOKEN: ${{ github.token }}
-          PUBLISHED_SHA: ${{ needs.release.outputs.published-sha }}
-          VERSION: ${{ needs.release.outputs.version }}
-        shell: bash
-        run: |
-          tag="v${VERSION}"
-          tag_sha="$(git rev-list -n 1 "$tag")"
-          if [[ "$tag_sha" != "$PUBLISHED_SHA" ]]; then
-            echo "${tag} points to ${tag_sha}, not published commit ${PUBLISHED_SHA}."
-            exit 1
-          fi
-
-          preferred="backport/${VERSION}"
-          validate_branch() {
-            local candidate="$1"
-            local expected_oid="${2:-}"
-            git fetch --no-tags --force origin "refs/heads/${candidate}:refs/remotes/origin/${candidate}" >/dev/null 2>&1 || return 1
-            branch_sha="$(git rev-parse "refs/remotes/origin/${candidate}")"
-            [[ -z "$expected_oid" || "$branch_sha" == "$expected_oid" ]] || return 1
-            read -r -a ancestry <<< "$(git rev-list --parents -n 1 "$branch_sha")"
-            [[ "${#ancestry[@]}" -eq 2 && "${ancestry[1]}" == "$PUBLISHED_SHA" ]] || return 1
-            git diff --quiet "$PUBLISHED_SHA" "$branch_sha"
-          }
-
-          while IFS=$'\t' read -r pr_branch pr_oid pr_repo pr_url; do
-            if [[ "$pr_repo" == "$GITHUB_REPOSITORY" ]] && validate_branch "$pr_branch" "$pr_oid"; then
-              echo "Backport PR already exists: ${pr_url}"
-              echo "skip=true" >> "$GITHUB_OUTPUT"
-              echo "branch=${pr_branch}" >> "$GITHUB_OUTPUT"
-              exit 0
-            fi
-          done < <(gh pr list --state open --base develop --limit 1000 \
-            --json headRefName,headRefOid,headRepository,url \
-            --jq ".[] | select(.headRefName == \"${preferred}\" or (.headRefName | startswith(\"${preferred}-\"))) | [.headRefName,.headRefOid,.headRepository.nameWithOwner,.url] | @tsv")
-
-          branch=""
-          while read -r candidate; do
-            if [[ -n "$candidate" ]] && validate_branch "$candidate"; then
-              branch="$candidate"
-              echo "reuse=true" >> "$GITHUB_OUTPUT"
-              break
-            fi
-          done < <(git ls-remote --heads origin \
-            "refs/heads/${preferred}" "refs/heads/${preferred}-*" |
-            awk '{sub("refs/heads/", "", $2); print $2}')
-
-          if [[ -z "$branch" ]]; then
-            branch="${preferred}-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
-            if git ls-remote --exit-code --heads origin "refs/heads/${branch}" >/dev/null 2>&1; then
-              echo "Backport fallback branch ${branch} already exists and cannot be safely reused."
-              exit 1
-            fi
-            echo "reuse=false" >> "$GITHUB_OUTPUT"
-          else
-            echo "Reusing verified backport branch ${branch}."
-          fi
-          echo "skip=false" >> "$GITHUB_OUTPUT"
-          echo "branch=${branch}" >> "$GITHUB_OUTPUT"
-
-      - name: Create and push backport branch
-        if: steps.backport.outputs.skip != 'true' && steps.backport.outputs.reuse != 'true'
-        env:
-          BRANCH: ${{ steps.backport.outputs.branch }}
-          VERSION: ${{ needs.release.outputs.version }}
-        shell: bash
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git switch --create "$BRANCH"
-          git commit --allow-empty --message "chore: backport v${VERSION} to develop"
-          git push --set-upstream origin "$BRANCH"
-
-      - name: Open backport pull request
-        if: steps.backport.outputs.skip != 'true'
-        env:
-          BRANCH: ${{ steps.backport.outputs.branch }}
           GH_REPO: ${{ github.repository }}
           GH_TOKEN: ${{ secrets.BACKPORT_TOKEN }}
           PUBLISHED_SHA: ${{ needs.release.outputs.published-sha }}
           VERSION: ${{ needs.release.outputs.version }}
         shell: bash
         run: |
+          repository="${GITHUB_REPOSITORY}"
+          owner="${repository%%/*}"
+          master_sha="$(gh api "repos/${repository}/git/ref/heads/master" --jq .object.sha)"
+          if [[ "$master_sha" != "$PUBLISHED_SHA" ]]; then
+            echo "master points to ${master_sha}, not published commit ${PUBLISHED_SHA}."
+            exit 1
+          fi
+          existing_url="$(gh api --paginate \
+            -H 'Accept: application/vnd.github+json' \
+            "repos/${repository}/pulls?state=open&base=develop&head=${owner}%3Amaster&per_page=100" \
+            --jq '.[0].html_url // empty')"
+          if [[ -n "$existing_url" ]]; then
+            echo "Backport PR already exists: ${existing_url}"
+            exit 0
+          fi
           body_file="$(mktemp)"
           trap 'rm -f "$body_file"' EXIT
           {
-            echo "Backports the published version \`${VERSION}\` to \`develop\`."
+            echo "Backports \`master\` after publishing version \`${VERSION}\` to \`develop\`."
             echo
             echo "- Stable tag: \`v${VERSION}\`"
             echo "- Source commit: \`${PUBLISHED_SHA}\`"
             echo "- Publishing workflow: ${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}"
           } > "$body_file"
-          gh pr create \
-            --base develop \
-            --head "$BRANCH" \
-            --title "chore: backport v${VERSION} to develop" \
-            --body-file "$body_file"
+          pr_url="$(gh api \
+            --method POST \
+            -H 'Accept: application/vnd.github+json' \
+            "repos/${repository}/pulls" \
+            -f title="chore: backport v${VERSION} to develop" \
+            -f head='master' \
+            -f base='develop' \
+            -F body=@"$body_file" \
+            --jq .html_url)"
+          echo "Opened backport PR: ${pr_url}"
