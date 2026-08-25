@@ -50,6 +50,9 @@ class ContainedPathTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 VALIDATOR.contained_path(root, "escape/file", kind="file")
 
+    def test_skill_local_markdown_links_resolve(self) -> None:
+        self.assertEqual(VALIDATOR.validate_local_markdown_links(VALIDATOR.SKILL), [])
+
 
 class WorkflowGovernanceTests(unittest.TestCase):
     def test_release_has_no_push_trigger_or_checkout(self) -> None:
