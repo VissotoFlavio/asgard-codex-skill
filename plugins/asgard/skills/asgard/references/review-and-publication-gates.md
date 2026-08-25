@@ -46,3 +46,9 @@ Applicable workspace rules and explicit user authority control commit, push, cha
 ## Dependency availability
 
 Treat a result as available only after it exists in the validated base used by dependent work. When using Git-style review, this normally means the change is merged and the base is updated. In other environments, use the equivalent approved integration checkpoint. Avoid stacked changes unless explicitly authorized.
+
+## Hermod promotion gate
+
+Use Hermod only after Odin approves the exact candidate and records the permitted repository mutations. Follow [release-promotion.md](release-promotion.md) for the state machine, branch and merge policy, SemVer decision boundary, CI failure packet, tag and GitHub release rules, and CI-created backport verification.
+
+Passing CI does not authorize the next transition by itself. Hermod must also verify the current revision, required reviews, branch protection, source and target policy, mergeability, and its recorded authority. A production deployment is complete only when its required Actions succeed; a release is complete only when the verified backport returns the production version to develop.
