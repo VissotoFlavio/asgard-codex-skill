@@ -30,8 +30,14 @@ jobs:
             develop)
               case "$HEAD_REF" in
                 feature/?*|fix/?*|docs/?*|chore/?*|refactor/?*|test/?*|backport/?*) ;;
+                master)
+                  if [[ "$HEAD_REPO" != "$REPOSITORY" ]]; then
+                    echo "Only this repository's master branch may backport to develop."
+                    exit 1
+                  fi
+                  ;;
                 *)
-                  echo "PRs to develop require one of: feature/, fix/, docs/, chore/, refactor/, test/, backport/."
+                  echo "PRs to develop require an allowed change prefix or this repository's master branch."
                   exit 1
                   ;;
               esac

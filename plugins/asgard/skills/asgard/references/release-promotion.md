@@ -8,6 +8,12 @@ Odin must provide the repository, approved delivery branch and revision, authori
 
 The repository must be clean. Confirm remote state immediately before every mutation and bind CI evidence to the current pull-request or merge revision. Never rely on a successful check for an older revision.
 
+## GitHub command policy
+
+Use the GitHub CLI for every GitHub integration. Start by requiring `gh auth status` to succeed for the intended host and account. Prefer `gh api` with explicit REST or GraphQL endpoints for pull requests, reviews, required checks, workflow runs, merge operations, tags, and releases. Use focused commands such as `gh run view`, `gh pr`, or `gh release` only when they provide a clearer supported operation than the API endpoint.
+
+Use `git` for repository operations such as status, fetch, branch creation, commits, tags, and push; do not use a browser, connector, or a different API client as a silent fallback for failed `gh` authentication or authorization. Stop and report the failed `gh` command, sanitized response, host, account, and required scope. Paginate collection endpoints when the complete result affects a decision, and re-read the pull-request head SHA and required-check state immediately before merging.
+
 ## State machine
 
 ```text
@@ -64,7 +70,7 @@ Repository Actions own package generation, publication, and environment deployme
 
 ## CI-created backport
 
-After production publication, discover the pull request created by CI using reliable workflow output, version, revision, branch, and repository metadata. Confirm it targets `develop`, represents the exact production version, and contains no unrelated changes. Multiple plausible matches or a missing backport after the configured monitoring window block promotion.
+After production publication, discover the pull request created by CI directly from `master` to `develop` using reliable workflow output, version, revision, and repository metadata. Confirm both branches belong to the same repository, the head is the published `master` revision, and the changes return production state without unrelated divergence. Multiple plausible matches or a missing backport after the configured monitoring window block promotion.
 
 Apply the ordinary `develop` merge rule, normally squash, after all backport gates pass. Synchronize local `develop` and verify its application version equals production before declaring `RELEASE_COMPLETE`.
 
