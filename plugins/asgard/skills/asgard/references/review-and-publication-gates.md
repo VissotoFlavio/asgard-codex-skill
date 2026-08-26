@@ -1,54 +1,50 @@
 # Review, Completion, and Publication Gates
 
-## Review order
+## Review the same candidate
 
-1. Require the implementer to finish editing and provide evidence.
-2. Require Odin to inspect the whole candidate and verify the DoD.
-3. Require Tyr when the activity materially affects rules, contracts, compatibility, persistence, public APIs, or consistency across boundaries.
-4. Require Loki and Heimdall to review the same candidate independently and read-only; run them concurrently when capacity permits.
-5. Require Odin to disclose every Heimdall finding to the user with classification, severity, evidence, impact, expected correction, and required test without pausing the authorized correction loop.
-6. Route findings through Odin to the original implementer.
-7. Compare the corrected candidate, rerun affected validation, and repeat invalidated reviews.
-8. Require Odin to make final acceptance only after all required approvals refer to the same candidate.
+After the implementer stops editing, bind every review to the same immutable diff or revision. Odin and required specialists may review concurrently when the candidate is stable and capacity permits. Let Odin reject first when obvious incompleteness would make specialist work wasteful.
 
-## Approval integrity
+Mode determines the minimum gate:
 
-Do not treat an agent report, passing self-authored tests, or the absence of findings in one review as complete acceptance. Record evidence separately from assumptions. Invalidate approval when a material change affects reviewed behavior or invariants. Disclose when independent review cannot be obtained; never simulate it by relabeling the implementer's context.
+- **Lean:** Odin; add Tyr, Loki, or Heimdall only for an identified material risk.
+- **Standard:** Odin, Loki, and Heimdall; add Tyr for material rules, contracts, compatibility, persistence, or cross-boundary consistency.
+- **Critical:** Odin plus every applicable independent specialist, with explicit negative and security evidence.
+- **Release:** the selected delivery gate, followed by Hermod only after final approval and mutation authority.
 
-## Integrated wave gate
+Independent reviewers remain read-only and must not share the implementer's context as their only evidence. Disclose limitations when genuine independence is unavailable.
 
-After combining approved microactivities, rerun cross-boundary and regression validation. Require Odin, Loki, and Heimdall to inspect the integrated candidate. Require Tyr when integration changes or exercises shared contracts or rules.
+## Correct proportionally
 
-## Completion and optional publication record
+Odin confirms actionable findings, groups compatible corrections into one bounded pass, and returns exact scope, affected DoD criterion, expected correction, and required evidence to the original implementer. Reviewers do not silently fix findings.
+
+After a correction:
+
+1. compare the candidate with the previously reviewed revision;
+2. complete the bounded correction pass, then rerun affected validation once;
+3. invalidate only approvals whose evidence or invariant changed;
+4. rerun those reviews against the new candidate;
+5. let Odin make final acceptance when all required evidence aligns.
+
+Report confirmed vulnerabilities promptly. Consolidate defense-in-depth recommendations and residual risks unless immediate user action is required.
+
+## Avoid duplicate integration gates
+
+Skip a separate integrated-wave review when one activity is the entire delivery and integration creates no new diff, dependency, configuration, generated artifact, or invariant.
+
+When multiple activities are combined, validate and review their integration surface and cross-boundary behavior. Reopen complete activity reviews only when integration changes their prior evidence. Dependent work starts only from the integrated, validated base required by its contract.
+
+## Complete concisely
+
+Record the candidate, DoD result, required approvals, focused validation, deviations, out-of-scope changes, and residual risks. Omit empty fields and repeated role instructions. Distinguish precisely:
 
 ```text
-Activity or wave:
-Base revision: value | not applicable
-Candidate revision or diff:
-DoD satisfied:
-Odin approved:
-Tyr approved/not applicable:
-Loki approved:
-Heimdall approved:
-Required validation passed:
-Documentation synchronized:
-Out-of-scope changes:
-Residual risks:
-Delivery complete:
-Commit authorized: yes | no | not applicable
-Push authorized: yes | no | not applicable
-Change request authorized and target: value | not applicable
-Integration authorized: yes | no | not applicable
+IMPLEMENTER_COMPLETE != APPROVED
+APPROVED             != PUBLISHED
+CHANGE_OPEN          != INTEGRATED
 ```
 
-Applicable workspace rules and explicit user authority control commit, push, change requests, integration, migration, deployment, dependency addition, infrastructure mutation, and destructive operations. Internal Asgard approval never grants those permissions.
+## Publication gate
 
-## Dependency availability
+Applicable repository rules and explicit user authority control commits, pushes, change requests, merges, migrations, deployments, dependencies, infrastructure, tags, releases, and destructive operations. Internal Asgard approval grants none of them.
 
-Treat a result as available only after it exists in the validated base used by dependent work. When using Git-style review, this normally means the change is merged and the base is updated. In other environments, use the equivalent approved integration checkpoint. Avoid stacked changes unless explicitly authorized.
-
-## Hermod promotion gate
-
-Use Hermod only after Odin approves the exact candidate and records the permitted repository mutations. Follow [release-promotion.md](release-promotion.md) for the state machine, branch and merge policy, SemVer decision boundary, CI failure packet, tag and GitHub release rules, and CI-created backport verification.
-
-Passing CI does not authorize the next transition by itself. Hermod must also verify the current revision, required reviews, branch protection, source and target policy, mergeability, and its recorded authority. A production deployment is complete only when its required Actions succeed; a release is complete only when the verified backport returns the production version to develop.
+Use Hermod only for an Odin-approved exact revision with authority recorded for each intended mutation. Read [release-promotion.md](release-promotion.md) for branch policy, current-revision checks, version decision, failure handling, publication, and backport verification.

@@ -1,64 +1,39 @@
 # Definition of Done
 
-Complete every field before dispatching implementation. Use `not applicable` where a capability or publication mechanism is absent.
+Create a task-local contract before implementation. Include only fields that change execution or acceptance; use `not applicable` only when omitting a field would be ambiguous.
+
+## Required core
 
 ```text
 Activity:
-Objective:
-Execution directory:
-Isolation mechanism: worktree | sandbox | checkout | other | none
-Version-control system: value | not applicable
-Base revision: value | not applicable
-Working branch or change: value | not applicable
-Publication target: PR | MR | change request | other | not applicable
+Objective and observable outcome:
+Owned production and test artifacts:
+Dependencies and base state:
+Primary failure mode:
+Applicable invariants:
+Focused validation and end-of-activity command:
+Rejection conditions:
 Implementer: Brokkr | Sindri
-Dependencies:
+Mode: Lean | Standard | Critical | Release
+Required reviewers and rationale:
+Excluded or unauthorized operations:
 ```
 
-## Expected outcome
+Add execution directory, isolation, branch or revision, shared files, conflict risk, publication target, or external authority only when applicable.
 
-Describe observable behavior and the primary failure mode.
+## Scale detail to risk
 
-## Included and excluded scope
+- **Lean:** record the observable outcome, owned artifacts, focused validation, primary failure mode, and exclusions. Add a specialist reviewer only for an identified risk.
+- **Standard:** also record material compatibility, domain, authorization, data, concurrency, and cross-boundary invariants; require Loki and Heimdall, and Tyr when contracts or rules are material.
+- **Critical:** make every relevant security, privacy, persistence, transaction, isolation, abuse, availability, rollback, and negative-test expectation explicit.
+- **Release:** additionally record the exact approved revision and authority for each repository or publication mutation.
 
-List required behavior, owned production and test artifacts, allowed integration points, forbidden shared artifacts, adjacent features, refactors, migrations, deployments, infrastructure, and destructive actions.
+Avoid generic invariant checklists. An invariant belongs in the contract only when the activity can affect it.
 
-## Invariants
+Schedule executable validation once at the end of implementation. If an earlier run is required to reproduce a defect or test a high-risk assumption, record that exception in the contract.
 
-Record compatibility, public contract, stored-data, configuration, domain-rule, authorization, ownership, isolation, confidentiality, logging, fail-closed, abuse-resistance, transaction, and concurrency invariants as applicable.
+## Completion evidence
 
-## Required validation
+Record the exact candidate revision or diff, changed artifacts, DoD result, focused validation, required reviewer decisions, deviations, out-of-scope changes, and residual risks. A single `APPROVED` may cover a reviewer with no findings; do not repeat its full packet.
 
-Name focused suites, scenarios, expected results, negative cases, regression cases, concurrency checks, and security evidence proportional to risk.
-
-## Specialist routing
-
-```text
-Mimir required: yes/no and uncertainty
-Tyr required: yes/no and invariant
-Loki required: yes
-Heimdall required: yes
-Independent review available: yes/no and limitation
-```
-
-## Rejection conditions
-
-Reject missing behavior or validation, out-of-scope changes, broken invariants, unresolved findings, hidden deviations, sensitive leakage, false claims of independent review, or unauthorized operations.
-
-## Completion record
-
-```text
-Candidate revision or diff:
-DoD satisfied:
-Odin review:
-Tyr review: approved | not applicable
-Loki review:
-Heimdall review:
-Affected validation passed:
-Documentation synchronized:
-Out-of-scope changes: none | details
-Residual risks:
-Odin final approval:
-Delivery complete:
-Publication authorized: yes | no | not applicable
-```
+Odin accepts only evidence for the same candidate. Passing tests, implementer completion, or one reviewer approval is insufficient when other gates are required.
