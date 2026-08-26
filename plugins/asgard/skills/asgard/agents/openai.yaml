@@ -1,10 +1,10 @@
 interface:
   display_name: "Asgard"
-  short_description: "Orchestrate multi-agent delivery with review gates"
+  short_description: "Orchestrate risk-based multi-agent delivery"
   icon_small: "./assets/logo.png"
   icon_large: "./assets/logo_asgard.png"
   brand_color: "#C9973E"
-  default_prompt: "Use $asgard to plan and coordinate this delivery with functional, adversarial, and security reviews."
+  default_prompt: "Use $asgard to coordinate this substantial delivery with the smallest sufficient risk-based review mode."
 
 policy:
   allow_implicit_invocation: true

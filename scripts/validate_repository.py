@@ -16,6 +16,7 @@ PLUGIN_ROOT = ROOT / "plugins" / "asgard"
 MANIFEST = PLUGIN_ROOT / ".codex-plugin" / "plugin.json"
 MARKETPLACE = ROOT / ".agents" / "plugins" / "marketplace.json"
 SKILL = PLUGIN_ROOT / "skills" / "asgard" / "SKILL.md"
+SKILL_ROOT = SKILL.parent
 
 # SemVer 2.0.0: numeric core identifiers cannot have leading zeroes; numeric
 # prerelease identifiers cannot either. Empty prerelease/build identifiers fail.
@@ -142,7 +143,8 @@ def validate() -> str:
             errors.append("SKILL.md frontmatter name must be 'asgard'")
         if not re.search(r"(?m)^description:\s*\S", header):
             errors.append("SKILL.md frontmatter must include a description")
-        errors.extend(validate_local_markdown_links(SKILL))
+        for markdown in SKILL_ROOT.rglob("*.md"):
+            errors.extend(validate_local_markdown_links(markdown))
     except (FileNotFoundError, UnicodeDecodeError, IndexError) as exc:
         errors.append(f"cannot read skill definition: {exc}")
 

@@ -4,7 +4,7 @@
 
 # Asgard for Codex
 
-Asgard is a multi-agent software delivery workflow for Codex. It separates implementation from acceptance and coordinates focused specialists through explicit Definitions of Done, adversarial testing, security review, correction loops, and optional publication gates.
+Asgard is a multi-agent software delivery workflow for Codex. It separates implementation from acceptance and coordinates focused specialists through risk-based Definitions of Done, independent review, correction loops, and optional publication gates.
 
 ## Roles
 
@@ -33,6 +33,8 @@ Odin plans and defines the DoD
 
 Any finding -> Odin -> original implementer -> affected reviews
 ```
+
+Asgard selects the smallest sufficient mode: Lean for bounded low-risk work, Standard for material multi-activity delivery, Critical for high-risk changes, and Release when an approved candidate must be promoted. Each specialist has an independent context packet, so only the roles used by the selected mode enter the working context. Single-activity deliveries do not repeat an integration review unless integration changes the candidate or its invariants.
 
 Approval of the execution graph covers the described implementation and internal correction cycles. The workflow returns to the user for changed scope, product decisions, protected operations, or genuine blockers—not for every internal handoff.
 
