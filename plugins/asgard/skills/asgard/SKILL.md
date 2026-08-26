@@ -1,102 +1,69 @@
 ---
 name: asgard
-description: Orchestrate substantial software deliveries with named specialist agents, explicit Definitions of Done, bounded implementation, independent contract, adversarial, and security reviews, correction loops, and optional publication gates. Use when Codex must coordinate multiple agents, decompose dependent work, safely parallelize implementation, validate every implementer result independently, or carry an approved execution graph to a reviewed delivery candidate without asking the user to approve each internal transition.
+description: Orchestrate substantial software deliveries that benefit from multiple specialist agents, explicit acceptance criteria, and independent risk-based review. Use for coordinated implementation across bounded activities or high-assurance delivery; do not invoke for routine single-file edits or ordinary coding tasks that one agent can safely complete and verify.
 ---
 
 # Asgard
 
-Coordinate multi-agent delivery under Odin's ownership. Treat agent completion, self-authored tests, and publication artifacts as evidence, never as acceptance.
+Coordinate multi-agent delivery under Odin's ownership. Agent reports and passing tests are evidence, never acceptance. Keep the process proportional to delivery risk.
 
-## Establish authority and capabilities
+## Establish authority
 
-Read repository and workspace instructions before planning. Identify affected components, available execution and review capacity, version-control and isolation mechanisms, publication authority, and prohibited operations. Preserve all applicable rules.
+Read repository and workspace instructions before planning. Identify affected components, available agent capacity, isolation and version-control mechanisms, prohibited operations, and publication authority.
 
-Do not create agents, branches, isolated checkouts, or worktrees before the user approves the execution graph unless immediate execution was explicitly requested. Treat graph approval as authorization for its described implementation and internal correction cycles. Do not request approval for transitions between Asgard roles. Return to the user only for changed scope, missing product direction, protected operations not already authorized, or a genuine external blocker.
+Do not create agents, branches, or isolated workspaces before the user approves the execution graph unless immediate execution was explicitly requested. Graph approval covers its implementation and internal correction cycles, not protected or external mutations. Return to the user for changed scope, missing product direction, unauthorized protected operations, or genuine external blockers.
 
-Adapt to available capabilities. Run roles sequentially when parallel slots are limited. Use worktrees or equivalent isolation only for genuinely simultaneous implementation. Never claim independent review when the same context that implemented the candidate is the only context reviewing it; disclose the limitation and obtain a genuinely independent reviewer when the DoD requires one.
+Odin remains accountable for decomposition, delegation, integration, evidence review, and final acceptance. Never delegate acceptance of the complete delivery or act only as a router.
+Read [Odin's packet](references/agents/odin.md) only when a separate orchestration handoff or compact recovery context is needed.
 
-## Keep Odin accountable
+## Select the smallest sufficient mode
 
-Odin remains the primary agent and owns planning, delegation, DoD, review, integration, and final acceptance. Never delegate acceptance of the complete delivery or act as a passive router.
+Choose once during planning and increase rigor if new risk appears:
 
-Use these roles:
+- **Lean:** one bounded, low-risk activity with localized impact. Use one implementer and Odin review. Add only reviewers justified by a concrete risk.
+- **Standard:** multiple activities or material behavioral risk. Use independent Loki and Heimdall review; add Tyr for material rules or contracts.
+- **Critical:** security-sensitive, externally exposed, persistent, concurrent, irreversible, regulated, or broad cross-boundary work. Use all applicable independent gates and strict correction loops.
+- **Release:** add Hermod only after the candidate is approved and exact publication authority is recorded.
 
-- **Odin:** orchestrate, decide, review against the DoD, integrate, and grant final approval.
-- **Brokkr:** implement a small or medium bounded activity with an established architecture.
-- **Sindri:** implement a complex architectural activity or inseparable structural refactor; replace Brokkr for that activity rather than sharing ownership.
-- **Mimir:** investigate code, documentation, external facts, and unresolved technical context read-only.
-- **Tyr:** independently validate domain rules, contracts, compatibility, state transitions, and cross-module, cross-service, cross-package, or cross-project consistency.
-- **Loki:** adversarially test behavior, edge cases, invalid inputs, concurrency, and inconsistent states without fixing the implementation.
-- **Heimdall:** review the candidate independently and read-only for security, privacy, isolation, abuse, and availability risks.
-- **Hermod:** promote an approved delivery through version control, release versioning, required CI, production publication, and backport integration without changing product code or bypassing repository protections.
+Do not use Asgard when Lean would merely reproduce ordinary single-agent work without meaningful delegation or independent review.
 
-Read [roles-and-packets.md](references/roles-and-packets.md) completely before dispatching any role.
-Read [release-promotion.md](references/release-promotion.md) completely before asking Hermod to publish or promote a delivery.
+## Build the execution graph
 
-## Build and approve the execution graph
+Inspect only the code and evidence needed to decompose the delivery. Give each activity one observable objective, bounded ownership, focused validation, dependencies, primary failure mode, and rejection conditions. Classify dependencies as `SEQUENTIAL_REQUIRED`, `PARALLEL_SAFE`, `PARALLEL_WITH_COORDINATION`, or `DEFER_DECISION`; do not parallelize merely to fill slots.
 
-Inspect relevant code, tests, documentation, and shared integration points. Decompose the delivery into microactivities with one observable objective, limited ownership, focused validation, and one primary failure mode.
+Present one concise approval boundary with activities, dependencies, selected mode and implementers, DoD, review routing, isolation, conflict risks, validation, integration, optional publication, and still-unauthorized operations. Read [definition-of-done.md](references/definition-of-done.md) only when constructing the activity contracts.
 
-Classify dependencies as `SEQUENTIAL_REQUIRED`, `PARALLEL_SAFE`, `PARALLEL_WITH_COORDINATION`, or `DEFER_DECISION`. Do not parallelize merely to occupy available slots.
+## Dispatch with minimal context
 
-Present one approval boundary containing:
+Use Brokkr for bounded implementation and Sindri instead for one inseparable architectural activity. Use Mimir only to resolve a stated uncertainty. Load only the reference for each role actually dispatched:
 
-- activities, dependencies, and waves;
-- DoD and rejection conditions for every activity;
-- selected implementer: Brokkr or Sindri;
-- conditional use of Mimir and Tyr;
-- mandatory Odin, Loki, and Heimdall gates;
-- execution directories, isolation choices, shared files, and conflict risks;
-- validation, integration, optional publication, and completion gates;
-- operations that remain unauthorized.
+- [Brokkr](references/agents/brokkr.md) or [Sindri](references/agents/sindri.md)
+- [Mimir](references/agents/mimir.md) when investigation is required
+- [Tyr](references/agents/tyr.md) for material rules, contracts, compatibility, persistence, or cross-boundary consistency
+- [Loki](references/agents/loki.md) for adversarial behavioral review
+- [Heimdall](references/agents/heimdall.md) for security, privacy, isolation, abuse, or availability review
+- [Hermod](references/agents/hermod.md) only for approved publication or promotion
 
-After approval, execute the graph autonomously within scope. Read [definition-of-done.md](references/definition-of-done.md) before dispatching implementation.
+Do not pass the full conversation by default. Give each agent only its role packet, activity contract, applicable workspace rules, relevant paths or candidate diff, stable dependencies, focused validation, and explicit exclusions. Prefer a fresh or minimal context when the platform supports it.
 
-## Execute each activity
+## Validate once per activity
 
-Follow this state machine:
+Defer executable validation until the implementer has completed the activity and inspected the final diff. Run the smallest affected test set once immediately before `IMPLEMENTER_COMPLETE`, not after each edit or internal step. During implementation, prefer read-only inspection and inexpensive static checks that do not rebuild or rerun suites.
 
-```text
-PLANNED -> READY -> IMPLEMENTING -> IMPLEMENTER_COMPLETE
-  -> ODIN_REVIEW -> TYR_REVIEW (when applicable)
-  -> LOKI_REVIEW -> HEIMDALL_REVIEW -> ODIN_FINAL_REVIEW
-  -> APPROVED -> DELIVERY_COMPLETE
+Run an earlier test only when it is needed to reproduce the original failure, validate a high-risk assumption before substantial work continues, or satisfy an explicit user or repository requirement. Record the reason so repeated execution does not become the default.
 
-Optional publication: APPROVED -> CHANGE_OPEN -> PUBLISHED -> INTEGRATED
-Any finding: CHANGES_REQUIRED -> original implementer -> affected reviews
-```
+## Review and correct efficiently
 
-When publication includes a Git-hosted release flow, Odin may dispatch Hermod only after the final candidate is approved and the exact commit, push, pull-request, merge, tag, release, and monitoring authorities are recorded. Hermod owns promotion mechanics, never delivery acceptance.
+The implementer stops at `IMPLEMENTER_COMPLETE`. Odin and required independent reviewers inspect the same immutable candidate. Run them concurrently when the candidate is stable and capacity permits; let Odin review first when rapid rejection is likely to avoid wasted reviews.
 
-Require the implementer to stop at `IMPLEMENTER_COMPLETE` and return changed artifacts, decisions, deviations, validation results, risks, unresolved questions, and confirmation of excluded operations not performed.
+Read [review-and-publication-gates.md](references/review-and-publication-gates.md) before accepting a candidate. Route confirmed findings to the original implementer with exact scope and required evidence. Group compatible findings into one bounded correction pass, then rerun only validations and reviews whose evidence or invariant changed. Material changes invalidate affected approvals, not unrelated ones.
 
-Odin must inspect the complete candidate and verify every DoD criterion independently. Passing tests alone is insufficient. Send confirmed findings to the original implementer with exact scope. Do not let Loki, Heimdall, Tyr, or Odin silently fix another role's implementation.
+Do not repeat an integrated-wave review when there is one activity and integration produced no new diff, dependency, or invariant. For multiple combined activities, review only the integration surface and cross-boundary behavior unless the combined candidate invalidates earlier evidence.
 
-Require Loki and Heimdall for every implementation candidate accepted by Odin. Run their read-only reviews in parallel when capacity permits. Use Tyr when rules, contracts, compatibility, persistence, public APIs, or consistency across boundaries are material. Use Mimir when uncertainty must be reduced without editing.
+Odin grants final approval only when all required evidence refers to the same candidate. Keep reports delta-focused: decisions, changed artifacts, failed or passed validations, actionable findings, deviations, unresolved risks, and unauthorized operations attempted, if any. Omit empty boilerplate.
 
-When Heimdall reports a finding, Odin must promptly disclose it to the user while continuing the authorized correction loop. Include classification, severity, affected behavior, evidence, credible impact or exploitation scenario, expected correction, and required regression or security test. Distinguish confirmed vulnerabilities from defense-in-depth recommendations and residual risks. Do not expose secrets, personal data, or unnecessarily actionable exploit details.
+## Publish only when authorized
 
-After corrections, compare the new candidate, rerun affected validation, and repeat every review whose evidence or invariant changed. Material changes invalidate prior approvals. Read [review-and-publication-gates.md](references/review-and-publication-gates.md) before accepting, completing, or publishing.
+Approval never grants authority to commit, push, open or merge changes, publish, migrate, deploy, mutate infrastructure, add dependencies, or perform destructive operations. For Release mode, read [release-promotion.md](references/release-promotion.md) before dispatching Hermod.
 
-## Integrate and complete precisely
-
-Microactivity approval does not approve the integrated wave. After integration, run cross-boundary tests and require Odin, Loki, and Heimdall to inspect the same final wave candidate; require Tyr when integrated contracts or rules are material.
-
-Do not commit, push, open a change request, merge, publish, migrate, deploy, mutate infrastructure, add dependencies, or perform destructive operations unless applicable rules and user authorization permit the exact action. Quality approval never grants publication authority.
-
-Hermod may merge only the pull requests and targets explicitly authorized in its packet and only after every required review and check for the current revision passes. CI performs deployment; Hermod monitors it, reports any failure to Odin, and does not modify implementation or CI configuration to recover.
-
-Treat states precisely:
-
-```text
-IMPLEMENTER_COMPLETE != APPROVED
-APPROVED             != PUBLISHED
-CHANGE_OPEN          != INTEGRATED
-INTEGRATED           == dependency available in the approved base
-```
-
-When version control or publication does not apply, mark those fields `not applicable` and finish at `DELIVERY_COMPLETE`. Start dependent work only from an integrated, validated base. Use stacked changes only when explicitly authorized.
-
-## Handle blockers
-
-Stop and report when required authority is missing, documentation conflicts materially, the base invalidates assumptions, a protected mutation becomes necessary, a finding requires product direction, planned ownership overlaps, independent review cannot be obtained when required, or validation cannot produce meaningful evidence. Exhaust safe read-only investigation first.
+Stop after exhausting safe read-only investigation when required authority, product direction, independent review, or meaningful validation is unavailable.

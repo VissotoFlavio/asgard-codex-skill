@@ -51,7 +51,16 @@ class ContainedPathTests(unittest.TestCase):
                 VALIDATOR.contained_path(root, "escape/file", kind="file")
 
     def test_skill_local_markdown_links_resolve(self) -> None:
-        self.assertEqual(VALIDATOR.validate_local_markdown_links(VALIDATOR.SKILL), [])
+        for markdown in VALIDATOR.SKILL_ROOT.rglob("*.md"):
+            self.assertEqual(VALIDATOR.validate_local_markdown_links(markdown), [], str(markdown))
+
+    def test_specialist_packets_are_independently_loadable(self) -> None:
+        agents = VALIDATOR.SKILL_ROOT / "references" / "agents"
+        expected = {"odin", "brokkr", "sindri", "mimir", "tyr", "loki", "heimdall", "hermod"}
+        self.assertEqual({path.stem for path in agents.glob("*.md")}, expected)
+        for role in expected:
+            packet = (agents / f"{role}.md").read_text(encoding="utf-8")
+            self.assertLess(len(packet), 2_500, role)
 
 
 class WorkflowGovernanceTests(unittest.TestCase):
