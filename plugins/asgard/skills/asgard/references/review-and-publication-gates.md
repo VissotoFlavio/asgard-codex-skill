@@ -15,12 +15,12 @@ Independent reviewers remain read-only and must not share the implementer's cont
 
 ## Correct proportionally
 
-Odin confirms actionable findings and returns exact scope, affected DoD criterion, expected correction, and required evidence to the original implementer. Reviewers do not silently fix findings.
+Odin confirms actionable findings, groups compatible corrections into one bounded pass, and returns exact scope, affected DoD criterion, expected correction, and required evidence to the original implementer. Reviewers do not silently fix findings.
 
 After a correction:
 
 1. compare the candidate with the previously reviewed revision;
-2. rerun affected validation;
+2. complete the bounded correction pass, then rerun affected validation once;
 3. invalidate only approvals whose evidence or invariant changed;
 4. rerun those reviews against the new candidate;
 5. let Odin make final acceptance when all required evidence aligns.

@@ -11,7 +11,7 @@ Owned production and test artifacts:
 Dependencies and base state:
 Primary failure mode:
 Applicable invariants:
-Focused validation:
+Focused validation and end-of-activity command:
 Rejection conditions:
 Implementer: Brokkr | Sindri
 Mode: Lean | Standard | Critical | Release
@@ -29,6 +29,8 @@ Add execution directory, isolation, branch or revision, shared files, conflict r
 - **Release:** additionally record the exact approved revision and authority for each repository or publication mutation.
 
 Avoid generic invariant checklists. An invariant belongs in the contract only when the activity can affect it.
+
+Schedule executable validation once at the end of implementation. If an earlier run is required to reproduce a defect or test a high-risk assumption, record that exception in the contract.
 
 ## Completion evidence
 

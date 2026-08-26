@@ -46,11 +46,17 @@ Use Brokkr for bounded implementation and Sindri instead for one inseparable arc
 
 Do not pass the full conversation by default. Give each agent only its role packet, activity contract, applicable workspace rules, relevant paths or candidate diff, stable dependencies, focused validation, and explicit exclusions. Prefer a fresh or minimal context when the platform supports it.
 
+## Validate once per activity
+
+Defer executable validation until the implementer has completed the activity and inspected the final diff. Run the smallest affected test set once immediately before `IMPLEMENTER_COMPLETE`, not after each edit or internal step. During implementation, prefer read-only inspection and inexpensive static checks that do not rebuild or rerun suites.
+
+Run an earlier test only when it is needed to reproduce the original failure, validate a high-risk assumption before substantial work continues, or satisfy an explicit user or repository requirement. Record the reason so repeated execution does not become the default.
+
 ## Review and correct efficiently
 
 The implementer stops at `IMPLEMENTER_COMPLETE`. Odin and required independent reviewers inspect the same immutable candidate. Run them concurrently when the candidate is stable and capacity permits; let Odin review first when rapid rejection is likely to avoid wasted reviews.
 
-Read [review-and-publication-gates.md](references/review-and-publication-gates.md) before accepting a candidate. Route confirmed findings to the original implementer with exact scope and required evidence. After correction, rerun only validations and reviews whose evidence or invariant changed. Material changes invalidate affected approvals, not unrelated ones.
+Read [review-and-publication-gates.md](references/review-and-publication-gates.md) before accepting a candidate. Route confirmed findings to the original implementer with exact scope and required evidence. Group compatible findings into one bounded correction pass, then rerun only validations and reviews whose evidence or invariant changed. Material changes invalidate affected approvals, not unrelated ones.
 
 Do not repeat an integrated-wave review when there is one activity and integration produced no new diff, dependency, or invariant. For multiple combined activities, review only the integration surface and cross-boundary behavior unless the combined candidate invalidates earlier evidence.
 
