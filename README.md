@@ -38,6 +38,8 @@ Asgard selects the smallest sufficient mode: Lean for bounded low-risk work, Sta
 
 Approval of the execution graph covers the described implementation and internal correction cycles. The workflow returns to the user for changed scope, product decisions, protected operations, or genuine blockers—not for every internal handoff.
 
+Activities may also load discipline packets without replacing their implementer role. Frontend work uses an intentional design capability during implementation and an independent interface-guidelines gate on the stable candidate. .NET backend work applies project-aware .NET best practices. Required capabilities are resolved before dispatch so unavailable skills or review sources are never reported as completed evidence.
+
 ## Install the plugin
 
 The `master` branch contains the latest stable release. Clone it, register the repository as a Codex marketplace, and install Asgard:
