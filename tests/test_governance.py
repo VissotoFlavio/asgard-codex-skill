@@ -62,6 +62,16 @@ class ContainedPathTests(unittest.TestCase):
             packet = (agents / f"{role}.md").read_text(encoding="utf-8")
             self.assertLess(len(packet), 2_500, role)
 
+    def test_discipline_packets_are_independently_loadable(self) -> None:
+        disciplines = VALIDATOR.SKILL_ROOT / "references" / "disciplines"
+        expected = {"backend"}
+        self.assertEqual({path.stem for path in disciplines.glob("*.md")}, expected)
+        for discipline in expected:
+            packet = (disciplines / f"{discipline}.md").read_text(encoding="utf-8")
+            self.assertLess(len(packet), 2_500, discipline)
+        backend = (disciplines / "backend.md").read_text(encoding="utf-8")
+        self.assertIn("$dotnet-best-practices", backend)
+
 
 class WorkflowGovernanceTests(unittest.TestCase):
     def test_release_runs_from_master_push_without_checkout(self) -> None:

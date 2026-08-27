@@ -33,6 +33,8 @@ Inspect only the code and evidence needed to decompose the delivery. Give each a
 
 Present one concise approval boundary with activities, dependencies, selected mode and implementers, DoD, review routing, isolation, conflict risks, validation, integration, optional publication, and still-unauthorized operations. Read [definition-of-done.md](references/definition-of-done.md) only when constructing the activity contracts.
 
+Classify an activity by discipline only when that classification changes its implementation guidance or required capabilities. For backend work, load the [backend discipline packet](references/disciplines/backend.md). Record each required skill and its availability before graph approval; do not claim that a capability was applied when it is unavailable.
+
 ## Dispatch with minimal context
 
 Use Brokkr for bounded implementation and Sindri instead for one inseparable architectural activity. Use Mimir only to resolve a stated uncertainty. Load only the reference for each role actually dispatched:
@@ -45,6 +47,8 @@ Use Brokkr for bounded implementation and Sindri instead for one inseparable arc
 - [Hermod](references/agents/hermod.md) only for approved publication or promotion
 
 Do not pass the full conversation by default. Give each agent only its role packet, activity contract, applicable workspace rules, relevant paths or candidate diff, stable dependencies, focused validation, and explicit exclusions. Prefer a fresh or minimal context when the platform supports it.
+
+When a discipline packet requires a skill, explicitly name that skill in the assigned agent's contract and require the agent to use it before making discipline-specific decisions. Repository and user instructions remain authoritative when skill guidance is generic or conflicts with established project conventions.
 
 ## Validate once per activity
 
