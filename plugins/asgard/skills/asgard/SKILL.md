@@ -33,7 +33,7 @@ Inspect only the code and evidence needed to decompose the delivery. Give each a
 
 Present one concise approval boundary with activities, dependencies, selected mode and implementers, DoD, review routing, isolation, conflict risks, validation, integration, optional publication, and still-unauthorized operations. Read [definition-of-done.md](references/definition-of-done.md) only when constructing the activity contracts.
 
-Classify an activity by discipline only when that classification changes its implementation guidance or required capabilities. For backend work, load the [backend discipline packet](references/disciplines/backend.md). Record each required skill and its availability before graph approval; do not claim that a capability was applied when it is unavailable.
+Classify an activity by discipline only when that classification changes its implementation guidance or required capabilities. Load the [frontend discipline packet](references/disciplines/frontend.md) for user-visible interface work and the [backend discipline packet](references/disciplines/backend.md) for server-side work. A cross-boundary activity may load both only when it cannot be decomposed without breaking ownership. Record each required skill and its availability before graph approval; do not claim that a capability was applied when it is unavailable.
 
 ## Dispatch with minimal context
 

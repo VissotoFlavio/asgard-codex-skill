@@ -64,13 +64,16 @@ class ContainedPathTests(unittest.TestCase):
 
     def test_discipline_packets_are_independently_loadable(self) -> None:
         disciplines = VALIDATOR.SKILL_ROOT / "references" / "disciplines"
-        expected = {"backend"}
+        expected = {"backend", "frontend"}
         self.assertEqual({path.stem for path in disciplines.glob("*.md")}, expected)
         for discipline in expected:
             packet = (disciplines / f"{discipline}.md").read_text(encoding="utf-8")
             self.assertLess(len(packet), 2_500, discipline)
         backend = (disciplines / "backend.md").read_text(encoding="utf-8")
         self.assertIn("$dotnet-best-practices", backend)
+        frontend = (disciplines / "frontend.md").read_text(encoding="utf-8")
+        self.assertIn("$frontend-design", frontend)
+        self.assertIn("$web-design-guidelines", frontend)
 
 
 class WorkflowGovernanceTests(unittest.TestCase):
