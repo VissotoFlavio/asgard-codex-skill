@@ -22,6 +22,7 @@ Send only the selected role packet plus:
 - the activity objective, DoD, rejection conditions, and primary failure mode;
 - relevant paths or the exact candidate diff/revision;
 - applicable repository rules and explicit exclusions;
+- the applicable discipline packet and explicitly required skills;
 - stable dependency state and focused validation commands;
 - authority boundaries for edits and external mutations.
 
