@@ -15,7 +15,7 @@ Primary failure mode:
 Applicable invariants:
 Focused validation and end-of-activity command:
 Rejection conditions:
-Implementer: Brokkr | Sindri
+Implementer: Brokkr | Sindri | Ymir
 Mode: Lean | Standard | Critical | Release
 Required reviewers and rationale:
 Excluded or unauthorized operations:
@@ -23,7 +23,7 @@ Excluded or unauthorized operations:
 
 Add execution directory, isolation, branch or revision, shared files, conflict risk, publication target, or external authority only when applicable.
 
-Omit discipline and required skills when they do not change execution. For a .NET backend activity, record `Backend` and `$dotnet-best-practices: AVAILABLE` before dispatch. For frontend work, record the applicable implementation and independent review skills from the frontend discipline packet. Treat an unavailable required skill or review source as a planning blocker unless the user approves a stated fallback.
+Omit discipline and required skills when they do not change execution. For a .NET backend activity, record `Backend` and `$dotnet-best-practices: AVAILABLE` before dispatch. For frontend work, record the applicable implementation and independent review skills from the frontend discipline packet. For infrastructure work, record Ymir, the transport/provider, expected destination identity, access level, and required provider capabilities. Treat an unavailable required skill or review source as a planning blocker unless the user approves a stated fallback.
 
 ## Scale detail to risk
 

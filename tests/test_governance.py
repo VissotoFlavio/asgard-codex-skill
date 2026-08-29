@@ -56,7 +56,7 @@ class ContainedPathTests(unittest.TestCase):
 
     def test_specialist_packets_are_independently_loadable(self) -> None:
         agents = VALIDATOR.SKILL_ROOT / "references" / "agents"
-        expected = {"odin", "brokkr", "sindri", "mimir", "tyr", "loki", "heimdall", "hermod"}
+        expected = {"odin", "brokkr", "sindri", "ymir", "mimir", "tyr", "loki", "heimdall", "hermod"}
         self.assertEqual({path.stem for path in agents.glob("*.md")}, expected)
         for role in expected:
             packet = (agents / f"{role}.md").read_text(encoding="utf-8")
@@ -64,7 +64,7 @@ class ContainedPathTests(unittest.TestCase):
 
     def test_discipline_packets_are_independently_loadable(self) -> None:
         disciplines = VALIDATOR.SKILL_ROOT / "references" / "disciplines"
-        expected = {"backend", "frontend"}
+        expected = {"backend", "frontend", "infrastructure"}
         self.assertEqual({path.stem for path in disciplines.glob("*.md")}, expected)
         for discipline in expected:
             packet = (disciplines / f"{discipline}.md").read_text(encoding="utf-8")
@@ -74,6 +74,28 @@ class ContainedPathTests(unittest.TestCase):
         frontend = (disciplines / "frontend.md").read_text(encoding="utf-8")
         self.assertIn("$frontend-design", frontend)
         self.assertIn("$web-design-guidelines", frontend)
+        infrastructure = (disciplines / "infrastructure.md").read_text(encoding="utf-8")
+        self.assertIn("DISCOVER -> PLAN -> APPLY -> VERIFY", infrastructure)
+        self.assertIn("infrastructure-state.md", infrastructure)
+        self.assertIn("Material drift invalidates the plan and authority", infrastructure)
+        self.assertIn("absent, unverifiable, or mismatched identity fails closed", infrastructure)
+        self.assertIn("rollback and retries require exact authority", infrastructure)
+
+        definition = (VALIDATOR.SKILL_ROOT / "references" / "definition-of-done.md").read_text(encoding="utf-8")
+        self.assertIn("Implementer: Brokkr | Sindri | Ymir", definition)
+
+    def test_infrastructure_state_contract_enforces_security_boundaries(self) -> None:
+        state = (VALIDATOR.SKILL_ROOT / "references" / "infrastructure-state.md").read_text(encoding="utf-8")
+        ymir = (VALIDATOR.SKILL_ROOT / "references" / "agents" / "ymir.md").read_text(encoding="utf-8")
+        self.assertIn("trusted out-of-band", state)
+        self.assertIn("explicitly scoped persistence consent", state)
+        self.assertIn("Reject malformed, corrupt, or unsupported-schema state", state)
+        self.assertIn("stale state may guide discovery but never PLAN approval or APPLY", state)
+        self.assertIn("Material drift invalidates the plan and APPLY authority", state)
+        self.assertIn("On partial APPLY or VERIFY failure, halt further mutation", state)
+        self.assertIn("Persistence never includes secrets", state)
+        self.assertIn("Provider-specific skills extend capability but grant no authority", ymir)
+        self.assertIn("dependency or skill installation requires user authorization", ymir)
 
 
 class WorkflowGovernanceTests(unittest.TestCase):

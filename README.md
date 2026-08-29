@@ -11,6 +11,7 @@ Asgard is a multi-agent software delivery workflow for Codex. It separates imple
 - **Odin** orchestrates the delivery and owns final acceptance.
 - **Brokkr** implements bounded work with an established architecture.
 - **Sindri** owns complex architectural implementation.
+- **Ymir** discovers, plans, applies authorized infrastructure changes, and verifies remote environments.
 - **Mimir** investigates code, documentation, and technical uncertainty.
 - **Tyr** validates rules, contracts, compatibility, and consistency.
 - **Loki** searches for edge cases and tries to break the candidate.
@@ -20,11 +21,15 @@ Asgard is a multi-agent software delivery workflow for Codex. It separates imple
   <img src="./assets/asgard-agents.png" alt="Asgard agents, responsibilities, and delivery flow" width="720">
 </p>
 
+<p align="center">
+  <img src="./assets/ymir.png" alt="Ymir, Asgard infrastructure specialist" width="560">
+</p>
+
 ## Core flow
 
 ```text
 Odin plans and defines the DoD
-  -> Brokkr or Sindri implements
+  -> Brokkr or Sindri implements application work; Ymir owns infrastructure work
   -> Odin reviews against the DoD
   -> Tyr validates contracts when applicable
   -> Loki tests adversarially
@@ -38,7 +43,7 @@ Asgard selects the smallest sufficient mode: Lean for bounded low-risk work, Sta
 
 Approval of the execution graph covers the described implementation and internal correction cycles. The workflow returns to the user for changed scope, product decisions, protected operations, or genuine blockers—not for every internal handoff.
 
-Activities may also load discipline packets without replacing their implementer role. Frontend work uses an intentional design capability during implementation and an independent interface-guidelines gate on the stable candidate. .NET backend work applies project-aware .NET best practices. Required capabilities are resolved before dispatch so unavailable skills or review sources are never reported as completed evidence.
+Activities may also load discipline packets without replacing their implementer role. Frontend work uses an intentional design capability during implementation and an independent interface-guidelines gate on the stable candidate. .NET backend work applies project-aware .NET best practices. Infrastructure work follows `DISCOVER -> PLAN -> APPLY -> VERIFY`, keeps secrets in external credential mechanisms, and treats inventory as a revalidated snapshot. Required provider skills and tools are resolved before dispatch; installing them or mutating remote environments still requires user authority.
 
 ## Install the plugin
 
