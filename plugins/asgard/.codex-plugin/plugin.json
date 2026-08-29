@@ -1,6 +1,6 @@
 {
   "name": "asgard",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Multi-agent software delivery orchestration with independent quality and security gates.",
   "author": {
     "name": "Flavio Vissoto",
