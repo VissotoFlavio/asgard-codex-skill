@@ -94,7 +94,7 @@ classification: application | test | build | deployment | infrastructure | permi
 summary: concise observed cause
 evidence: short sanitized evidence
 retry_possible: true | false | unknown
-recommended_owner: Brokkr | Sindri | Odin | repository-maintainer
+recommended_owner: Brokkr | Sindri | Ymir | Odin | repository-maintainer
 ```
 
 Never reproduce credentials, tokens, personal data, or unnecessary exploit details. A transient-looking failure may justify recommending a rerun, but Hermod does not rerun automatically unless that exact retry authority and a bounded retry policy were supplied.

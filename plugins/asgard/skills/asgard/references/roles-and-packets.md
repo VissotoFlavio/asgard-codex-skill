@@ -7,6 +7,7 @@ Use this index only when role selection is unclear. The main skill links directl
 | Orchestration and final acceptance | Odin | [agents/odin.md](agents/odin.md) |
 | Bounded implementation with established architecture | Brokkr | [agents/brokkr.md](agents/brokkr.md) |
 | Inseparable architectural implementation | Sindri | [agents/sindri.md](agents/sindri.md) |
+| Infrastructure discovery, planning, execution, and verification | Ymir | [agents/ymir.md](agents/ymir.md) |
 | Read-only uncertainty reduction | Mimir | [agents/mimir.md](agents/mimir.md) |
 | Rules, contracts, compatibility, or consistency review | Tyr | [agents/tyr.md](agents/tyr.md) |
 | Adversarial behavior and edge-case review | Loki | [agents/loki.md](agents/loki.md) |
