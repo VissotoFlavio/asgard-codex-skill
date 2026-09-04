@@ -99,6 +99,13 @@ class ContainedPathTests(unittest.TestCase):
 
 
 class WorkflowGovernanceTests(unittest.TestCase):
+    def test_release_version_is_determined_without_user_confirmation(self) -> None:
+        text = (VALIDATOR.SKILL_ROOT / "references" / "release-promotion.md").read_text(encoding="utf-8")
+        self.assertIn("-> VERSION_DETERMINED", text)
+        self.assertNotIn("AWAITING_VERSION_DECISION", text)
+        self.assertIn("use the highest required increment", text)
+        self.assertIn("Do not stop solely for version selection", text)
+
     def test_release_runs_from_master_push_without_checkout(self) -> None:
         text = (ROOT / ".github" / "workflows" / "release.yml").read_text(encoding="utf-8")
         self.assertIn("\n  push:\n    branches: [master]", text)

@@ -21,8 +21,7 @@ DELIVERY_APPROVED
   -> DELIVERY_PR_OPEN
   -> DELIVERY_CI_PASSED
   -> DELIVERY_MERGED_TO_DEVELOP
-  -> VERSION_SUGGESTED
-  -> AWAITING_VERSION_DECISION
+  -> VERSION_DETERMINED
   -> RELEASE_BRANCH_CREATED
   -> APPLICATION_VERSION_UPDATED
   -> RELEASE_PR_OPEN
@@ -50,15 +49,15 @@ Merge only when the pull request is not a draft, has no conflicts, satisfies req
 
 ## Version decision
 
-After merging the delivery, synchronize local `develop` and analyze only the approved delivery. Recommend:
+After merging the delivery, synchronize local `develop` and analyze only the approved delivery. Determine the next version without asking the user to choose or confirm the increment:
 
 - `major` for incompatible public behavior, contract, or data changes;
 - `minor` for backward-compatible functionality;
 - `patch` for backward-compatible fixes or internal improvements.
 
-Show the current version, recommended increment and result, confidence, evidence, and the resulting major, minor, and patch alternatives. Stop at `AWAITING_VERSION_DECISION`; the user always chooses the increment.
+When more than one category applies, use the highest required increment: `major` over `minor`, and `minor` over `patch`. Calculate the next version from the current stable SemVer by incrementing the selected component and resetting every component to its right to zero. Record the current version, selected increment, resulting version, confidence, and evidence. Do not stop solely for version selection or request confirmation of the inferred version.
 
-After the choice, create `release/<major.minor.patch>` from synchronized `develop`. Update only authoritative version artifacts and required generated counterparts, validate that the application reports the chosen version, and use a Conventional Commit such as `chore(release): bump version to 1.2.3`.
+Create `release/<major.minor.patch>` for the resulting version from synchronized `develop`. Update only authoritative version artifacts and required generated counterparts, validate that the application reports the determined version, and use a Conventional Commit such as `chore(release): bump version to 1.2.3`.
 
 ## Master promotion, tag, and release
 
