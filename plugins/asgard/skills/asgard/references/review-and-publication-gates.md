@@ -9,7 +9,7 @@ Mode determines the minimum gate:
 - **Lean:** Odin; add Tyr, Loki, or Heimdall only for an identified material risk.
 - **Standard:** Odin, Loki, and Heimdall; add Tyr for material rules, contracts, compatibility, persistence, or cross-boundary consistency.
 - **Critical:** Odin plus every applicable independent specialist, with explicit negative and security evidence.
-- **Release:** the selected delivery gate, followed by Hermod only after final approval and mutation authority.
+- **Release:** the selected delivery gate, applicable Forseti traceability approval, then Hermod only after final approval and mutation authority.
 
 Independent reviewers remain read-only and must not share the implementer's context as their only evidence. Disclose limitations when genuine independence is unavailable.
 
@@ -47,4 +47,4 @@ CHANGE_OPEN          != INTEGRATED
 
 Applicable repository rules and explicit user authority control commits, pushes, change requests, merges, migrations, deployments, dependencies, infrastructure, tags, releases, and destructive operations. Internal Asgard approval grants none of them.
 
-Use Hermod only for an Odin-approved exact revision with authority recorded for each intended mutation. Read [release-promotion.md](release-promotion.md) for branch policy, current-revision checks, version decision, failure handling, publication, and backport verification.
+Use Hermod only for an Odin-approved exact revision with authority recorded for each intended mutation. When traceability policy applies, require Forseti to verify the issue, pull request, changelog, and release inventory available at that phase before merge or publication. Read [release-promotion.md](release-promotion.md) for branch policy, current-revision checks, version decision, failure handling, publication, and backport verification.
