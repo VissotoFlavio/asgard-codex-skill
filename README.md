@@ -1,63 +1,93 @@
 <p align="center">
-  <img src="./assets/logo_asgard.png" alt="Asgard for Codex" width="760">
+  <img src="./assets/asgard-agents.png" alt="Asgard agents, responsibilities, and delivery flow" width="760">
 </p>
 
 # Asgard for Codex
 
-Asgard is a multi-agent software delivery workflow for Codex. It separates implementation from acceptance and coordinates focused specialists through risk-based Definitions of Done, independent review, correction loops, and optional publication gates.
+Asgard is a risk-based, multi-agent software delivery workflow for Codex. Odin decomposes substantial work into bounded activities, assigns focused specialists, reviews their evidence, coordinates independent gates, and remains accountable for final acceptance.
+
+The workflow is intentionally proportional: routine changes should stay simple, while complex or high-risk deliveries receive stronger implementation, contract, adversarial, security, governance, and publication controls.
+
+## When to use Asgard
+
+Use Asgard for deliveries that benefit from one or more of the following:
+
+- multiple bounded implementation activities;
+- coordinated application and infrastructure work;
+- explicit acceptance criteria and dependency ordering;
+- independent behavioral, contract, or security review;
+- high-assurance release promotion with traceable evidence.
+
+Do not use it for routine single-file edits or ordinary work that one agent can implement and verify safely. Asgard should reduce delivery risk, not add ceremony without a concrete reason.
 
 ## Roles
 
-- **Odin** orchestrates the delivery and owns final acceptance.
-- **Brokkr** implements bounded work with an established architecture.
-- **Sindri** owns complex architectural implementation.
-- **Ymir** discovers, plans, applies authorized infrastructure changes, and verifies remote environments.
-- **Mimir** investigates code, documentation, and technical uncertainty.
-- **Tyr** validates rules, contracts, compatibility, and consistency.
-- **Loki** searches for edge cases and tries to break the candidate.
-- **Heimdall** performs independent security review and reports every finding.
-- **Forseti** verifies issue, pull-request, changelog, and release traceability without accepting or publishing the delivery.
+| Role | Responsibility |
+| --- | --- |
+| **Odin** | Plans the execution graph, coordinates specialists, reviews evidence, and owns final acceptance. |
+| **Brokkr** | Implements bounded application work within an established architecture. |
+| **Sindri** | Implements one inseparable application activity that requires architectural ownership. |
+| **Ymir** | Discovers, plans, applies authorized infrastructure changes, and verifies the resulting environment. |
+| **Mimir** | Resolves a stated code, documentation, or technical uncertainty. |
+| **Tyr** | Independently validates material rules, contracts, compatibility, and consistency. |
+| **Loki** | Searches adversarially for behavioral gaps and edge cases. |
+| **Heimdall** | Independently reviews security, privacy, isolation, abuse, and availability risks. |
+| **Forseti** | Verifies issue, pull-request, changelog, and release traceability without accepting or publishing the delivery. |
+| **Hermod** | Promotes an approved revision through explicitly authorized version-control and release operations. |
 
-<p align="center">
-  <img src="./assets/asgard-agents.png" alt="Asgard agents, responsibilities, and delivery flow" width="720">
-</p>
+Specialists receive task-local context rather than the entire conversation. Their reports and passing tests are evidence; Odin still inspects the candidate and makes the acceptance decision.
 
-<p align="center">
-  <img src="./assets/asgard-agents_cards.png" alt="Asgard agent cards and delivery flow" width="720">
-</p>
+## Delivery modes
 
-<p align="center">
-  <img src="./assets/forseti.png" alt="Forseti, Asgard delivery governance specialist" width="560">
-</p>
-
-<p align="center">
-  <img src="./assets/ymir.png" alt="Ymir, Asgard infrastructure specialist" width="560">
-</p>
+- **Lean:** one bounded, low-risk activity with an implementer and Odin review. Add a specialist gate only for an identified risk.
+- **Standard:** multiple activities or material behavioral risk, with independent Loki and Heimdall review and Tyr when contracts or rules are affected.
+- **Critical:** security-sensitive, persistent, concurrent, irreversible, regulated, or broadly exposed work, using every applicable independent gate.
+- **Release:** an approved candidate promoted by Hermod after required Forseti traceability and explicit mutation authority are recorded.
 
 ## Core flow
 
 ```text
-Odin plans and defines the DoD
-  -> Brokkr or Sindri implements application work; Ymir owns infrastructure work
-  -> Odin reviews against the DoD
-  -> Tyr validates contracts when applicable
+Odin defines the execution graph and Definition of Done
+  -> Brokkr or Sindri implements application work
+     and/or Ymir performs authorized infrastructure work
+  -> implementers validate their final activity once
+  -> Odin reviews the exact candidate
+  -> Tyr validates material contracts when applicable
   -> Loki tests adversarially
   -> Heimdall reviews security
   -> Forseti validates required delivery traceability
   -> Odin grants final approval
+  -> Hermod promotes the approved revision when authorized
 
-Any finding -> Odin -> original implementer -> affected reviews
+Any confirmed finding
+  -> Odin routes a bounded correction to the original implementer
+  -> only affected validations and approvals are repeated
 ```
 
-Asgard selects the smallest sufficient mode: Lean for bounded low-risk work, Standard for material multi-activity delivery, Critical for high-risk changes, and Release when an approved candidate must be promoted. Each specialist has an independent context packet, so only the roles used by the selected mode enter the working context. Focused tests run once at the end of each activity by default, and single-activity deliveries do not repeat an integration review unless integration changes the candidate or its invariants.
+Asgard classifies dependencies as sequential, parallel-safe, parallel-with-coordination, or deferred. It does not parallelize work merely to fill agent slots, and it avoids repeating complete reviews when integration creates no new diff or invariant.
 
-Approval of the execution graph covers the described implementation and internal correction cycles. The workflow returns to the user for changed scope, product decisions, protected operations, or genuine blockers—not for every internal handoff.
+## Definitions of Done and authority
 
-Activities may also load discipline packets without replacing their implementer role. Frontend work uses an intentional design capability during implementation and an independent interface-guidelines gate on the stable candidate. .NET backend work applies project-aware .NET best practices. Infrastructure work follows `DISCOVER -> PLAN -> APPLY -> VERIFY`, keeps secrets in external credential mechanisms, and treats inventory as a revalidated snapshot. Required provider skills and tools are resolved before dispatch; installing them or mutating remote environments still requires user authority.
+Every activity receives an observable objective, bounded artifact ownership, dependencies, primary failure mode, focused validation, rejection conditions, and applicable reviewers. Tests normally run once after the implementer has inspected the final diff.
+
+Approval never grants authority to commit, push, open or merge pull requests, publish releases, deploy, migrate data, mutate infrastructure, add dependencies, or perform destructive operations. Repository instructions and explicit user authority remain controlling.
+
+## Delivery governance
+
+When the repository requires traceability, Forseti checks the evidence available at each lifecycle phase:
+
+1. one bounded issue defines the objective and acceptance criteria;
+2. the delivery branch and pull request identify that issue;
+3. required labels, templates, reviews, and checks are present;
+4. the changelog links the issue and pull request;
+5. release notes enumerate every included issue and pull request;
+6. release and backport pull requests have their own tracking issues when untracked pull requests are forbidden.
+
+Missing evidence that cannot exist yet is reported as `PENDING`; a violated invariant is `CHANGES_REQUIRED`. Forseti is read-only and its approval covers governance only.
 
 ## Install the plugin
 
-The `master` branch contains the latest stable release. Clone it, register the repository as a Codex marketplace, and install Asgard:
+The `master` branch contains the latest stable release:
 
 ```bash
 git clone --branch master https://github.com/VissotoFlavio/asgard-codex-skill.git
@@ -66,17 +96,19 @@ codex plugin marketplace add .
 codex plugin add asgard@asgard-community
 ```
 
-Start a new Codex task after installation so the plugin and its skill are loaded. You can then invoke it explicitly:
+Start a new Codex task after installation so the plugin and its skill are loaded.
+
+Invoke Asgard explicitly:
 
 ```text
 Use $asgard to plan and coordinate this software delivery.
 ```
 
-You can also describe a substantial multi-agent delivery naturally; Codex may select Asgard when the request matches its purpose.
+Codex may also select Asgard automatically when a request clearly matches its scope.
 
 ## Update the plugin
 
-Pull the latest stable release and reinstall the marketplace entry:
+Update the stable checkout and reinstall the marketplace entry:
 
 ```bash
 cd asgard-codex-skill
@@ -85,48 +117,48 @@ git pull --ff-only origin master
 codex plugin add asgard@asgard-community
 ```
 
-Open a new Codex task after updating so the new version is picked up.
+Open a new Codex task after reinstalling.
 
 ## Install only the skill
 
-If you do not want the complete plugin, ask Codex to install the skill directly from:
+To install the standalone skill instead of the plugin, ask Codex to install:
 
 ```text
 https://github.com/VissotoFlavio/asgard-codex-skill/tree/master/plugins/asgard/skills/asgard
 ```
 
-Then start a new task and invoke `$asgard`.
+Start a new task after installation and invoke `$asgard`.
 
-## Repository channels
+## Repository and release workflow
 
-- `master`: stable, versioned releases intended for installation.
-- `develop`: upcoming changes that may not yet be released.
-- [Changelog](./CHANGELOG.md): issue- and pull-request-linked delivery history.
-- [GitHub Releases](https://github.com/VissotoFlavio/asgard-codex-skill/releases): published versions and release history.
+- `develop` contains the next candidate changes.
+- `feature/*`, `fix/*`, `docs/*`, and related delivery branches originate from and return to `develop`.
+- `release/<version>` originates from `develop` and targets `master`.
+- `hotfix/<version>` originates from and targets `master`.
+- `master` contains stable, versioned releases.
+- [CHANGELOG.md](./CHANGELOG.md) records deliveries with issue and pull-request links.
+- [GitHub Releases](https://github.com/VissotoFlavio/asgard-codex-skill/releases) contains stable release notes.
 
-## Prepare a release version
+After an approved release merge reaches `master`, the repository workflow validates the version, creates the immutable tag and GitHub Release, and opens a `master` to `develop` backport pull request. Production publication failures leave the tag in place and require a new corrective version.
 
-Maintainers can increment the plugin manifest without creating a commit, tag, or release automatically:
+## Prepare a version
+
+Maintainers can update the authoritative plugin version without creating a commit, tag, or release automatically:
 
 ```bash
 python scripts/bump_version.py patch
 python scripts/bump_version.py minor
 python scripts/bump_version.py major
-```
-
-An explicit stable version and a dry run are also supported:
-
-```bash
-python scripts/bump_version.py 1.0.0
+python scripts/bump_version.py 1.2.3
 python scripts/bump_version.py patch --dry-run
 ```
 
-Commit the updated manifest through the normal `develop` pull-request flow. The release workflow remains responsible for creating the tag and GitHub Release after the approved `develop` to `master` merge.
+The release workflow creates the tag and GitHub Release only after the version change is approved and merged through the normal release pull request.
 
 ## Portability
 
-Asgard adapts to available agent slots, version-control systems, isolation mechanisms, and publication workflows. Git branches, worktrees, pull requests, and merges are optional. Repository instructions and user permissions always take precedence.
+Asgard adapts to the available agent capacity, version-control system, isolation mechanism, repository policy, and publication workflow. GitHub-specific mechanics are used only when the repository and authorized tooling support them.
 
 ## License
 
-MIT
+[MIT](./LICENSE)
