@@ -23,6 +23,10 @@ Asgard is a multi-agent software delivery workflow for Codex. It separates imple
 </p>
 
 <p align="center">
+  <img src="./assets/forseti.png" alt="Forseti, Asgard delivery governance specialist" width="560">
+</p>
+
+<p align="center">
   <img src="./assets/ymir.png" alt="Ymir, Asgard infrastructure specialist" width="560">
 </p>
 
