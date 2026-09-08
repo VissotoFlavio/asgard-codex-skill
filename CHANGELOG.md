@@ -8,6 +8,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [0.7.0] - 2026-09-08
 
+Release tracking: [issue #40](https://github.com/VissotoFlavio/asgard-codex-skill/issues/40), [PR #41](https://github.com/VissotoFlavio/asgard-codex-skill/pull/41).
+
 ### Added
 
 - Add Forseti as the delivery-governance specialist, with independent issue-to-release traceability gates and official artwork ([issue #38](https://github.com/VissotoFlavio/asgard-codex-skill/issues/38), [PR #39](https://github.com/VissotoFlavio/asgard-codex-skill/pull/39)).
