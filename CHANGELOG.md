@@ -8,7 +8,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [0.7.1] - 2026-09-08
 
-Release tracking: [issue #46](https://github.com/VissotoFlavio/asgard-codex-skill/issues/46).
+Release tracking: [issue #46](https://github.com/VissotoFlavio/asgard-codex-skill/issues/46), [PR #49](https://github.com/VissotoFlavio/asgard-codex-skill/pull/49).
 
 ### Added
 
