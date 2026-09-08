@@ -97,6 +97,7 @@ Then start a new task and invoke `$asgard`.
 
 - `master`: stable, versioned releases intended for installation.
 - `develop`: upcoming changes that may not yet be released.
+- [Changelog](./CHANGELOG.md): issue- and pull-request-linked delivery history.
 - [GitHub Releases](https://github.com/VissotoFlavio/asgard-codex-skill/releases): published versions and release history.
 
 ## Prepare a release version
