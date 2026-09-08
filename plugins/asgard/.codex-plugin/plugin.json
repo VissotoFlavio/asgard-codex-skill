@@ -28,6 +28,7 @@
     "logo": "./assets/logo_asgard.png",
     "screenshots": [
       "./assets/asgard-agents.png",
+      "./assets/asgard-agents_cards.png",
       "./assets/forseti.png",
       "./assets/hermod.png"
     ]
