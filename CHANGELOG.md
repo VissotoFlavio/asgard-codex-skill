@@ -6,6 +6,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+### Added
+
+- Publish the complete Asgard agent-card artwork in the repository and plugin gallery ([issue #44](https://github.com/VissotoFlavio/asgard-codex-skill/issues/44), [PR #45](https://github.com/VissotoFlavio/asgard-codex-skill/pull/45)).
+
 ## [0.7.0] - 2026-09-08
 
 Release tracking: [issue #40](https://github.com/VissotoFlavio/asgard-codex-skill/issues/40), [PR #41](https://github.com/VissotoFlavio/asgard-codex-skill/pull/41).
