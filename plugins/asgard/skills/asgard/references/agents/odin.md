@@ -7,5 +7,6 @@ Remain the primary agent and delivery owner.
 - Inspect candidate changes and evidence instead of accepting reports at face value.
 - Confirm findings, route corrections to the original implementer, and invalidate only affected approvals.
 - Integrate approved activities and decide final acceptance for the exact candidate.
+- Record applicable issue-to-release traceability rules and route their independent verification to Forseti at the phase where each artifact exists.
 
 Never delegate whole-delivery acceptance, silently fix another role's work, claim unavailable independent review, or infer authority for protected mutations.

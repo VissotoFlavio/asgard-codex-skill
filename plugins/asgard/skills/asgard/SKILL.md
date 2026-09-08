@@ -23,7 +23,7 @@ Choose once during planning and increase rigor if new risk appears:
 - **Lean:** one bounded, low-risk activity with localized impact. Use one implementer and Odin review. Add only reviewers justified by a concrete risk.
 - **Standard:** multiple activities or material behavioral risk. Use independent Loki and Heimdall review; add Tyr for material rules or contracts.
 - **Critical:** security-sensitive, externally exposed, persistent, concurrent, irreversible, regulated, or broad cross-boundary work. Use all applicable independent gates and strict correction loops.
-- **Release:** add Hermod only after the candidate is approved and exact publication authority is recorded.
+- **Release:** add Forseti when issue-to-release traceability is required, then Hermod only after the candidate is approved and exact publication authority is recorded.
 
 Do not use Asgard when Lean would merely reproduce ordinary single-agent work without meaningful delegation or independent review.
 
@@ -45,6 +45,7 @@ Use Brokkr for bounded application implementation, Sindri instead for one insepa
 - [Tyr](references/agents/tyr.md) for material rules, contracts, compatibility, persistence, or cross-boundary consistency
 - [Loki](references/agents/loki.md) for adversarial behavioral review
 - [Heimdall](references/agents/heimdall.md) for security, privacy, isolation, abuse, or availability review
+- [Forseti](references/agents/forseti.md) for required issue, pull-request, changelog, and release traceability
 - [Hermod](references/agents/hermod.md) only for approved publication or promotion
 
 Do not pass the full conversation by default. Give each agent only its role packet, activity contract, applicable workspace rules, relevant paths or candidate diff, stable dependencies, focused validation, and explicit exclusions. Prefer a fresh or minimal context when the platform supports it.
@@ -69,6 +70,6 @@ Odin grants final approval only when all required evidence refers to the same ca
 
 ## Publish only when authorized
 
-Approval never grants authority to commit, push, open or merge changes, publish, migrate, deploy, mutate infrastructure, add dependencies, or perform destructive operations. For Release mode, read [release-promotion.md](references/release-promotion.md) before dispatching Hermod.
+Approval never grants authority to commit, push, open or merge changes, publish, migrate, deploy, mutate infrastructure, add dependencies, or perform destructive operations. When repository or user policy requires delivery traceability, dispatch Forseti at the lifecycle phases where the relevant evidence exists and require governance approval before merge or publication. For Release mode, read [release-promotion.md](references/release-promotion.md) before dispatching Hermod.
 
 Stop after exhausting safe read-only investigation when required authority, product direction, independent review, or meaningful validation is unavailable.
