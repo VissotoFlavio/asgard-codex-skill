@@ -16,6 +16,7 @@ Asgard is a multi-agent software delivery workflow for Codex. It separates imple
 - **Tyr** validates rules, contracts, compatibility, and consistency.
 - **Loki** searches for edge cases and tries to break the candidate.
 - **Heimdall** performs independent security review and reports every finding.
+- **Forseti** verifies issue, pull-request, changelog, and release traceability without accepting or publishing the delivery.
 
 <p align="center">
   <img src="./assets/asgard-agents.png" alt="Asgard agents, responsibilities, and delivery flow" width="720">
@@ -34,6 +35,7 @@ Odin plans and defines the DoD
   -> Tyr validates contracts when applicable
   -> Loki tests adversarially
   -> Heimdall reviews security
+  -> Forseti validates required delivery traceability
   -> Odin grants final approval
 
 Any finding -> Odin -> original implementer -> affected reviews

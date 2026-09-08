@@ -56,7 +56,7 @@ class ContainedPathTests(unittest.TestCase):
 
     def test_specialist_packets_are_independently_loadable(self) -> None:
         agents = VALIDATOR.SKILL_ROOT / "references" / "agents"
-        expected = {"odin", "brokkr", "sindri", "ymir", "mimir", "tyr", "loki", "heimdall", "hermod"}
+        expected = {"odin", "brokkr", "sindri", "ymir", "mimir", "tyr", "loki", "heimdall", "forseti", "hermod"}
         self.assertEqual({path.stem for path in agents.glob("*.md")}, expected)
         for role in expected:
             packet = (agents / f"{role}.md").read_text(encoding="utf-8")
@@ -99,6 +99,19 @@ class ContainedPathTests(unittest.TestCase):
 
 
 class WorkflowGovernanceTests(unittest.TestCase):
+    def test_forseti_governs_traceability_without_accepting_or_mutating(self) -> None:
+        text = (VALIDATOR.SKILL_ROOT / "references" / "agents" / "forseti.md").read_text(encoding="utf-8")
+        self.assertIn("one bounded, authoritative issue", text)
+        self.assertIn("changelog entry", text)
+        self.assertIn("release notes enumerate the included issues and pull requests", text)
+        self.assertIn("Forseti is read-only", text)
+        self.assertIn("never implies technical acceptance", text)
+
+        skill = (VALIDATOR.SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
+        self.assertIn("references/agents/forseti.md", skill)
+        release = (VALIDATOR.SKILL_ROOT / "references" / "release-promotion.md").read_text(encoding="utf-8")
+        self.assertIn("RELEASE_TRACEABILITY_APPROVED", release)
+
     def test_release_version_is_determined_without_user_confirmation(self) -> None:
         text = (VALIDATOR.SKILL_ROOT / "references" / "release-promotion.md").read_text(encoding="utf-8")
         self.assertIn("-> VERSION_DETERMINED", text)

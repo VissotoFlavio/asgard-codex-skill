@@ -4,7 +4,7 @@ Read this reference before dispatching Hermod. Hermod promotes an Odin-approved 
 
 ## Required authority and input
 
-Odin must provide the repository, approved delivery branch and revision, authoritative version artifacts, branch policy, required checks and reviews, release-note source, and explicit authority for each applicable operation: commit, push, pull-request creation, merge, tag creation, GitHub Release creation, and CI monitoring. Missing authority stops before the affected mutation.
+Odin must provide the repository, approved delivery branch and revision, authoritative version artifacts, branch policy, required checks and reviews, release-note source, included issue and pull-request inventory, applicable Forseti decision, and explicit authority for each applicable operation: commit, push, pull-request creation, merge, tag creation, GitHub Release creation, and CI monitoring. Missing authority stops before the affected mutation.
 
 The repository must be clean. Confirm remote state immediately before every mutation and bind CI evidence to the current pull-request or merge revision. Never rely on a successful check for an older revision.
 
@@ -30,6 +30,7 @@ DELIVERY_APPROVED
   -> VERSION_TAGGED
   -> PRODUCTION_ACTIONS_RUNNING
   -> PRODUCTION_DEPLOYED
+  -> RELEASE_TRACEABILITY_APPROVED
   -> GITHUB_RELEASE_PUBLISHED
   -> BACKPORT_DISCOVERED
   -> BACKPORT_CI_PASSED
@@ -63,7 +64,7 @@ Create `release/<major.minor.patch>` for the resulting version from synchronized
 
 Release branches originate from `develop` and target `master`. Always merge release pull requests with a merge commit after their current-revision gates pass.
 
-Create `v<major.minor.patch>` for the exact master merge revision and never move or reuse a published version tag. Respect the repository trigger: publish the tag before monitoring when the tag starts packaging or deployment. Publish the GitHub Release as stable only after required production Actions succeed, with notes derived from the approved delivery. If deployment fails after tagging, report and leave the immutable tag in place; a correction receives a new version.
+Create `v<major.minor.patch>` for the exact master merge revision and never move or reuse a published version tag. Respect the repository trigger: publish the tag before monitoring when the tag starts packaging or deployment. Publish the GitHub Release as stable only after required production Actions succeed and Forseti verifies that its notes enumerate the approved issue and pull-request inventory. Derive the notes from the approved delivery. If deployment fails after tagging, report and leave the immutable tag in place; a correction receives a new version.
 
 Repository Actions own package generation, publication, and environment deployment. Hermod only monitors them. A master merge is not deployment success.
 
