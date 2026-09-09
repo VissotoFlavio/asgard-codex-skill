@@ -33,7 +33,7 @@ Do not use it for routine single-file edits or ordinary work that one agent can 
 | **Loki** | Searches adversarially for behavioral gaps and edge cases. |
 | **Bragi** | Reviews completed code for human readability and maintainability using context-sensitive SOLID, DRY, KISS, YAGNI, and Tell, Don't Ask. |
 | **Heimdall** | Independently reviews security, privacy, isolation, abuse, and availability risks. |
-| **Forseti** | Verifies issue, pull-request, changelog, and release traceability without accepting or publishing the delivery. |
+| **Forseti** | Enforces issue, pull-request, changelog, and release traceability, including the narrowly authorized automatic `Closes #<issue>` repair. |
 | **Hermod** | Promotes an approved revision through explicitly authorized version-control and release operations. |
 
 Specialists receive task-local context rather than the entire conversation. Their reports and passing tests are evidence; Odin still inspects the candidate and makes the acceptance decision.
@@ -89,13 +89,13 @@ Approval never grants authority to commit, push, open or merge pull requests, pu
 When the repository requires traceability, Forseti checks the evidence available at each lifecycle phase:
 
 1. one bounded issue defines new delivery work and its acceptance criteria when repository policy requires it;
-2. the delivery branch and pull request identify that issue;
+2. the delivery branch and pull request identify that issue with a provider-recognized `Closes #<issue>` relationship;
 3. required labels, templates, reviews, and checks are present;
 4. the changelog links the issue and pull request;
 5. the final published release description explicitly enumerates every included delivery issue and pull request;
 6. operational release and backport pull requests do not require separate issues unless repository policy explicitly overrides that exemption.
 
-Missing evidence that cannot exist yet is reported as `PENDING`; a violated invariant is `CHANGES_REQUIRED`. Forseti is read-only and its approval covers governance only.
+When an eligible delivery PR lacks its closing reference, Forseti appends a standalone `Closes #<issue>` line automatically if exactly one open, same-repository issue is authoritative and PR edit authority is already recorded. It preserves the existing body, performs at most one edit, and verifies the provider-recognized relationship afterward. Ambiguous or conflicting issue candidates require correction instead of guessing. Missing evidence that cannot exist yet is `PENDING`; a violated invariant is `CHANGES_REQUIRED`. Forseti's approval covers governance only.
 
 ## Install the plugin
 

@@ -71,6 +71,6 @@ Odin grants final approval only when all required evidence refers to the same ca
 
 ## Publish only when authorized
 
-Approval never grants authority to commit, push, open or merge changes, publish, migrate, deploy, mutate infrastructure, add dependencies, or perform destructive operations. When repository or user policy requires delivery traceability, dispatch Forseti at the lifecycle phases where the relevant evidence exists and require governance approval before merge or publication. For Release mode, read [release-promotion.md](references/release-promotion.md) before dispatching Hermod.
+Approval never grants authority to commit, push, open or merge changes, publish, migrate, deploy, mutate infrastructure, add dependencies, or perform destructive operations. When repository or user policy requires delivery traceability, dispatch Forseti at the lifecycle phases where the relevant evidence exists. Recorded authority to create or edit an eligible delivery pull request permits Forseti's single idempotent repair that appends its unambiguous `Closes #<issue>` reference; it grants no other mutation. Require governance approval before merge or publication. For Release mode, read [release-promotion.md](references/release-promotion.md) before dispatching Hermod.
 
 Stop after exhausting safe read-only investigation when required authority, product direction, independent review, or meaningful validation is unavailable.
