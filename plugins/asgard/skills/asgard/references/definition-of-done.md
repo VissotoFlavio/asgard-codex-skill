@@ -19,6 +19,7 @@ Implementer: Brokkr | Sindri | Ymir
 Mode: Lean | Standard | Critical | Release
 Required reviewers and rationale:
 Delivery governance and traceability: Forseti | not applicable
+Authoritative delivery issue and pull-request edit authority:
 Excluded or unauthorized operations:
 ```
 
