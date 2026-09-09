@@ -6,6 +6,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+### Added
+
+- Add Bragi as the independent final-candidate reviewer for human-readable, maintainable code, with context-sensitive SOLID, DRY, KISS, YAGNI, and Tell, Don't Ask guidance and official artwork ([issue #56](https://github.com/VissotoFlavio/asgard-codex-skill/issues/56), [PR #57](https://github.com/VissotoFlavio/asgard-codex-skill/pull/57)).
+
 ## [0.7.2] - 2026-09-08
 
 Release PR: [#54](https://github.com/VissotoFlavio/asgard-codex-skill/pull/54).

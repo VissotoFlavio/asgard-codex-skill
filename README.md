@@ -38,6 +38,16 @@ Do not use it for routine single-file edits or ordinary work that one agent can 
 
 Specialists receive task-local context rather than the entire conversation. Their reports and passing tests are evidence; Odin still inspects the candidate and makes the acceptance decision.
 
+### Bragi: final-candidate code review
+
+<p align="center">
+  <img src="./assets/bragi.png" alt="Bragi, Asgard's reviewer of code intent, readability, and maintainability" width="420">
+</p>
+
+Bragi reviews code only after the implementer reports `IMPLEMENTER_COMPLETE`, against the stable final candidate rather than each file as it changes. This keeps review feedback consolidated and avoids restarting services, builds, or broad test suites during the review.
+
+The review is read-only and applies SOLID, DRY, KISS, YAGNI, and Tell, Don't Ask as context-sensitive design lenses. Bragi distinguishes maintainability risks from stylistic preferences, reports concrete evidence and impact, and sends confirmed findings back through Odin for one bounded correction pass by the original implementer.
+
 ## Delivery modes
 
 - **Lean:** one bounded, low-risk activity with an implementer and Odin review. Add a specialist gate only for an identified risk, including Bragi when maintainability is a stated concern.
