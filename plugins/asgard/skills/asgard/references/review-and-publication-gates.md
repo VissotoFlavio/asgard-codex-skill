@@ -6,12 +6,14 @@ After the implementer stops editing, bind every review to the same immutable dif
 
 Mode determines the minimum gate:
 
-- **Lean:** Odin; add Tyr, Loki, or Heimdall only for an identified material risk.
-- **Standard:** Odin, Loki, and Heimdall; add Tyr for material rules, contracts, compatibility, persistence, or cross-boundary consistency.
-- **Critical:** Odin plus every applicable independent specialist, with explicit negative and security evidence.
+- **Lean:** Odin; add Tyr, Loki, Bragi, or Heimdall only for an identified material risk.
+- **Standard:** Odin, Loki, and Heimdall; add Tyr for material rules, contracts, compatibility, persistence, or cross-boundary consistency, and Bragi when production code is added or structurally changed.
+- **Critical:** Odin plus every applicable independent specialist, with explicit negative and security evidence; Bragi is required for production-code candidates.
 - **Release:** the selected delivery gate, applicable Forseti traceability approval, then Hermod only after final approval and mutation authority.
 
 Independent reviewers remain read-only and must not share the implementer's context as their only evidence. Disclose limitations when genuine independence is unavailable.
+
+Dispatch Bragi only after `IMPLEMENTER_COMPLETE` against the stable candidate, never after each edited file. Bragi may consume existing static-analysis evidence but does not start services or rerun broad validations. Its blocking findings require concrete comprehension or maintenance impact; preferences remain non-blocking recommendations.
 
 ## Correct proportionally
 

@@ -56,7 +56,7 @@ class ContainedPathTests(unittest.TestCase):
 
     def test_specialist_packets_are_independently_loadable(self) -> None:
         agents = VALIDATOR.SKILL_ROOT / "references" / "agents"
-        expected = {"odin", "brokkr", "sindri", "ymir", "mimir", "tyr", "loki", "heimdall", "forseti", "hermod"}
+        expected = {"odin", "brokkr", "sindri", "ymir", "mimir", "tyr", "loki", "bragi", "heimdall", "forseti", "hermod"}
         self.assertEqual({path.stem for path in agents.glob("*.md")}, expected)
         for role in expected:
             packet = (agents / f"{role}.md").read_text(encoding="utf-8")
@@ -99,6 +99,19 @@ class ContainedPathTests(unittest.TestCase):
 
 
 class WorkflowGovernanceTests(unittest.TestCase):
+    def test_bragi_reviews_only_completed_code_quality_candidate(self) -> None:
+        bragi = (VALIDATOR.SKILL_ROOT / "references" / "agents" / "bragi.md").read_text(encoding="utf-8")
+        self.assertIn("after `IMPLEMENTER_COMPLETE`", bragi)
+        self.assertIn("SOLID, DRY, KISS, YAGNI, and Tell, Don't Ask", bragi)
+        self.assertIn("style taste alone cannot reject", bragi)
+        self.assertIn("do not review intermediate files", bragi)
+
+        skill = (VALIDATOR.SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
+        self.assertIn("references/agents/bragi.md", skill)
+        gates = (VALIDATOR.SKILL_ROOT / "references" / "review-and-publication-gates.md").read_text(encoding="utf-8")
+        self.assertIn("Dispatch Bragi only after `IMPLEMENTER_COMPLETE`", gates)
+        self.assertIn("does not start services or rerun broad validations", gates)
+
     def test_forseti_governs_traceability_without_accepting_or_mutating(self) -> None:
         text = (VALIDATOR.SKILL_ROOT / "references" / "agents" / "forseti.md").read_text(encoding="utf-8")
         self.assertIn("one bounded, authoritative issue", text)
