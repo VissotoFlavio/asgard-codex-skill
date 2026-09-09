@@ -8,6 +8,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [0.8.1] - 2026-09-09
 
+Release PR: [#62](https://github.com/VissotoFlavio/asgard-codex-skill/pull/62).
+
 ### Changed
 
 - Make Forseti automatically add and verify `Closes #<issue>` on eligible delivery pull requests when the authoritative issue is unambiguous and PR edit authority is recorded ([issue #60](https://github.com/VissotoFlavio/asgard-codex-skill/issues/60), [PR #61](https://github.com/VissotoFlavio/asgard-codex-skill/pull/61)).
