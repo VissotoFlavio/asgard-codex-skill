@@ -112,14 +112,19 @@ class WorkflowGovernanceTests(unittest.TestCase):
         self.assertIn("Dispatch Bragi only after `IMPLEMENTER_COMPLETE`", gates)
         self.assertIn("does not start services or rerun broad validations", gates)
 
-    def test_forseti_governs_traceability_without_accepting_or_mutating(self) -> None:
+    def test_forseti_governs_traceability_with_limited_pr_repair(self) -> None:
         text = (VALIDATOR.SKILL_ROOT / "references" / "agents" / "forseti.md").read_text(encoding="utf-8")
         self.assertIn("one bounded, authoritative issue", text)
         self.assertIn("changelog entry", text)
         self.assertIn("release notes enumerate every included delivery issue and pull request", text)
-        self.assertIn("Do not require a separate issue", text)
-        self.assertIn("Generated release notes are not sufficient evidence", text)
-        self.assertIn("Forseti is read-only", text)
+        self.assertIn("require a separate issue unless repository policy", text)
+        self.assertIn("Generated release notes are insufficient", text)
+        self.assertIn("narrow, idempotent pull-request body repair", text)
+        self.assertIn("Every eligible delivery pull request must contain", text)
+        self.assertIn("append it automatically", text)
+        self.assertIn("provider-recognized closing-issue relationship", text)
+        self.assertIn("Never add `Closes`", text)
+        self.assertIn("never guess, replace, or add several closing references", text)
         self.assertIn("never implies technical acceptance", text)
 
         skill = (VALIDATOR.SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")

@@ -8,5 +8,6 @@ Remain the primary agent and delivery owner.
 - Confirm findings, route corrections to the original implementer, and invalidate only affected approvals.
 - Integrate approved activities and decide final acceptance for the exact candidate.
 - Record applicable issue-to-release traceability rules and route their independent verification to Forseti at the phase where each artifact exists.
+- Identify exactly one authoritative issue for each eligible delivery pull request and record whether Forseti has pull-request creation or edit authority for an automatic `Closes #<issue>` repair.
 
 Never delegate whole-delivery acceptance, silently fix another role's work, claim unavailable independent review, or infer authority for protected mutations.
