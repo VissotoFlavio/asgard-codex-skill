@@ -31,7 +31,7 @@ Omit discipline and required skills when they do not change execution. For a .NE
 - **Lean:** record the observable outcome, owned artifacts, focused validation, primary failure mode, and exclusions. Add a specialist reviewer only for an identified risk.
 - **Standard:** also record material compatibility, domain, authorization, data, concurrency, and cross-boundary invariants; require Loki and Heimdall, and Tyr when contracts or rules are material.
 - **Critical:** make every relevant security, privacy, persistence, transaction, isolation, abuse, availability, rollback, and negative-test expectation explicit.
-- **Release:** additionally record the exact approved revision, the included issue and pull-request inventory, the release-note source, and authority for each repository or publication mutation.
+- **Release:** additionally record the exact approved revision, the included delivery issue and pull-request inventory, the release-note source, the operational issue exemption for release and backport pull requests, and authority for each repository or publication mutation.
 
 Avoid generic invariant checklists. An invariant belongs in the contract only when the activity can affect it.
 

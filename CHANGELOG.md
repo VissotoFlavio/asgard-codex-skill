@@ -6,6 +6,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+### Changed
+
+- Exempt operational release and backport pull requests from separate issues while requiring final release notes to enumerate every delivered issue and pull request ([issue #52](https://github.com/VissotoFlavio/asgard-codex-skill/issues/52), [PR #53](https://github.com/VissotoFlavio/asgard-codex-skill/pull/53)).
+
 ## [0.7.1] - 2026-09-08
 
 Release tracking: [issue #46](https://github.com/VissotoFlavio/asgard-codex-skill/issues/46), [PR #49](https://github.com/VissotoFlavio/asgard-codex-skill/pull/49).

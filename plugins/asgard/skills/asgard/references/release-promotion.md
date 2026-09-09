@@ -4,7 +4,7 @@ Read this reference before dispatching Hermod. Hermod promotes an Odin-approved 
 
 ## Required authority and input
 
-Odin must provide the repository, approved delivery branch and revision, authoritative version artifacts, branch policy, required checks and reviews, release-note source, included issue and pull-request inventory, applicable Forseti decision, and explicit authority for each applicable operation: commit, push, pull-request creation, merge, tag creation, GitHub Release creation, and CI monitoring. Missing authority stops before the affected mutation.
+Odin must provide the repository, approved delivery branch and revision, authoritative version artifacts, branch policy, required checks and reviews, release-note source, included delivery issue and pull-request inventory, applicable Forseti decision, and explicit authority for each applicable operation: commit, push, pull-request creation, merge, tag creation, GitHub Release creation, and CI monitoring. Release and backport pull requests require no separate issue unless repository policy explicitly says otherwise. Missing authority stops before the affected mutation.
 
 The repository must be clean. Confirm remote state immediately before every mutation and bind CI evidence to the current pull-request or merge revision. Never rely on a successful check for an older revision.
 
@@ -30,8 +30,9 @@ DELIVERY_APPROVED
   -> VERSION_TAGGED
   -> PRODUCTION_ACTIONS_RUNNING
   -> PRODUCTION_DEPLOYED
-  -> RELEASE_TRACEABILITY_APPROVED
   -> GITHUB_RELEASE_PUBLISHED
+  -> RELEASE_NOTES_RECONCILED
+  -> RELEASE_TRACEABILITY_APPROVED
   -> BACKPORT_DISCOVERED
   -> BACKPORT_CI_PASSED
   -> BACKPORT_MERGED_TO_DEVELOP
@@ -64,13 +65,13 @@ Create `release/<major.minor.patch>` for the resulting version from synchronized
 
 Release branches originate from `develop` and target `master`. Always merge release pull requests with a merge commit after their current-revision gates pass.
 
-Create `v<major.minor.patch>` for the exact master merge revision and never move or reuse a published version tag. Respect the repository trigger: publish the tag before monitoring when the tag starts packaging or deployment. Publish the GitHub Release as stable only after required production Actions succeed and Forseti verifies that its notes enumerate the approved issue and pull-request inventory. Derive the notes from the approved delivery. If deployment fails after tagging, report and leave the immutable tag in place; a correction receives a new version.
+Create `v<major.minor.patch>` for the exact master merge revision and never move or reuse a published version tag. Respect the repository trigger: publish the tag before monitoring when the tag starts packaging or deployment. Derive GitHub Release notes from the approved delivery inventory. After required production Actions succeed and the release exists, create or edit its description so every included delivery issue and pull request is explicit, then re-read it and obtain Forseti approval. Automatically generated notes alone do not satisfy this gate. If deployment fails after tagging, report and leave the immutable tag in place; a correction receives a new version.
 
 Repository Actions own package generation, publication, and environment deployment. Hermod only monitors them. A master merge is not deployment success.
 
 ## CI-created backport
 
-After production publication, discover the pull request created by CI directly from `master` to `develop` using reliable workflow output, version, revision, and repository metadata. Confirm both branches belong to the same repository, the head is the published `master` revision, and the changes return production state without unrelated divergence. Multiple plausible matches or a missing backport after the configured monitoring window block promotion.
+After production publication, discover the pull request created by CI directly from `master` to `develop` using reliable workflow output, version, revision, and repository metadata. The backport does not require its own issue unless repository policy explicitly overrides this rule. Confirm both branches belong to the same repository, the head is the published `master` revision, and the changes return production state without unrelated divergence. Multiple plausible matches or a missing backport after the configured monitoring window block promotion.
 
 Apply the ordinary `develop` merge rule, normally squash, after all backport gates pass. Synchronize local `develop` and verify its application version equals production before declaring `RELEASE_COMPLETE`.
 

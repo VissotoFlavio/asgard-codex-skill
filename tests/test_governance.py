@@ -103,7 +103,9 @@ class WorkflowGovernanceTests(unittest.TestCase):
         text = (VALIDATOR.SKILL_ROOT / "references" / "agents" / "forseti.md").read_text(encoding="utf-8")
         self.assertIn("one bounded, authoritative issue", text)
         self.assertIn("changelog entry", text)
-        self.assertIn("release notes enumerate the included issues and pull requests", text)
+        self.assertIn("release notes enumerate every included delivery issue and pull request", text)
+        self.assertIn("Do not require a separate issue", text)
+        self.assertIn("Generated release notes are not sufficient evidence", text)
         self.assertIn("Forseti is read-only", text)
         self.assertIn("never implies technical acceptance", text)
 
@@ -111,6 +113,9 @@ class WorkflowGovernanceTests(unittest.TestCase):
         self.assertIn("references/agents/forseti.md", skill)
         release = (VALIDATOR.SKILL_ROOT / "references" / "release-promotion.md").read_text(encoding="utf-8")
         self.assertIn("RELEASE_TRACEABILITY_APPROVED", release)
+        self.assertIn("RELEASE_NOTES_RECONCILED", release)
+        self.assertIn("Release and backport pull requests require no separate issue", release)
+        self.assertIn("Automatically generated notes alone do not satisfy this gate", release)
 
     def test_release_version_is_determined_without_user_confirmation(self) -> None:
         text = (VALIDATOR.SKILL_ROOT / "references" / "release-promotion.md").read_text(encoding="utf-8")
