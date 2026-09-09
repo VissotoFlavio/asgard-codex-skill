@@ -20,9 +20,9 @@ Read [Odin's packet](references/agents/odin.md) only when a separate orchestrati
 
 Choose once during planning and increase rigor if new risk appears:
 
-- **Lean:** one bounded, low-risk activity with localized impact. Use one implementer and Odin review. Add only reviewers justified by a concrete risk.
-- **Standard:** multiple activities or material behavioral risk. Use independent Loki and Heimdall review; add Tyr for material rules or contracts.
-- **Critical:** security-sensitive, externally exposed, persistent, concurrent, irreversible, regulated, or broad cross-boundary work. Use all applicable independent gates and strict correction loops.
+- **Lean:** one bounded, low-risk activity with localized impact. Use one implementer and Odin review. Add only reviewers justified by a concrete risk, including Bragi when maintainability is a stated concern.
+- **Standard:** multiple activities or material behavioral risk. Use independent Loki and Heimdall review; add Tyr for material rules or contracts, and Bragi when the candidate adds production code or changes its structure.
+- **Critical:** security-sensitive, externally exposed, persistent, concurrent, irreversible, regulated, or broad cross-boundary work. Use all applicable independent gates and strict correction loops; require Bragi for production-code candidates.
 - **Release:** add Forseti when issue-to-release traceability is required, then Hermod only after the candidate is approved and exact publication authority is recorded.
 
 Do not use Asgard when Lean would merely reproduce ordinary single-agent work without meaningful delegation or independent review.
@@ -44,6 +44,7 @@ Use Brokkr for bounded application implementation, Sindri instead for one insepa
 - [Mimir](references/agents/mimir.md) when investigation is required
 - [Tyr](references/agents/tyr.md) for material rules, contracts, compatibility, persistence, or cross-boundary consistency
 - [Loki](references/agents/loki.md) for adversarial behavioral review
+- [Bragi](references/agents/bragi.md) for human-readable, maintainable code and context-sensitive SOLID, DRY, KISS, YAGNI, or Tell, Don't Ask review
 - [Heimdall](references/agents/heimdall.md) for security, privacy, isolation, abuse, or availability review
 - [Forseti](references/agents/forseti.md) for required issue, pull-request, changelog, and release traceability
 - [Hermod](references/agents/hermod.md) only for approved publication or promotion
@@ -60,7 +61,7 @@ Run an earlier test only when it is needed to reproduce the original failure, va
 
 ## Review and correct efficiently
 
-The implementer stops at `IMPLEMENTER_COMPLETE`. Odin and required independent reviewers inspect the same immutable candidate. Run them concurrently when the candidate is stable and capacity permits; let Odin review first when rapid rejection is likely to avoid wasted reviews.
+The implementer stops at `IMPLEMENTER_COMPLETE`. Only then do Odin and required independent reviewers inspect the same immutable candidate; never dispatch Bragi against intermediate per-file edits. Run reviewers concurrently when the candidate is stable and capacity permits; let Odin review first when rapid rejection is likely to avoid wasted reviews.
 
 Read [review-and-publication-gates.md](references/review-and-publication-gates.md) before accepting a candidate. Route confirmed findings to the original implementer with exact scope and required evidence. Group compatible findings into one bounded correction pass, then rerun only validations and reviews whose evidence or invariant changed. Material changes invalidate affected approvals, not unrelated ones.
 

@@ -28,14 +28,14 @@ Omit discipline and required skills when they do not change execution. For a .NE
 
 ## Scale detail to risk
 
-- **Lean:** record the observable outcome, owned artifacts, focused validation, primary failure mode, and exclusions. Add a specialist reviewer only for an identified risk.
-- **Standard:** also record material compatibility, domain, authorization, data, concurrency, and cross-boundary invariants; require Loki and Heimdall, and Tyr when contracts or rules are material.
-- **Critical:** make every relevant security, privacy, persistence, transaction, isolation, abuse, availability, rollback, and negative-test expectation explicit.
+- **Lean:** record the observable outcome, owned artifacts, focused validation, primary failure mode, and exclusions. Add a specialist reviewer only for an identified risk; use Bragi when maintainability is an explicit acceptance concern.
+- **Standard:** also record material compatibility, domain, authorization, data, concurrency, and cross-boundary invariants; require Loki and Heimdall, Tyr when contracts or rules are material, and Bragi when production code is added or structurally changed.
+- **Critical:** make every relevant security, privacy, persistence, transaction, isolation, abuse, availability, rollback, and negative-test expectation explicit; require Bragi for production-code candidates.
 - **Release:** additionally record the exact approved revision, the included delivery issue and pull-request inventory, the release-note source, the operational issue exemption for release and backport pull requests, and authority for each repository or publication mutation.
 
 Avoid generic invariant checklists. An invariant belongs in the contract only when the activity can affect it.
 
-Schedule executable validation once at the end of implementation. If an earlier run is required to reproduce a defect or test a high-risk assumption, record that exception in the contract.
+Schedule executable validation once at the end of implementation. If an earlier run is required to reproduce a defect or test a high-risk assumption, record that exception in the contract. Bragi reviews only the completed immutable candidate and does not trigger per-file services, builds, or broad test suites.
 
 ## Completion evidence
 

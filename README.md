@@ -31,6 +31,7 @@ Do not use it for routine single-file edits or ordinary work that one agent can 
 | **Mimir** | Resolves a stated code, documentation, or technical uncertainty. |
 | **Tyr** | Independently validates material rules, contracts, compatibility, and consistency. |
 | **Loki** | Searches adversarially for behavioral gaps and edge cases. |
+| **Bragi** | Reviews completed code for human readability and maintainability using context-sensitive SOLID, DRY, KISS, YAGNI, and Tell, Don't Ask. |
 | **Heimdall** | Independently reviews security, privacy, isolation, abuse, and availability risks. |
 | **Forseti** | Verifies issue, pull-request, changelog, and release traceability without accepting or publishing the delivery. |
 | **Hermod** | Promotes an approved revision through explicitly authorized version-control and release operations. |
@@ -39,8 +40,8 @@ Specialists receive task-local context rather than the entire conversation. Thei
 
 ## Delivery modes
 
-- **Lean:** one bounded, low-risk activity with an implementer and Odin review. Add a specialist gate only for an identified risk.
-- **Standard:** multiple activities or material behavioral risk, with independent Loki and Heimdall review and Tyr when contracts or rules are affected.
+- **Lean:** one bounded, low-risk activity with an implementer and Odin review. Add a specialist gate only for an identified risk, including Bragi when maintainability is a stated concern.
+- **Standard:** multiple activities or material behavioral risk, with independent Loki and Heimdall review, Tyr when contracts or rules are affected, and Bragi when production code is added or structurally changed.
 - **Critical:** security-sensitive, persistent, concurrent, irreversible, regulated, or broadly exposed work, using every applicable independent gate.
 - **Release:** an approved candidate promoted by Hermod after required Forseti traceability and explicit mutation authority are recorded.
 
@@ -54,6 +55,7 @@ Odin defines the execution graph and Definition of Done
   -> Odin reviews the exact candidate
   -> Tyr validates material contracts when applicable
   -> Loki tests adversarially
+  -> Bragi reviews the completed candidate for readability and maintainability when applicable
   -> Heimdall reviews security
   -> Forseti validates required delivery traceability
   -> Odin grants final approval
