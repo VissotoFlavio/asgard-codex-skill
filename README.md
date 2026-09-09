@@ -76,12 +76,12 @@ Approval never grants authority to commit, push, open or merge pull requests, pu
 
 When the repository requires traceability, Forseti checks the evidence available at each lifecycle phase:
 
-1. one bounded issue defines the objective and acceptance criteria;
+1. one bounded issue defines new delivery work and its acceptance criteria when repository policy requires it;
 2. the delivery branch and pull request identify that issue;
 3. required labels, templates, reviews, and checks are present;
 4. the changelog links the issue and pull request;
-5. release notes enumerate every included issue and pull request;
-6. release and backport pull requests have their own tracking issues when untracked pull requests are forbidden.
+5. the final published release description explicitly enumerates every included delivery issue and pull request;
+6. operational release and backport pull requests do not require separate issues unless repository policy explicitly overrides that exemption.
 
 Missing evidence that cannot exist yet is reported as `PENDING`; a violated invariant is `CHANGES_REQUIRED`. Forseti is read-only and its approval covers governance only.
 
@@ -139,7 +139,7 @@ Start a new task after installation and invoke `$asgard`.
 - [CHANGELOG.md](./CHANGELOG.md) records deliveries with issue and pull-request links.
 - [GitHub Releases](https://github.com/VissotoFlavio/asgard-codex-skill/releases) contains stable release notes.
 
-After an approved release merge reaches `master`, the repository workflow validates the version, creates the immutable tag and GitHub Release, and opens a `master` to `develop` backport pull request. Production publication failures leave the tag in place and require a new corrective version.
+After an approved release merge reaches `master`, the repository workflow validates the version, creates the immutable tag and GitHub Release, and opens a `master` to `develop` backport pull request. Release and backport pull requests are operational and do not require their own issues by default. Before completion, the final release description must explicitly list every delivery issue and pull request included in production. Production publication failures leave the tag in place and require a new corrective version.
 
 ## Prepare a version
 
