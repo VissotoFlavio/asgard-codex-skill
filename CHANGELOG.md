@@ -6,6 +6,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+## [0.7.2] - 2026-09-08
+
 ### Changed
 
 - Exempt operational release and backport pull requests from separate issues while requiring final release notes to enumerate every delivered issue and pull request ([issue #52](https://github.com/VissotoFlavio/asgard-codex-skill/issues/52), [PR #53](https://github.com/VissotoFlavio/asgard-codex-skill/pull/53)).
@@ -30,6 +32,7 @@ Release tracking: [issue #40](https://github.com/VissotoFlavio/asgard-codex-skil
 
 - Add Forseti as the delivery-governance specialist, with independent issue-to-release traceability gates and official artwork ([issue #38](https://github.com/VissotoFlavio/asgard-codex-skill/issues/38), [PR #39](https://github.com/VissotoFlavio/asgard-codex-skill/pull/39)).
 
-[Unreleased]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.7.1...develop
+[Unreleased]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.7.2...develop
+[0.7.2]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.7.1...v0.7.2
 [0.7.1]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.7.0...v0.7.1
 [0.7.0]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.6.0...v0.7.0
