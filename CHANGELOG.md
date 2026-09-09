@@ -6,6 +6,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+## [0.8.0] - 2026-09-09
+
+Release PR: [#58](https://github.com/VissotoFlavio/asgard-codex-skill/pull/58).
+
 ### Added
 
 - Add Bragi as the independent final-candidate reviewer for human-readable, maintainable code, with context-sensitive SOLID, DRY, KISS, YAGNI, and Tell, Don't Ask guidance and official artwork ([issue #56](https://github.com/VissotoFlavio/asgard-codex-skill/issues/56), [PR #57](https://github.com/VissotoFlavio/asgard-codex-skill/pull/57)).
@@ -38,7 +42,8 @@ Release tracking: [issue #40](https://github.com/VissotoFlavio/asgard-codex-skil
 
 - Add Forseti as the delivery-governance specialist, with independent issue-to-release traceability gates and official artwork ([issue #38](https://github.com/VissotoFlavio/asgard-codex-skill/issues/38), [PR #39](https://github.com/VissotoFlavio/asgard-codex-skill/pull/39)).
 
-[Unreleased]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.7.2...develop
+[Unreleased]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.8.0...develop
+[0.8.0]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.7.2...v0.8.0
 [0.7.2]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.7.1...v0.7.2
 [0.7.1]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.7.0...v0.7.1
 [0.7.0]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.6.0...v0.7.0
