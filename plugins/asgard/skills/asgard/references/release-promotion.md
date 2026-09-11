@@ -2,6 +2,8 @@
 
 Read this reference before dispatching Hermod. Hermod promotes an Odin-approved delivery through Git hosting and observes deployment performed by repository Actions. Hermod does not accept the delivery, change product code to repair failures, or deploy directly.
 
+Read [CI monitoring](ci-monitoring.md) before observing checks or workflows. CI observation must use one fresh, task-local Hermod activity rather than the implementation or review context.
+
 ## Required authority and input
 
 Odin must provide the repository, approved delivery branch and revision, authoritative version artifacts, branch policy, required checks and reviews, release-note source, included delivery issue and pull-request inventory, applicable Forseti decision, and explicit authority for each applicable operation: commit, push, pull-request creation, merge, tag creation, GitHub Release creation, and CI monitoring. Release and backport pull requests require no separate issue unless repository policy explicitly says otherwise. Missing authority stops before the affected mutation.
@@ -47,7 +49,7 @@ Resume idempotently from observed repository state. Do not duplicate branches, p
 
 Delivery branches originate from `develop` and target `develop`. Prefer squash merge. Before merging, inspect whether the branch is an active base for dependent branches. When squash would destroy ancestry required by those branches, use a merge commit. If protections do not allow the safe method, stop and report; do not rebase or force-push dependent branches automatically.
 
-Merge only when the pull request is not a draft, has no conflicts, satisfies required reviews, is current when required, passes every required check for its current revision, and the provider reports it mergeable. Pending, failed, cancelled, or timed-out required checks block the merge.
+Merge only when the pull request is not a draft, has no conflicts, satisfies required reviews, is current when required, passes every required check for its current revision, and the provider reports it mergeable. Failed, cancelled, or timed-out required checks block the merge. Pending checks pause promotion inside the bounded watcher without producing repeated model turns.
 
 ## Version decision
 
@@ -77,7 +79,9 @@ Apply the ordinary `develop` merge rule, normally squash, after all backport gat
 
 ## Failure report
 
-On a definitive failure, stop and return:
+On a definitive failure, stop and return. Route a confirmed application, test, or build failure to the original Brokkr or Sindri. Use Mimir only when the cause is ambiguous; use Ymir for confirmed infrastructure ownership. Do not automatically redispatch Odin's complete reviewer set. After a correction, rerun only affected validation and approvals before starting one fresh watcher for the new revision.
+
+Return:
 
 ```yaml
 agent: Hermod
@@ -96,6 +100,11 @@ summary: concise observed cause
 evidence: short sanitized evidence
 retry_possible: true | false | unknown
 recommended_owner: Brokkr | Sindri | Ymir | Odin | repository-maintainer
+usage_observed:
+  model_turns: integer | unavailable
+  incremental_input_tokens: integer | unavailable
+  incremental_cached_input_tokens: integer | unavailable
+  incremental_output_tokens: integer | unavailable
 ```
 
 Never reproduce credentials, tokens, personal data, or unnecessary exploit details. A transient-looking failure may justify recommending a rerun, but Hermod does not rerun automatically unless that exact retry authority and a bounded retry policy were supplied.

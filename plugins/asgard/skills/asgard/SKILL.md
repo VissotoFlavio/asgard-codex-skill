@@ -49,7 +49,9 @@ Use Brokkr for bounded application implementation, Sindri instead for one insepa
 - [Forseti](references/agents/forseti.md) for required issue, pull-request, changelog, and release traceability
 - [Hermod](references/agents/hermod.md) only for approved publication or promotion
 
-Do not pass the full conversation by default. Give each agent only its role packet, activity contract, applicable workspace rules, relevant paths or candidate diff, stable dependencies, focused validation, and explicit exclusions. Prefer a fresh or minimal context when the platform supports it.
+Do not pass the full conversation by default. Give each agent only its role packet, activity contract, applicable workspace rules, relevant paths or candidate diff, stable dependencies, focused validation, and explicit exclusions. When the platform supports history selection, dispatch with no inherited conversation history (for example, `fork_turns="none"`) and put every required input in the task-local packet. If an agent must inherit history, justify that exception in the graph and do not use it for waiting, polling, CI observation, or other operational monitoring.
+
+Treat waiting as an operational state, not a reason for another model turn. For CI or release observation, use one context-isolated Hermod activity and read [CI monitoring](references/ci-monitoring.md). Do not dispatch reviewers while checks remain pending or restart Asgard merely to report unchanged state.
 
 When a discipline packet requires a skill, explicitly name that skill in the assigned agent's contract and require the agent to use it before making discipline-specific decisions. Repository and user instructions remain authoritative when skill guidance is generic or conflicts with established project conventions.
 
