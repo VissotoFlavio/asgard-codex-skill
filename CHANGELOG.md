@@ -10,7 +10,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ### Changed
 
-- Reduce orchestration context with phase checkpoints, fresh specialist contexts that do not recursively invoke Asgard, proportional execution budgets, bounded reports and evidence, narrower implicit selection, and incremental usage telemetry by role and phase.
+- Reduce orchestration context with phase checkpoints, fresh specialist contexts that do not recursively invoke Asgard, proportional execution budgets, bounded reports and evidence, narrower implicit selection, and incremental usage telemetry by role and phase ([issue #68](https://github.com/VissotoFlavio/asgard-codex-skill/issues/68), [PR #69](https://github.com/VissotoFlavio/asgard-codex-skill/pull/69)).
 
 ## [0.8.2] - 2026-09-11
 
