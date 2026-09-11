@@ -1,6 +1,6 @@
 ---
 name: asgard
-description: Orchestrate substantial software deliveries that benefit from multiple specialist agents, explicit acceptance criteria, and independent risk-based review. Use for coordinated implementation across bounded activities or high-assurance delivery; do not invoke for routine single-file edits or ordinary coding tasks that one agent can safely complete and verify.
+description: Orchestrate substantial software deliveries with multiple bounded activities or material risk that justifies independent review. Use for coordinated implementation or high-assurance delivery; do not invoke for routine edits, isolated diagnosis, ordinary maintenance, or release observation that one agent can safely complete.
 ---
 
 # Asgard
@@ -33,6 +33,8 @@ Inspect only the code and evidence needed to decompose the delivery. Give each a
 
 Present one concise approval boundary with activities, dependencies, selected mode and implementers, DoD, review routing, isolation, conflict risks, validation, integration, optional publication, and still-unauthorized operations. Read [definition-of-done.md](references/definition-of-done.md) only when constructing the activity contracts.
 
+Set a proportional execution budget and define phase boundaries. Read [context efficiency](references/context-efficiency.md) when the delivery spans multiple activities, agents, correction cycles, or implementation and release phases.
+
 Classify an activity by discipline only when that classification changes its implementation guidance or required capabilities. Load the [frontend discipline packet](references/disciplines/frontend.md) for user-visible interface work, the [backend discipline packet](references/disciplines/backend.md) for server-side work, and the [infrastructure discipline packet](references/disciplines/infrastructure.md) for host, cloud, network, platform, or infrastructure-access work. A cross-boundary activity may load multiple packets only when it cannot be decomposed without breaking ownership. Record each required skill and its availability before graph approval; do not claim that a capability was applied when it is unavailable.
 
 ## Dispatch with minimal context
@@ -50,6 +52,8 @@ Use Brokkr for bounded application implementation, Sindri instead for one insepa
 - [Hermod](references/agents/hermod.md) only for approved publication or promotion
 
 Do not pass the full conversation by default. Give each agent only its role packet, activity contract, applicable workspace rules, relevant paths or candidate diff, stable dependencies, focused validation, and explicit exclusions. When the platform supports history selection, dispatch with no inherited conversation history (for example, `fork_turns="none"`) and put every required input in the task-local packet. If an agent must inherit history, justify that exception in the graph and do not use it for waiting, polling, CI observation, or other operational monitoring.
+
+Do not mention or invoke `$asgard` in a specialist task. Odin has already applied the orchestration policy; specialists receive only the selected role packet and task-local contract. Require another skill only when that specialist genuinely needs its distinct discipline guidance.
 
 Treat waiting as an operational state, not a reason for another model turn. For CI or release observation, use one context-isolated Hermod activity and read [CI monitoring](references/ci-monitoring.md). Do not dispatch reviewers while checks remain pending or restart Asgard merely to report unchanged state.
 
@@ -70,6 +74,8 @@ Read [review-and-publication-gates.md](references/review-and-publication-gates.m
 Do not repeat an integrated-wave review when there is one activity and integration produced no new diff, dependency, or invariant. For multiple combined activities, review only the integration surface and cross-boundary behavior unless the combined candidate invalidates earlier evidence.
 
 Odin grants final approval only when all required evidence refers to the same candidate. Keep reports delta-focused: decisions, changed artifacts, failed or passed validations, actionable findings, deviations, unresolved risks, and unauthorized operations attempted, if any. Omit empty boilerplate.
+
+At a material phase boundary, replace accumulated narrative with the compact checkpoint defined in [context efficiency](references/context-efficiency.md). Pass the checkpoint forward instead of replaying completed discussion, logs, diffs, or reviewer reports.
 
 ## Publish only when authorized
 

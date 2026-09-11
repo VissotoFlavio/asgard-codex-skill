@@ -28,4 +28,8 @@ Send only the selected role packet plus:
 - stable dependency state and focused validation commands;
 - authority boundaries for edits and external mutations.
 
-Do not attach the full conversation when this task-local contract is sufficient. Agent output should contain only decisions or findings, changed artifacts when applicable, validation evidence, deviations, unresolved risks, and blockers. Omit repeated instructions and empty fields.
+Do not mention or invoke `$asgard` in the specialist task; its policy has already been applied by Odin. Do not attach the full conversation when this task-local contract is sufficient. Use a fresh context without inherited history when available.
+
+Reference exact paths, revisions, and bounded diff commands rather than attaching full diffs. Reference validation artifacts rather than pasting successful logs. Include a short sanitized excerpt only when a failure cannot be understood without it.
+
+Agent output should stay within the activity's report budget and contain only decisions or findings, changed artifacts when applicable, validation evidence, deviations, unresolved risks, and blockers. Omit repeated instructions, role guidance, successful command output, and empty fields.
