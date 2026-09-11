@@ -142,6 +142,23 @@ class WorkflowGovernanceTests(unittest.TestCase):
         self.assertIn("use the highest required increment", text)
         self.assertIn("Do not stop solely for version selection", text)
 
+    def test_ci_monitoring_is_context_isolated_and_silent_while_pending(self) -> None:
+        skill = (VALIDATOR.SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
+        odin = (VALIDATOR.SKILL_ROOT / "references" / "agents" / "odin.md").read_text(encoding="utf-8")
+        hermod = (VALIDATOR.SKILL_ROOT / "references" / "agents" / "hermod.md").read_text(encoding="utf-8")
+        release = (VALIDATOR.SKILL_ROOT / "references" / "release-promotion.md").read_text(encoding="utf-8")
+        monitoring = (VALIDATOR.SKILL_ROOT / "references" / "ci-monitoring.md").read_text(encoding="utf-8")
+
+        self.assertIn('fork_turns="none"', skill)
+        self.assertIn("one Hermod activity with no inherited conversation history", odin)
+        self.assertIn("remain silent while the observed state is unchanged and pending", hermod)
+        self.assertIn("one fresh, task-local Hermod activity", release)
+        self.assertIn("gh run watch --exit-status", monitoring)
+        self.assertIn("Never create parallel watchers for the same revision", monitoring)
+        self.assertIn("Use Mimir only when evidence cannot classify the cause", monitoring)
+        self.assertIn("unaffected reviewers remain approved", monitoring)
+        self.assertIn("incremental_cached_input_tokens", monitoring)
+
     def test_release_runs_from_master_push_without_checkout(self) -> None:
         text = (ROOT / ".github" / "workflows" / "release.yml").read_text(encoding="utf-8")
         self.assertIn("\n  push:\n    branches: [master]", text)

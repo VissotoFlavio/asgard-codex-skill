@@ -6,6 +6,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+### Changed
+
+- Isolate Hermod CI monitoring from delivery history, wait silently through unchanged pending states, route failures without restarting every reviewer, bound retries, and record incremental token telemetry.
+
 ## [0.8.1] - 2026-09-09
 
 Release PR: [#62](https://github.com/VissotoFlavio/asgard-codex-skill/pull/62).

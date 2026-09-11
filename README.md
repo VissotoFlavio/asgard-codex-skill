@@ -78,6 +78,8 @@ Any confirmed finding
 
 Asgard classifies dependencies as sequential, parallel-safe, parallel-with-coordination, or deferred. It does not parallelize work merely to fill agent slots, and it avoids repeating complete reviews when integration creates no new diff or invariant.
 
+CI monitoring stays inside Hermod but runs as one context-isolated watcher. The watcher receives only the repository, run or pull request, expected revision, required checks, deadline, and bounded retry authority. It remains silent while CI is pending and returns only success, failure, timeout, revision drift, or required user action. Unchanged CI never summons reviewers or restarts the orchestration graph.
+
 ## Definitions of Done and authority
 
 Every activity receives an observable objective, bounded artifact ownership, dependencies, primary failure mode, focused validation, rejection conditions, and applicable reviewers. Tests normally run once after the implementer has inspected the final diff.
