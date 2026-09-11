@@ -18,6 +18,7 @@ Rejection conditions:
 Implementer: Brokkr | Sindri | Ymir
 Mode: Lean | Standard | Critical | Release
 Required reviewers and rationale:
+Execution budget: simultaneous agents | correction cycles | report words | inherited history
 Delivery governance and traceability: Forseti | not applicable
 Authoritative delivery issue and pull-request edit authority:
 Excluded or unauthorized operations:
@@ -35,6 +36,8 @@ Omit discipline and required skills when they do not change execution. For a .NE
 - **Release:** additionally record the exact approved revision, the included delivery issue and pull-request inventory, the release-note source, the operational issue exemption for release and backport pull requests, and authority for each repository or publication mutation.
 
 Avoid generic invariant checklists. An invariant belongs in the contract only when the activity can affect it.
+
+Default to at most three simultaneous agents, one grouped correction cycle, 400 report words per agent, and no inherited conversation history. These are decision budgets, not acceptance gates. Increase only the field required by a documented risk or indivisible dependency, and record the reason before dispatch. A failed correction cycle stops for Odin to reassess rather than spawning an open-ended retry chain.
 
 Schedule executable validation once at the end of implementation. If an earlier run is required to reproduce a defect or test a high-risk assumption, record that exception in the contract. Bragi reviews only the completed immutable candidate and does not trigger per-file services, builds, or broad test suites.
 

@@ -159,6 +159,33 @@ class WorkflowGovernanceTests(unittest.TestCase):
         self.assertIn("unaffected reviewers remain approved", monitoring)
         self.assertIn("incremental_cached_input_tokens", monitoring)
 
+    def test_context_efficiency_is_budgeted_and_non_recursive(self) -> None:
+        skill = (VALIDATOR.SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
+        context = (VALIDATOR.SKILL_ROOT / "references" / "context-efficiency.md").read_text(encoding="utf-8")
+        roles = (VALIDATOR.SKILL_ROOT / "references" / "roles-and-packets.md").read_text(encoding="utf-8")
+        definition = (VALIDATOR.SKILL_ROOT / "references" / "definition-of-done.md").read_text(encoding="utf-8")
+        gates = (VALIDATOR.SKILL_ROOT / "references" / "review-and-publication-gates.md").read_text(encoding="utf-8")
+        odin = (VALIDATOR.SKILL_ROOT / "references" / "agents" / "odin.md").read_text(encoding="utf-8")
+
+        self.assertIn("references/context-efficiency.md", skill)
+        self.assertIn("Do not mention or invoke `$asgard` in a specialist task", skill)
+        self.assertIn("simultaneous_agents: 3", context)
+        self.assertIn("correction_cycles: 1", context)
+        self.assertIn("report_words_per_agent: 400", context)
+        self.assertIn("phase_checkpoint:", context)
+        self.assertIn("Aggregate by phase and role only at the final checkpoint", context)
+        self.assertIn("Reference exact paths, revisions, and bounded diff commands", roles)
+        self.assertIn("Execution budget:", definition)
+        self.assertIn("default budget permits one grouped correction cycle", gates)
+        self.assertIn("mention `$asgard` in a specialist task", odin)
+
+    def test_implicit_selection_excludes_ordinary_work(self) -> None:
+        skill = (VALIDATOR.SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
+        header = skill.split("---", 2)[1]
+        self.assertIn("multiple bounded activities or material risk", header)
+        self.assertIn("ordinary maintenance", header)
+        self.assertIn("release observation", header)
+
     def test_release_runs_from_master_push_without_checkout(self) -> None:
         text = (ROOT / ".github" / "workflows" / "release.yml").read_text(encoding="utf-8")
         self.assertIn("\n  push:\n    branches: [master]", text)
