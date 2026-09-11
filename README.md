@@ -38,6 +38,8 @@ Do not use it for routine single-file edits or ordinary work that one agent can 
 
 Specialists receive task-local context rather than the entire conversation. Their reports and passing tests are evidence; Odin still inspects the candidate and makes the acceptance decision.
 
+Odin applies Asgard once: specialist tasks do not invoke `$asgard` again. Multi-phase deliveries use compact checkpoints, fresh agent contexts, bounded reports, and a proportional default budget of three simultaneous agents and one grouped correction cycle. Exact paths, revisions, run URLs, and validation conclusions replace copied transcripts, full diffs, and successful logs.
+
 ### Bragi: final-candidate code review
 
 <p align="center">
@@ -79,6 +81,8 @@ Any confirmed finding
 Asgard classifies dependencies as sequential, parallel-safe, parallel-with-coordination, or deferred. It does not parallelize work merely to fill agent slots, and it avoids repeating complete reviews when integration creates no new diff or invariant.
 
 CI monitoring stays inside Hermod but runs as one context-isolated watcher. The watcher receives only the repository, run or pull request, expected revision, required checks, deadline, and bounded retry authority. It remains silent while CI is pending and returns only success, failure, timeout, revision drift, or required user action. Unchanged CI never summons reviewers or restarts the orchestration graph.
+
+At discussion-to-implementation, implementation-to-review, and approval-to-release boundaries, Odin replaces accumulated narrative with a compact phase checkpoint containing only the candidate, decisions, changed artifacts, validation, approvals, deviations, open risks, next activity, and remaining authority. When usage is available, final reporting aggregates incremental tokens by role and phase without spending extra turns to reconstruct missing telemetry.
 
 ## Definitions of Done and authority
 

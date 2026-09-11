@@ -19,6 +19,8 @@ Dispatch Bragi only after `IMPLEMENTER_COMPLETE` against the stable candidate, n
 
 Odin confirms actionable findings, groups compatible corrections into one bounded pass, and returns exact scope, affected DoD criterion, expected correction, and required evidence to the original implementer. Reviewers do not silently fix findings.
 
+The default budget permits one grouped correction cycle. If material findings remain afterward, Odin stops, records the delta and cause, and proposes a revised graph or explicit budget increase instead of automatically repeating implementer and reviewer loops.
+
 After a correction:
 
 1. compare the candidate with the previously reviewed revision;
@@ -38,6 +40,8 @@ When multiple activities are combined, validate and review their integration sur
 ## Complete concisely
 
 Record the candidate, DoD result, required approvals, focused validation, deviations, out-of-scope changes, and residual risks. Omit empty fields and repeated role instructions. Distinguish precisely:
+
+Reference the candidate revision and bounded paths instead of reproducing its full diff. For passing validation, record the command, conclusion, and artifact or run URL; include output only for a concise failure excerpt. A reviewer approval needs one decision line plus material findings, not a restatement of its packet or the complete DoD.
 
 ```text
 IMPLEMENTER_COMPLETE != APPROVED

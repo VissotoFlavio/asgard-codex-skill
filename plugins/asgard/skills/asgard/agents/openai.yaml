@@ -4,7 +4,7 @@ interface:
   icon_small: "./assets/logo.png"
   icon_large: "./assets/logo_asgard.png"
   brand_color: "#C9973E"
-  default_prompt: "Use $asgard to coordinate this substantial delivery with the smallest sufficient risk-based review mode."
+  default_prompt: "Use $asgard only for this substantial multi-activity or materially risky delivery, with the smallest sufficient review mode and task-local context."
 
 policy:
   allow_implicit_invocation: true
