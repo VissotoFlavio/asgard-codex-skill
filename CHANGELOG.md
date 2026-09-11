@@ -6,6 +6,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+## [0.9.0] - 2026-09-11
+
 ### Changed
 
 - Reduce orchestration context with phase checkpoints, fresh specialist contexts that do not recursively invoke Asgard, proportional execution budgets, bounded reports and evidence, narrower implicit selection, and incremental usage telemetry by role and phase.
@@ -62,7 +64,8 @@ Release tracking: [issue #40](https://github.com/VissotoFlavio/asgard-codex-skil
 
 - Add Forseti as the delivery-governance specialist, with independent issue-to-release traceability gates and official artwork ([issue #38](https://github.com/VissotoFlavio/asgard-codex-skill/issues/38), [PR #39](https://github.com/VissotoFlavio/asgard-codex-skill/pull/39)).
 
-[Unreleased]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.8.2...develop
+[Unreleased]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.9.0...develop
+[0.9.0]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.8.2...v0.9.0
 [0.8.2]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.8.1...v0.8.2
 [0.8.1]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.8.0...v0.8.1
 [0.8.0]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.7.2...v0.8.0
