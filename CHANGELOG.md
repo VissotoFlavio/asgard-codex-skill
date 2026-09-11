@@ -8,6 +8,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [0.8.2] - 2026-09-11
 
+Release PR: [#66](https://github.com/VissotoFlavio/asgard-codex-skill/pull/66).
+
 ### Changed
 
 - Isolate Hermod CI monitoring from delivery history, wait silently through unchanged pending states, route failures without restarting every reviewer, bound retries, and record incremental token telemetry ([issue #64](https://github.com/VissotoFlavio/asgard-codex-skill/issues/64), [PR #65](https://github.com/VissotoFlavio/asgard-codex-skill/pull/65)).
