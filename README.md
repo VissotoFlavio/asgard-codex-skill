@@ -104,6 +104,8 @@ Every activity receives an observable objective, bounded artifact ownership, dep
 
 Approval never grants authority to commit, push, open or merge pull requests, publish releases, deploy, migrate data, mutate infrastructure, add dependencies, or perform destructive operations. Repository instructions and explicit user authority remain controlling.
 
+For GitHub, Asgard uses the authenticated `gh` CLI for issues, pull requests, reviews, checks, workflows, merges, tags, and releases, requesting only the structured fields needed. It does not silently fall back to a browser when authentication, authorization, scopes, or commands fail. Browser operation is reserved for a documented CLI/API capability gap and requires an explanation plus explicit user authorization for that exceptional operation.
+
 ## Delivery governance
 
 When the repository requires traceability, Forseti checks the evidence available at each lifecycle phase:
