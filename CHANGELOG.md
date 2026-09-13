@@ -8,6 +8,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [0.10.1] - 2026-09-13
 
+Release PR: [#78](https://github.com/VissotoFlavio/asgard-codex-skill/pull/78).
+
 ### Changed
 
 - Make the authenticated GitHub CLI the default for every GitHub interaction, minimize structured output, and reserve browser operation for explicitly authorized, documented CLI/API capability gaps ([issue #76](https://github.com/VissotoFlavio/asgard-codex-skill/issues/76), [PR #77](https://github.com/VissotoFlavio/asgard-codex-skill/pull/77)).
