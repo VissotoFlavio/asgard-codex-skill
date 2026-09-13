@@ -6,6 +6,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+## [0.10.3] - 2026-09-13
+
+Release PR: [#86](https://github.com/VissotoFlavio/asgard-codex-skill/pull/86)
+
 ### Changed
 
 - Allow release-only flows to version and publish approved delivery inventories without creating a release issue, while preserving delivery traceability and repository overrides ([issue #84](https://github.com/VissotoFlavio/asgard-codex-skill/issues/84), [PR #85](https://github.com/VissotoFlavio/asgard-codex-skill/pull/85)).
@@ -94,7 +98,8 @@ Release tracking: [issue #40](https://github.com/VissotoFlavio/asgard-codex-skil
 
 - Add Forseti as the delivery-governance specialist, with independent issue-to-release traceability gates and official artwork ([issue #38](https://github.com/VissotoFlavio/asgard-codex-skill/issues/38), [PR #39](https://github.com/VissotoFlavio/asgard-codex-skill/pull/39)).
 
-[Unreleased]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.10.2...develop
+[Unreleased]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.10.3...develop
+[0.10.3]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.10.2...v0.10.3
 [0.10.2]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.10.1...v0.10.2
 [0.10.1]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.10.0...v0.10.1
 [0.10.0]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.9.0...v0.10.0
