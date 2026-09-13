@@ -94,7 +94,7 @@ Any confirmed finding
 
 Asgard classifies dependencies as sequential, parallel-safe, parallel-with-coordination, or deferred. It does not parallelize work merely to fill agent slots, and it avoids repeating complete reviews when integration creates no new diff or invariant.
 
-CI monitoring stays inside Hermod but runs as one context-isolated watcher. The watcher receives only the repository, run or pull request, expected revision, required checks, deadline, and bounded retry authority. It remains silent while CI is pending and returns only success, failure, timeout, revision drift, or required user action. Unchanged CI never summons reviewers or restarts the orchestration graph.
+CI monitoring stays inside Hermod as one context-isolated, blocking `gh pr checks --watch` or `gh run watch` process per revision. Hermod is the sole owner of live Actions queries and returns revision-bound terminal evidence, then performs one final head and merge-gate read immediately before an authorized merge. Odin coordinates from that evidence and Forseti validates its coverage without querying Actions again. The watcher remains silent while CI is pending; unchanged CI never summons reviewers or restarts the orchestration graph.
 
 At discussion-to-implementation, implementation-to-review, and approval-to-release boundaries, Odin replaces accumulated narrative with a compact phase checkpoint containing only the candidate, decisions, changed artifacts, validation, approvals, deviations, open risks, next activity, and remaining authority. When usage is available, final reporting aggregates incremental tokens by role and phase without spending extra turns to reconstruct missing telemetry.
 
