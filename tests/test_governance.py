@@ -162,7 +162,7 @@ class WorkflowGovernanceTests(unittest.TestCase):
         self.assertIn("one bounded, authoritative issue", text)
         self.assertIn("changelog entry", text)
         self.assertIn("release notes enumerate every included delivery issue and pull request", text)
-        self.assertIn("require a separate issue unless repository policy", text)
+        self.assertIn("Never create or require an issue solely for them", text)
         self.assertIn("Generated release notes are insufficient", text)
         self.assertIn("narrow, idempotent pull-request body repair", text)
         self.assertIn("Every eligible delivery pull request must contain", text)
@@ -201,6 +201,20 @@ class WorkflowGovernanceTests(unittest.TestCase):
         self.assertNotIn("AWAITING_VERSION_DECISION", text)
         self.assertIn("use the highest required increment", text)
         self.assertIn("Do not stop solely for version selection", text)
+
+    def test_release_only_flow_does_not_create_an_issue(self) -> None:
+        skill = (VALIDATOR.SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
+        release = (VALIDATOR.SKILL_ROOT / "references" / "release-promotion.md").read_text(encoding="utf-8")
+        forseti = (VALIDATOR.SKILL_ROOT / "references" / "agents" / "forseti.md").read_text(encoding="utf-8")
+        definition = (VALIDATOR.SKILL_ROOT / "references" / "definition-of-done.md").read_text(encoding="utf-8")
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+
+        self.assertIn("without creating an issue solely for the release", skill)
+        self.assertIn("Do not invent a release issue", skill)
+        self.assertIn("creates no issue solely for versioning or publication", release)
+        self.assertIn("Never create or require an issue solely for them", forseti)
+        self.assertIn("no issue is created solely for release or backport work", definition)
+        self.assertIn("a release-only flow creates no issue solely", readme)
 
     def test_ci_monitoring_is_context_isolated_and_silent_while_pending(self) -> None:
         skill = (VALIDATOR.SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")

@@ -33,7 +33,7 @@ Omit discipline and required skills when they do not change execution. For a .NE
 - **Lean:** record the observable outcome, owned artifacts, focused validation, primary failure mode, and exclusions. Add a specialist reviewer only for an identified risk; use Bragi when maintainability is an explicit acceptance concern.
 - **Standard:** also record material compatibility, domain, authorization, data, concurrency, and cross-boundary invariants; require Loki and Heimdall, Tyr when contracts or rules are material, and Bragi when production code is added or structurally changed.
 - **Critical:** make every relevant security, privacy, persistence, transaction, isolation, abuse, availability, rollback, and negative-test expectation explicit; require Bragi for production-code candidates.
-- **Release:** additionally record the exact approved revision, the included delivery issue and pull-request inventory, the release-note source, the operational issue exemption for release and backport pull requests, and authority for each repository or publication mutation.
+- **Release:** additionally record the exact approved revision, included delivery issue and pull-request inventory, release-note source, that no issue is created solely for release or backport work unless repository policy overrides, and authority for each repository or publication mutation.
 
 Avoid generic invariant checklists. An invariant belongs in the contract only when the activity can affect it.
 
