@@ -8,6 +8,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [0.10.2] - 2026-09-13
 
+Release PR: [#82](https://github.com/VissotoFlavio/asgard-codex-skill/pull/82).
+
 ### Changed
 
 - Centralize GitHub Actions observation in Hermod with one blocking watcher per revision, reuse its terminal evidence in Odin and Forseti, and reserve one fresh provider read for the immediate pre-merge gate ([issue #80](https://github.com/VissotoFlavio/asgard-codex-skill/issues/80), [PR #81](https://github.com/VissotoFlavio/asgard-codex-skill/pull/81)).
