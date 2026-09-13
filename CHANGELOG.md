@@ -8,7 +8,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ### Changed
 
-- Centralize GitHub Actions observation in Hermod with one blocking watcher per revision, reuse its terminal evidence in Odin and Forseti, and reserve one fresh provider read for the immediate pre-merge gate ([issue #80](https://github.com/VissotoFlavio/asgard-codex-skill/issues/80)).
+- Centralize GitHub Actions observation in Hermod with one blocking watcher per revision, reuse its terminal evidence in Odin and Forseti, and reserve one fresh provider read for the immediate pre-merge gate ([issue #80](https://github.com/VissotoFlavio/asgard-codex-skill/issues/80), [PR #81](https://github.com/VissotoFlavio/asgard-codex-skill/pull/81)).
 
 ## [0.10.1] - 2026-09-13
 
