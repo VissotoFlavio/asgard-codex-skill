@@ -4,21 +4,23 @@
 
 # Asgard for Codex
 
-Asgard is a risk-based, multi-agent software delivery workflow for Codex. Odin decomposes substantial work into bounded activities, assigns focused specialists, reviews their evidence, coordinates independent gates, and remains accountable for final acceptance.
+Asgard is a risk-based, multi-agent discovery and software delivery workflow for Codex. Odin frames decisions, decomposes substantial work into bounded activities, assigns focused specialists, reviews their evidence, coordinates independent gates, and remains accountable for final acceptance.
 
 The workflow is intentionally proportional: routine changes should stay simple, while complex or high-risk deliveries receive stronger implementation, contract, adversarial, security, governance, and publication controls.
 
 ## When to use Asgard
 
-Use Asgard for deliveries that benefit from one or more of the following:
+Use Asgard when it is explicitly requested for discovery, delivery, review, infrastructure, deploy, release, or monitoring, or when work benefits from one or more of the following:
 
+- decision-ready discovery before implementation;
 - multiple bounded implementation activities;
 - coordinated application and infrastructure work;
 - explicit acceptance criteria and dependency ordering;
 - independent behavioral, contract, or security review;
-- high-assurance release promotion with traceable evidence.
+- high-assurance deployment or release promotion with traceable evidence;
+- explicit monitoring or monitoring within a governed delivery or release flow.
 
-Do not use it for routine single-file edits or ordinary work that one agent can implement and verify safely. Asgard should reduce delivery risk, not add ceremony without a concrete reason.
+Do not select it implicitly for routine single-file edits, isolated diagnosis, ordinary maintenance, or standalone release observation that one agent can handle safely. Explicit monitoring remains supported. Asgard should reduce delivery risk, not add ceremony without a concrete reason.
 
 ## Roles
 
@@ -36,19 +38,27 @@ Do not use it for routine single-file edits or ordinary work that one agent can 
 | **Forseti** | Enforces issue, pull-request, changelog, and release traceability, including the narrowly authorized automatic `Closes #<issue>` repair. |
 | **Hermod** | Promotes an approved revision through explicitly authorized version-control and release operations. |
 
-Specialists receive task-local context rather than the entire conversation. Their reports and passing tests are evidence; Odin still inspects the candidate and makes the acceptance decision.
+Specialists receive task-local context rather than the entire conversation. Their reports and passing tests are evidence; Odin still owns product decisions, inspects the candidate, and makes the acceptance decision. Mimir only resolves stated technical uncertainty read-only.
 
 Odin applies Asgard once: specialist tasks do not invoke `$asgard` again. Multi-phase deliveries use compact checkpoints, fresh agent contexts, bounded reports, and a proportional default budget of three simultaneous agents and one grouped correction cycle. Exact paths, revisions, run URLs, and validation conclusions replace copied transcripts, full diffs, and successful logs.
 
-### Bragi: final-candidate code review
+## Intent catalog
 
-<p align="center">
-  <img src="./assets/bragi.png" alt="Bragi, Asgard's reviewer of code intent, readability, and maintainability" width="420">
-</p>
+Asgard recognizes natural-language requests as `DISCOVERY`, `DELIVERY`, `REVIEW`, `INFRASTRUCTURE`, `DEPLOY`, `RELEASE`, or `MONITOR`. It infers a clear intent and asks only when ambiguity would materially change the result, scope, environment, or authority.
 
-Bragi reviews code only after the implementer reports `IMPLEMENTER_COMPLETE`, against the stable final candidate rather than each file as it changes. This keeps review feedback consolidated and avoids restarting services, builds, or broad test suites during the review.
+Intent never grants authority. Discovery produces a concise, decision-ready brief and stops for approval; it does not create issues or implement. After approval, Asgard may prepare or create issues only when authorized, then enter delivery. Application promotion belongs to Hermod, while infrastructure work belongs to Ymir. Release publication and infrastructure mutation remain separately protected operations.
 
-The review is read-only and applies SOLID, DRY, KISS, YAGNI, and Tell, Don't Ask as context-sensitive design lenses. Bragi distinguishes maintainability risks from stylistic preferences, reports concrete evidence and impact, and sends confirmed findings back through Odin for one bounded correction pass by the original implementer.
+Natural examples:
+
+- “Use Asgard para explorar esta ideia.”
+- “Use Asgard para desenvolver esta funcionalidade.”
+- “Faça o discovery e pare antes de criar as issues.”
+- “Faça o discovery e, se eu aprovar, prepare as issues.”
+- “Revise este PR quanto a comportamento e segurança.”
+- “Planeje esta mudança de infraestrutura, mas não aplique.”
+- “Faça deploy da revisão aprovada em staging.”
+- “Prepare a release 2.4.0 sem publicar.”
+- “Monitore o CI do PR 42.”
 
 ## Delivery modes
 
@@ -60,7 +70,11 @@ The review is read-only and applies SOLID, DRY, KISS, YAGNI, and Tell, Don't Ask
 ## Core flow
 
 ```text
-Odin defines the execution graph and Definition of Done
+Natural-language request
+  -> Odin infers intent and records the separate authority ceiling
+  -> DISCOVERY produces a decision-ready brief and stops for approval, when requested
+  -> approved issue preparation or creation occurs only when authorized
+  -> Odin defines the delivery execution graph and Definition of Done
   -> Brokkr or Sindri implements application work
      and/or Ymir performs authorized infrastructure work
   -> implementers validate their final activity once

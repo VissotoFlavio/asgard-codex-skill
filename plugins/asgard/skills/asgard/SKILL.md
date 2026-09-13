@@ -1,11 +1,41 @@
 ---
 name: asgard
-description: Orchestrate substantial software deliveries with multiple bounded activities or material risk that justifies independent review. Use for coordinated implementation or high-assurance delivery; do not invoke for routine edits, isolated diagnosis, ordinary maintenance, or release observation that one agent can safely complete.
+description: Orchestrate risk-based discovery, delivery, review, infrastructure, deploy, release, and monitor work when Asgard is explicitly requested or multiple bounded activities or material risk justify coordination. Do not select it implicitly for routine edits, isolated diagnosis, ordinary maintenance, or standalone release observation that one agent can safely complete; explicit MONITOR requests and monitoring within a governed flow are supported.
 ---
 
 # Asgard
 
 Coordinate multi-agent delivery under Odin's ownership. Agent reports and passing tests are evidence, never acceptance. Keep the process proportional to delivery risk.
+
+## Resolve intent before execution
+
+Classify the request into one canonical intent without treating keywords as commands:
+
+- **DISCOVERY:** frame a problem or opportunity and produce a decision-ready brief before delivery.
+- **DELIVERY:** plan and implement an approved outcome.
+- **REVIEW:** inspect a defined candidate or evidence without changing it.
+- **INFRASTRUCTURE:** discover, plan, apply, or verify host, cloud, network, platform, or infrastructure state through Ymir.
+- **DEPLOY:** promote an approved application revision through Hermod; route infrastructure changes needed for that promotion to Ymir.
+- **RELEASE:** run the governed version, traceability, approval, and publication flow.
+- **MONITOR:** observe a defined CI, deployment, or release state without changing it unless bounded retry authority is explicit.
+
+Infer intent from natural language when it is clear. Ask one focused question only when ambiguity would materially change the result, scope, environment, or required authority; do not make clarification mandatory on every invocation. Resolve materially ambiguous deploy requests by identifying the revision, target environment, and whether the request is application promotion or infrastructure mutation. Resolve materially ambiguous review requests by identifying the candidate and review boundary.
+
+Intent and authority are separate dimensions. Record the inferred intent and the current authority ceiling before action. A request to deliver, deploy, release, or operate infrastructure does not implicitly authorize issue creation, implementation, commits, pushes, pull requests, publication, deployment, migration, destructive action, dependency installation, or infrastructure mutation. Never reinterpret an intent keyword as protected-operation authority.
+
+For **DISCOVERY**, Odin owns product framing, alternatives, recommendation, and the decision boundary. Use Mimir only for a stated technical uncertainty that can be investigated read-only. Produce a concise **Discovery Brief** containing:
+
+- problem or desired outcome;
+- relevant technical evidence;
+- viable alternatives and Odin's recommendation;
+- proposed scope and exclusions;
+- affected components and expected impact;
+- risks and unknowns;
+- relative complexity;
+- proposed issues; and
+- preliminary acceptance criteria.
+
+Discovery is read-only unless the user separately authorizes another operation. It does not create issues, implement changes, or begin delivery. After presenting the brief, stop for approval. The transition is `DISCOVERY -> user approval -> prepare or create issues when separately authorized -> DELIVERY`; approval of the brief may authorize delivery planning, but issue creation and every protected mutation still require authority under repository and user policy.
 
 ## Establish authority
 
@@ -82,3 +112,14 @@ At a material phase boundary, replace accumulated narrative with the compact che
 Approval never grants authority to commit, push, open or merge changes, publish, migrate, deploy, mutate infrastructure, add dependencies, or perform destructive operations. When repository or user policy requires delivery traceability, dispatch Forseti at the lifecycle phases where the relevant evidence exists. Recorded authority to create or edit an eligible delivery pull request permits Forseti's single idempotent repair that appends its unambiguous `Closes #<issue>` reference; it grants no other mutation. Require governance approval before merge or publication. For Release mode, read [release-promotion.md](references/release-promotion.md) before dispatching Hermod.
 
 Stop after exhausting safe read-only investigation when required authority, product direction, independent review, or meaningful validation is unavailable.
+
+## Natural-language routing examples
+
+- “Explore this idea with Asgard” or “do discovery and stop before creating issues” -> `DISCOVERY`, then stop at the brief.
+- “Do discovery and, if I approve it, prepare the issues” -> `DISCOVERY`; approval permits issue preparation, while issue creation still requires authority.
+- “Develop this feature with Asgard” -> `DELIVERY`, subject to graph approval and the authority ceiling.
+- “Review this pull request for behavioral and security risks” -> `REVIEW`, with Loki and Heimdall when justified.
+- “Plan the production network change” -> `INFRASTRUCTURE`, routed to Ymir; applying it remains unauthorized until explicit approval.
+- “Deploy revision abc123 to staging” -> `DEPLOY`, routed to Hermod for application promotion; any required infrastructure mutation is a distinct Ymir activity.
+- “Prepare release 2.4.0” -> `RELEASE`, using release gates without inferring publication authority.
+- “Monitor CI for pull request 42” -> `MONITOR`, using one silent, context-isolated Hermod watcher.
