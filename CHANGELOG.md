@@ -6,6 +6,14 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+## [0.10.2] - 2026-09-13
+
+Release PR: [#82](https://github.com/VissotoFlavio/asgard-codex-skill/pull/82).
+
+### Changed
+
+- Centralize GitHub Actions observation in Hermod with one blocking watcher per revision, reuse its terminal evidence in Odin and Forseti, and reserve one fresh provider read for the immediate pre-merge gate ([issue #80](https://github.com/VissotoFlavio/asgard-codex-skill/issues/80), [PR #81](https://github.com/VissotoFlavio/asgard-codex-skill/pull/81)).
+
 ## [0.10.1] - 2026-09-13
 
 Release PR: [#78](https://github.com/VissotoFlavio/asgard-codex-skill/pull/78).
@@ -82,7 +90,8 @@ Release tracking: [issue #40](https://github.com/VissotoFlavio/asgard-codex-skil
 
 - Add Forseti as the delivery-governance specialist, with independent issue-to-release traceability gates and official artwork ([issue #38](https://github.com/VissotoFlavio/asgard-codex-skill/issues/38), [PR #39](https://github.com/VissotoFlavio/asgard-codex-skill/pull/39)).
 
-[Unreleased]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.10.1...develop
+[Unreleased]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.10.2...develop
+[0.10.2]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.10.1...v0.10.2
 [0.10.1]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.10.0...v0.10.1
 [0.10.0]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.9.0...v0.10.0
 [0.9.0]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.8.2...v0.9.0

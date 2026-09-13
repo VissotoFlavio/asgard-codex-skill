@@ -14,7 +14,7 @@ The repository must be clean. Confirm remote state immediately before every muta
 
 Use the GitHub CLI for every GitHub integration. Start by requiring `gh auth status` to succeed for the intended host and account. Prefer `gh api` with explicit REST or GraphQL endpoints for pull requests, reviews, required checks, workflow runs, merge operations, tags, and releases. Use focused commands such as `gh run view`, `gh pr`, or `gh release` only when they provide a clearer supported operation than the API endpoint.
 
-Use `git` for repository operations such as status, fetch, branch creation, commits, tags, and push; do not use a browser, connector, or a different API client as a silent fallback for failed `gh` authentication or authorization. Stop and report the failed `gh` command, sanitized response, host, account, and required scope. Paginate collection endpoints when the complete result affects a decision, and re-read the pull-request head SHA and required-check state immediately before merging.
+Use `git` for repository operations such as status, fetch, branch creation, commits, tags, and push; do not use a browser, connector, or a different API client as a silent fallback for failed `gh` authentication or authorization. Stop and report the failed `gh` command, sanitized response, host, account, and required scope. Paginate collection endpoints when the complete result affects a decision. Hermod owns all live Actions queries and the single pull-request head and merge-gate re-read immediately before merging; Odin and Forseti reuse Hermod's revision-bound evidence instead of querying again.
 
 ## State machine
 
