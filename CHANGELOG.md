@@ -8,7 +8,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ### Changed
 
-- Allow release-only flows to version and publish approved delivery inventories without creating a release issue, while preserving delivery traceability and repository overrides ([issue #84](https://github.com/VissotoFlavio/asgard-codex-skill/issues/84)).
+- Allow release-only flows to version and publish approved delivery inventories without creating a release issue, while preserving delivery traceability and repository overrides ([issue #84](https://github.com/VissotoFlavio/asgard-codex-skill/issues/84), [PR #85](https://github.com/VissotoFlavio/asgard-codex-skill/pull/85)).
 
 ## [0.10.2] - 2026-09-13
 
