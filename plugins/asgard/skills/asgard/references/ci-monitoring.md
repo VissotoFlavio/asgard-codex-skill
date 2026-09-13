@@ -2,6 +2,8 @@
 
 Use this policy only while Hermod observes pull-request checks, workflow runs, release automation, deployment Actions, or a CI-created backport. Monitoring is part of Hermod's release activity, not a new permanent Asgard role.
 
+Hermod exclusively owns live provider queries during this phase, including target resolution, the blocking watcher, terminal evidence capture, and the single final head-revision and merge-gate read immediately before an authorized merge. Odin coordinates from that evidence, and Forseti validates its governance coverage; neither repeats Actions queries. Missing or stale evidence returns to Hermod.
+
 ## Isolate the watcher
 
 Start one fresh Hermod activity with no inherited conversation history when the platform supports it, such as `fork_turns="none"`. Its complete input is limited to:
@@ -18,7 +20,7 @@ Do not attach the implementation transcript, user conversation, full diff, revie
 
 ## Wait without model polling
 
-Prefer one provider-native blocking watch operation that exits on success or failure, such as `gh run watch --exit-status`, when it can bind to the required run and revision. Otherwise use the environment's event or wait mechanism with the longest safe bounded wait. Intermediate tool waits may resume the same operation but must not trigger analysis, narration, new agents, or repeated state queries while nothing actionable changed.
+For pull-request checks, prefer one `gh pr checks <pr> --watch --required --fail-fast` process. For a known workflow run, prefer one `gh run watch <run-id> --exit-status --compact` process. These commands may poll internally, but the agent starts only one blocking watcher per revision. Otherwise use the environment's event or wait mechanism with the longest safe bounded wait. Intermediate tool waits resume the same process and must not trigger analysis, narration, new agents, or repeated state queries while nothing actionable changed.
 
 Silence is the required result for an unchanged pending state. Report only:
 
@@ -33,6 +35,8 @@ Never create parallel watchers for the same revision. Never involve Tyr, Loki, B
 ## Handle terminal events
 
 Bind every result to the observed revision. On success, return the required check names, conclusion, revision, and provider URL. On failure, return only the failed job or step, a short sanitized excerpt, classification, revision, URL, and recommended owner.
+
+Before an authorized merge, Hermod performs exactly one fresh provider read to confirm the pull-request head still matches the observed revision and that required checks, reviews, conflicts, draft state, and mergeability remain acceptable. This safety read is not a second watcher. If the revision changed, discard the stale success and start one new watcher for the new revision only when authority still permits it.
 
 Route a confirmed application, test, or build failure to the original Brokkr or Sindri. Use Mimir only when evidence cannot classify the cause. Use Ymir for a confirmed infrastructure failure. Odin decides which validations and approvals the correction invalidates; unaffected reviewers remain approved. A new revision receives one new isolated watcher and never reuses stale success.
 

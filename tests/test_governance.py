@@ -213,11 +213,28 @@ class WorkflowGovernanceTests(unittest.TestCase):
         self.assertIn("one Hermod activity with no inherited conversation history", odin)
         self.assertIn("remain silent while the observed state is unchanged and pending", hermod)
         self.assertIn("one fresh, task-local Hermod activity", release)
-        self.assertIn("gh run watch --exit-status", monitoring)
+        self.assertIn("gh run watch <run-id> --exit-status --compact", monitoring)
         self.assertIn("Never create parallel watchers for the same revision", monitoring)
         self.assertIn("Use Mimir only when evidence cannot classify the cause", monitoring)
         self.assertIn("unaffected reviewers remain approved", monitoring)
         self.assertIn("incremental_cached_input_tokens", monitoring)
+
+    def test_hermod_exclusively_owns_actions_queries_and_watchers(self) -> None:
+        odin = (VALIDATOR.SKILL_ROOT / "references" / "agents" / "odin.md").read_text(encoding="utf-8")
+        hermod = (VALIDATOR.SKILL_ROOT / "references" / "agents" / "hermod.md").read_text(encoding="utf-8")
+        forseti = (VALIDATOR.SKILL_ROOT / "references" / "agents" / "forseti.md").read_text(encoding="utf-8")
+        monitoring = (VALIDATOR.SKILL_ROOT / "references" / "ci-monitoring.md").read_text(encoding="utf-8")
+        release = (VALIDATOR.SKILL_ROOT / "references" / "release-promotion.md").read_text(encoding="utf-8")
+
+        self.assertIn("sole owner of provider queries for live CI state", hermod)
+        self.assertIn("gh pr checks <pr> --watch --required --fail-fast", hermod)
+        self.assertIn("gh run watch <run-id> --exit-status --compact", monitoring)
+        self.assertIn("starts only one blocking watcher per revision", monitoring)
+        self.assertIn("exactly one fresh provider read", monitoring)
+        self.assertIn("This safety read is not a second watcher", monitoring)
+        self.assertIn("never repeat Actions queries in Odin or Forseti", odin)
+        self.assertIn("Do not query, watch, or poll GitHub Actions", forseti)
+        self.assertIn("Odin and Forseti reuse Hermod's revision-bound evidence", release)
 
     def test_context_efficiency_is_budgeted_and_non_recursive(self) -> None:
         skill = (VALIDATOR.SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
