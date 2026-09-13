@@ -8,6 +8,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [0.10.0] - 2026-09-13
 
+Release PR: [#74](https://github.com/VissotoFlavio/asgard-codex-skill/pull/74).
+
 ### Added
 
 - Add natural-language routing for discovery, delivery, review, infrastructure, deploy, release, and monitor; introduce an Odin-owned Discovery Brief, keep Mimir limited to read-only technical uncertainty, preserve explicit authority boundaries, and align the README with the skill ([issue #72](https://github.com/VissotoFlavio/asgard-codex-skill/issues/72), [PR #73](https://github.com/VissotoFlavio/asgard-codex-skill/pull/73)).
