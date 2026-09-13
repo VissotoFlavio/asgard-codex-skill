@@ -115,7 +115,7 @@ When the repository requires traceability, Forseti checks the evidence available
 3. required labels, templates, reviews, and checks are present;
 4. the changelog links the issue and pull request;
 5. the final published release description explicitly enumerates every included delivery issue and pull request;
-6. operational release and backport pull requests do not require separate issues unless repository policy explicitly overrides that exemption.
+6. a release-only flow creates no issue solely for versioning or publication, and its operational release and backport pull requests require no separate issues unless repository policy explicitly overrides that exemption.
 
 When an eligible delivery PR lacks its closing reference, Forseti appends a standalone `Closes #<issue>` line automatically if exactly one open, same-repository issue is authoritative and PR edit authority is already recorded. It preserves the existing body, performs at most one edit, and verifies the provider-recognized relationship afterward. Ambiguous or conflicting issue candidates require correction instead of guessing. Missing evidence that cannot exist yet is `PENDING`; a violated invariant is `CHANGES_REQUIRED`. Forseti's approval covers governance only.
 

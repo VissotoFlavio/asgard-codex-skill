@@ -117,6 +117,8 @@ At a material phase boundary, replace accumulated narrative with the compact che
 
 Approval never grants authority to commit, push, open or merge changes, publish, migrate, deploy, mutate infrastructure, add dependencies, or perform destructive operations. When repository or user policy requires delivery traceability, dispatch Forseti at the lifecycle phases where the relevant evidence exists. Recorded authority to create or edit an eligible delivery pull request permits Forseti's single idempotent repair that appends its unambiguous `Closes #<issue>` reference; it grants no other mutation. Require governance approval before merge or publication. For Release mode, read [release-promotion.md](references/release-promotion.md) before dispatching Hermod.
 
+A release-only flow packages and publishes an already-approved delivery inventory without creating an issue solely for the release. Release and backport pull requests are operational artifacts and also require no separate issue unless repository policy explicitly overrides this exemption. Do not invent a release issue to satisfy delivery traceability; carry the included delivery issues and pull requests into the release notes instead.
+
 Stop after exhausting safe read-only investigation when required authority, product direction, independent review, or meaningful validation is unavailable.
 
 ## Natural-language routing examples
