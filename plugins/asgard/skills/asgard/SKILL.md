@@ -23,6 +23,12 @@ Infer intent from natural language when it is clear. Ask one focused question on
 
 Intent and authority are separate dimensions. Record the inferred intent and the current authority ceiling before action. A request to deliver, deploy, release, or operate infrastructure does not implicitly authorize issue creation, implementation, commits, pushes, pull requests, publication, deployment, migration, destructive action, dependency installation, or infrastructure mutation. Never reinterpret an intent keyword as protected-operation authority.
 
+## Use command-line GitHub integrations
+
+For every GitHub interaction, use the authenticated GitHub CLI. Require `gh auth status` to succeed for the intended host and account, prefer `gh api` for explicit REST or GraphQL operations, and use focused `gh issue`, `gh pr`, `gh run`, or `gh release` commands when clearer. Request only the fields needed for the decision with `--json`, `--jq`, or explicit API selection, and paginate only when completeness matters.
+
+Do not open or operate a browser, connector, or another API client for ordinary GitHub work. Browser use is an extreme last resort only when both `gh` and `gh api` have a documented capability gap for the required operation, Odin explains that gap and the additional risk or context cost, and the user explicitly authorizes that browser operation. Failed authentication, missing scopes, authorization denial, command failure, or inconvenient output are not capability gaps and never justify a silent browser fallback. Stop instead with the sanitized failure, host, account, and required scope. Existing authority boundaries still apply to every CLI or exceptional browser mutation.
+
 For **DISCOVERY**, Odin owns product framing, alternatives, recommendation, and the decision boundary. Use Mimir only for a stated technical uncertainty that can be investigated read-only. Produce a concise **Discovery Brief** containing:
 
 - problem or desired outcome;
