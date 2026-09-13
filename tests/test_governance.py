@@ -99,6 +99,51 @@ class ContainedPathTests(unittest.TestCase):
 
 
 class WorkflowGovernanceTests(unittest.TestCase):
+    def test_intent_routing_preserves_authority_and_discovery_boundary(self) -> None:
+        skill = (VALIDATOR.SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
+        for intent in ("DISCOVERY", "DELIVERY", "REVIEW", "INFRASTRUCTURE", "DEPLOY", "RELEASE", "MONITOR"):
+            self.assertIn(f"**{intent}:**", skill)
+        self.assertIn("Ask one focused question only when ambiguity would materially change", skill)
+        self.assertIn("Intent and authority are separate dimensions", skill)
+        self.assertIn("Never reinterpret an intent keyword as protected-operation authority", skill)
+        self.assertIn("DISCOVERY -> user approval -> prepare or create issues when separately authorized -> DELIVERY", skill)
+        self.assertIn("It does not create issues, implement changes, or begin delivery", skill)
+
+    def test_discovery_brief_and_role_ownership_are_explicit(self) -> None:
+        skill = (VALIDATOR.SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
+        odin = (VALIDATOR.SKILL_ROOT / "references" / "agents" / "odin.md").read_text(encoding="utf-8")
+        mimir = (VALIDATOR.SKILL_ROOT / "references" / "agents" / "mimir.md").read_text(encoding="utf-8")
+        for field in (
+            "problem or desired outcome", "relevant technical evidence", "viable alternatives",
+            "proposed scope and exclusions", "affected components", "risks and unknowns",
+            "relative complexity", "proposed issues", "preliminary acceptance criteria",
+        ):
+            self.assertIn(field, skill)
+        self.assertIn("For discovery, own the problem framing", odin)
+        self.assertIn("do not frame the product problem", mimir)
+        self.assertIn("do not edit artifacts", mimir.lower())
+
+    def test_deploy_routing_separates_application_and_infrastructure(self) -> None:
+        skill = (VALIDATOR.SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
+        roles = (VALIDATOR.SKILL_ROOT / "references" / "roles-and-packets.md").read_text(encoding="utf-8")
+        self.assertIn("promote an approved application revision through Hermod", skill)
+        self.assertIn("route infrastructure changes needed for that promotion to Ymir", skill)
+        self.assertIn("Application promotion routes to Hermod", roles)
+        self.assertIn("separately authorized activities", roles)
+
+    def test_readme_documents_intents_without_removed_bragi_section(self) -> None:
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+        self.assertNotIn("### Bragi: final-candidate code review", readme)
+        for example in (
+            "Use Asgard para explorar esta ideia.",
+            "Use Asgard para desenvolver esta funcionalidade.",
+            "Faça o discovery e pare antes de criar as issues.",
+            "Faça o discovery e, se eu aprovar, prepare as issues.",
+        ):
+            self.assertIn(example, readme)
+        self.assertIn("Intent never grants authority", readme)
+        self.assertIn("Application promotion belongs to Hermod", readme)
+
     def test_bragi_reviews_only_completed_code_quality_candidate(self) -> None:
         bragi = (VALIDATOR.SKILL_ROOT / "references" / "agents" / "bragi.md").read_text(encoding="utf-8")
         self.assertIn("after `IMPLEMENTER_COMPLETE`", bragi)
@@ -185,6 +230,22 @@ class WorkflowGovernanceTests(unittest.TestCase):
         self.assertIn("multiple bounded activities or material risk", header)
         self.assertIn("ordinary maintenance", header)
         self.assertIn("release observation", header)
+
+    def test_activation_contract_covers_all_intents_and_explicit_monitoring(self) -> None:
+        skill = (VALIDATOR.SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
+        header = skill.split("---", 2)[1]
+        for intent in ("discovery", "delivery", "review", "infrastructure", "deploy", "release", "monitor"):
+            self.assertIn(intent, header.lower())
+        self.assertIn("Asgard is explicitly requested", header)
+        self.assertIn("explicit MONITOR requests", header)
+        self.assertIn("Do not select it implicitly", header)
+
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+        when_to_use = readme.split("## When to use Asgard", 1)[1].split("## Roles", 1)[0]
+        for intent in ("discovery", "delivery", "review", "infrastructure", "deploy", "release", "monitoring"):
+            self.assertIn(intent, when_to_use.lower())
+        self.assertIn("Explicit monitoring remains supported", when_to_use)
+        self.assertIn("Do not select it implicitly", when_to_use)
 
     def test_release_runs_from_master_push_without_checkout(self) -> None:
         text = (ROOT / ".github" / "workflows" / "release.yml").read_text(encoding="utf-8")

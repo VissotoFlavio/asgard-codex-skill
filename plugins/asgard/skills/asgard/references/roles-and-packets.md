@@ -17,6 +17,8 @@ Use this index only when role selection is unclear. The main skill links directl
 
 Odin is the primary agent. It owns the graph, DoDs, routing, integration, evidence review, correction decisions, and final acceptance.
 
+Canonical intent does not itself select a mutation or grant authority. Odin owns discovery and decision-making; Mimir may supply only read-only evidence for a stated technical uncertainty. Application promotion routes to Hermod, while infrastructure discovery or mutation routes to Ymir. A deploy request that includes both becomes coordinated, separately authorized activities.
+
 ## Shared packet contract
 
 Send only the selected role packet plus:
