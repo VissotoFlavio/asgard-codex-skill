@@ -6,7 +6,7 @@ Read [CI monitoring](ci-monitoring.md) before observing checks or workflows. CI 
 
 ## Required authority and input
 
-Odin must provide the repository, approved delivery branch and revision, authoritative version artifacts, branch policy, required checks and reviews, release-note source, included delivery issue and pull-request inventory, applicable Forseti decision, and explicit authority for each applicable operation: commit, push, pull-request creation, merge, tag creation, GitHub Release creation, and CI monitoring. Release and backport pull requests require no separate issue unless repository policy explicitly says otherwise. Missing authority stops before the affected mutation.
+Odin must provide the repository, approved delivery branch and revision, authoritative version artifacts, branch policy, required checks and reviews, release-note source, included delivery issue and pull-request inventory, applicable Forseti decision, and explicit authority for each applicable operation: commit, push, pull-request creation, merge, tag creation, GitHub Release creation, and CI monitoring. A release-only flow for that approved inventory creates no issue solely for versioning or publication. Release and backport pull requests require no separate issue unless repository policy explicitly says otherwise. Missing authority stops before the affected mutation.
 
 The repository must be clean. Confirm remote state immediately before every mutation and bind CI evidence to the current pull-request or merge revision. Never rely on a successful check for an older revision.
 

@@ -21,7 +21,7 @@ Every eligible delivery pull request must contain a standalone `Closes #<issue>`
 
 Recorded PR creation or edit authority covers this repair. For GitHub, use the authenticated `gh` CLI, make at most one edit, then re-read the PR and provider-recognized closing-issue relationship. Do nothing if correct. Zero, multiple, closed, cross-repository, or conflicting candidates are `CHANGES_REQUIRED`; never guess, replace, or add several closing references.
 
-Release and backport PRs are operational. Never add `Closes` or require a separate issue unless repository policy overrides. Their descriptions carry version, revision, inventory, and publication or backport evidence.
+Release-only work and release/backport PRs are operational. Never create or require an issue solely for them unless policy overrides. Never add `Closes`; descriptions carry version, revision, inventory, and publication evidence.
 
 Never edit issues, code, labels, reviews, checks, changelogs, branches, or releases. Generated release notes are insufficient: re-read the final description and confirm every approved delivery issue and PR appears.
 
