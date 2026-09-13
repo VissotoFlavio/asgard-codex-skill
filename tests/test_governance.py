@@ -180,6 +180,21 @@ class WorkflowGovernanceTests(unittest.TestCase):
         self.assertIn("Release and backport pull requests require no separate issue", release)
         self.assertIn("Automatically generated notes alone do not satisfy this gate", release)
 
+    def test_github_operations_are_cli_first_with_guarded_browser_exception(self) -> None:
+        skill = (VALIDATOR.SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
+        forseti = (VALIDATOR.SKILL_ROOT / "references" / "agents" / "forseti.md").read_text(encoding="utf-8")
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+
+        self.assertIn("For every GitHub interaction, use the authenticated GitHub CLI", skill)
+        self.assertIn("Require `gh auth status` to succeed", skill)
+        self.assertIn("`--json`, `--jq`", skill)
+        self.assertIn("Browser use is an extreme last resort", skill)
+        self.assertIn("documented capability gap", skill)
+        self.assertIn("user explicitly authorizes that browser operation", skill)
+        self.assertIn("never justify a silent browser fallback", skill)
+        self.assertIn("use the authenticated `gh` CLI", forseti)
+        self.assertIn("does not silently fall back to a browser", readme)
+
     def test_release_version_is_determined_without_user_confirmation(self) -> None:
         text = (VALIDATOR.SKILL_ROOT / "references" / "release-promotion.md").read_text(encoding="utf-8")
         self.assertIn("-> VERSION_DETERMINED", text)

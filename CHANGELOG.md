@@ -6,6 +6,14 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+## [0.10.1] - 2026-09-13
+
+Release PR: [#78](https://github.com/VissotoFlavio/asgard-codex-skill/pull/78).
+
+### Changed
+
+- Make the authenticated GitHub CLI the default for every GitHub interaction, minimize structured output, and reserve browser operation for explicitly authorized, documented CLI/API capability gaps ([issue #76](https://github.com/VissotoFlavio/asgard-codex-skill/issues/76), [PR #77](https://github.com/VissotoFlavio/asgard-codex-skill/pull/77)).
+
 ## [0.10.0] - 2026-09-13
 
 Release PR: [#74](https://github.com/VissotoFlavio/asgard-codex-skill/pull/74).
@@ -74,7 +82,8 @@ Release tracking: [issue #40](https://github.com/VissotoFlavio/asgard-codex-skil
 
 - Add Forseti as the delivery-governance specialist, with independent issue-to-release traceability gates and official artwork ([issue #38](https://github.com/VissotoFlavio/asgard-codex-skill/issues/38), [PR #39](https://github.com/VissotoFlavio/asgard-codex-skill/pull/39)).
 
-[Unreleased]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.10.0...develop
+[Unreleased]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.10.1...develop
+[0.10.1]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.10.0...v0.10.1
 [0.10.0]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.9.0...v0.10.0
 [0.9.0]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.8.2...v0.9.0
 [0.8.2]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.8.1...v0.8.2
