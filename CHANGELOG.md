@@ -6,6 +6,14 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+## [0.10.4] - 2026-09-14
+
+Release PR: [#90](https://github.com/VissotoFlavio/asgard-codex-skill/pull/90)
+
+### Changed
+
+- Require merge commits for release and backport pull requests, reserving squash for delivery branches created from and targeting `develop` ([issue #88](https://github.com/VissotoFlavio/asgard-codex-skill/issues/88), [PR #89](https://github.com/VissotoFlavio/asgard-codex-skill/pull/89)).
+
 ## [0.10.3] - 2026-09-13
 
 Release PR: [#86](https://github.com/VissotoFlavio/asgard-codex-skill/pull/86)

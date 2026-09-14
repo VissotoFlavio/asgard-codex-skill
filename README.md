@@ -170,6 +170,7 @@ Start a new task after installation and invoke `$asgard`.
 - `release/<version>` originates from `develop` and targets `master`.
 - `hotfix/<version>` originates from and targets `master`.
 - `master` contains stable, versioned releases.
+- Squash is reserved for delivery pull requests created from `develop` and targeting `develop`; release and backport pull requests always use merge commits.
 - [CHANGELOG.md](./CHANGELOG.md) records deliveries with issue and pull-request links.
 - [GitHub Releases](https://github.com/VissotoFlavio/asgard-codex-skill/releases) contains stable release notes.
 
