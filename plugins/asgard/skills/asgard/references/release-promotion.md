@@ -47,7 +47,7 @@ Resume idempotently from observed repository state. Do not duplicate branches, p
 
 ## Delivery integration
 
-Delivery branches originate from `develop` and target `develop`. Prefer squash merge. Before merging, inspect whether the branch is an active base for dependent branches. When squash would destroy ancestry required by those branches, use a merge commit. If protections do not allow the safe method, stop and report; do not rebase or force-push dependent branches automatically.
+Delivery branches created from `develop` and targeting `develop` are the only pull requests eligible for squash merge. Prefer squash for those deliveries. Before merging, inspect whether the branch is an active base for dependent branches. When squash would destroy ancestry required by those branches, use a merge commit. If protections do not allow the safe method, stop and report; do not rebase or force-push dependent branches automatically.
 
 Merge only when the pull request is not a draft, has no conflicts, satisfies required reviews, is current when required, passes every required check for its current revision, and the provider reports it mergeable. Failed, cancelled, or timed-out required checks block the merge. Pending checks pause promotion inside the bounded watcher without producing repeated model turns.
 
@@ -75,7 +75,7 @@ Repository Actions own package generation, publication, and environment deployme
 
 After production publication, discover the pull request created by CI directly from `master` to `develop` using reliable workflow output, version, revision, and repository metadata. The backport does not require its own issue unless repository policy explicitly overrides this rule. Confirm both branches belong to the same repository, the head is the published `master` revision, and the changes return production state without unrelated divergence. Multiple plausible matches or a missing backport after the configured monitoring window block promotion.
 
-Apply the ordinary `develop` merge rule, normally squash, after all backport gates pass. Synchronize local `develop` and verify its application version equals production before declaring `RELEASE_COMPLETE`.
+Always merge backport pull requests with a merge commit after all backport gates pass. Never squash a backport, even though it targets `develop`; preserving the release ancestry prevents avoidable conflicts in later release and backport flows. Synchronize local `develop` and verify its application version equals production before declaring `RELEASE_COMPLETE`.
 
 ## Failure report
 
