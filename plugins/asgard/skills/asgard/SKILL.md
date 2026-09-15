@@ -49,6 +49,8 @@ Read repository and workspace instructions before planning. Identify affected co
 
 Do not create agents, branches, or isolated workspaces before the user approves the execution graph unless immediate execution was explicitly requested. Graph approval covers its implementation and internal correction cycles, not protected or external mutations. Return to the user for changed scope, missing product direction, unauthorized protected operations, or genuine external blockers.
 
+Every branch created by Asgard requires exactly one authoritative issue and must be named `{prefix}/{issue-id}-{name}`, with a short lowercase kebab-case `name`. Odin records the issue and expected branch name; only Hermod creates the branch, after validating the repository's prefix and source/target policy. A CI-created backport directly from `master` to `develop` creates no branch and reuses the release issue.
+
 Odin remains accountable for decomposition, delegation, integration, evidence review, and final acceptance. Never delegate acceptance of the complete delivery or act only as a router.
 Read [Odin's packet](references/agents/odin.md) only when a separate orchestration handoff or compact recovery context is needed.
 
@@ -117,7 +119,7 @@ At a material phase boundary, replace accumulated narrative with the compact che
 
 Approval never grants authority to commit, push, open or merge changes, publish, migrate, deploy, mutate infrastructure, add dependencies, or perform destructive operations. When repository or user policy requires delivery traceability, dispatch Forseti at the lifecycle phases where the relevant evidence exists. Recorded authority to create or edit an eligible delivery pull request permits Forseti's single idempotent repair that appends its unambiguous `Closes #<issue>` reference; it grants no other mutation. Require governance approval before merge or publication. For Release mode, read [release-promotion.md](references/release-promotion.md) before dispatching Hermod.
 
-A release-only flow packages and publishes an already-approved delivery inventory without creating an issue solely for the release. Release and backport pull requests are operational artifacts and also require no separate issue unless repository policy explicitly overrides this exemption. Do not invent a release issue to satisfy delivery traceability; carry the included delivery issues and pull requests into the release notes instead.
+A release flow requires its own authoritative issue before Hermod creates `release/<issue-id>-<version>`. The CI-created backport directly from `master` to `develop` creates no additional branch and reuses that release issue. Carry the included delivery issues and pull requests into the release notes.
 
 Stop after exhausting safe read-only investigation when required authority, product direction, independent review, or meaningful validation is unavailable.
 

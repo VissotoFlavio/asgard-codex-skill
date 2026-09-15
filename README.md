@@ -111,11 +111,11 @@ For GitHub, Asgard uses the authenticated `gh` CLI for issues, pull requests, re
 When the repository requires traceability, Forseti checks the evidence available at each lifecycle phase:
 
 1. one bounded issue defines new delivery work and its acceptance criteria when repository policy requires it;
-2. the delivery branch and pull request identify that issue with a provider-recognized `Closes #<issue>` relationship;
+2. every created branch is named `{prefix}/{issue-id}-{name}` using its authoritative issue, and the pull request identifies the same issue with a provider-recognized `Closes #<issue>` relationship;
 3. required labels, templates, reviews, and checks are present;
 4. the changelog links the issue and pull request;
 5. the final published release description explicitly enumerates every included delivery issue and pull request;
-6. a release-only flow creates no issue solely for versioning or publication, and its operational release and backport pull requests require no separate issues unless repository policy explicitly overrides that exemption.
+6. a release has its own authoritative issue and uses `release/<issue-id>-<version>`; the CI-created `master` to `develop` backport creates no additional branch and reuses that issue.
 
 When an eligible delivery PR lacks its closing reference, Forseti appends a standalone `Closes #<issue>` line automatically if exactly one open, same-repository issue is authoritative and PR edit authority is already recorded. It preserves the existing body, performs at most one edit, and verifies the provider-recognized relationship afterward. Ambiguous or conflicting issue candidates require correction instead of guessing. Missing evidence that cannot exist yet is `PENDING`; a violated invariant is `CHANGES_REQUIRED`. Forseti's approval covers governance only.
 
@@ -166,15 +166,16 @@ Start a new task after installation and invoke `$asgard`.
 ## Repository and release workflow
 
 - `develop` contains the next candidate changes.
-- `feature/*`, `fix/*`, `docs/*`, and related delivery branches originate from and return to `develop`.
-- `release/<version>` originates from `develop` and targets `master`.
-- `hotfix/<version>` originates from and targets `master`.
+- Every created branch follows `{prefix}/{issue-id}-{name}`, where `name` is a short lowercase kebab-case slug and the ID belongs to its authoritative issue.
+- `feature/<issue-id>-<name>`, `fix/<issue-id>-<name>`, `docs/<issue-id>-<name>`, and related delivery branches originate from and return to `develop`.
+- `release/<issue-id>-<version>` originates from `develop` and targets `master`.
+- `hotfix/<issue-id>-<version>` originates from and targets `master`.
 - `master` contains stable, versioned releases.
 - Squash is reserved for delivery pull requests created from `develop` and targeting `develop`; release and backport pull requests always use merge commits.
 - [CHANGELOG.md](./CHANGELOG.md) records deliveries with issue and pull-request links.
 - [GitHub Releases](https://github.com/VissotoFlavio/asgard-codex-skill/releases) contains stable release notes.
 
-After an approved release merge reaches `master`, the repository workflow validates the version, creates the immutable tag and GitHub Release, and opens a `master` to `develop` backport pull request. Release and backport pull requests are operational and do not require their own issues by default. Before completion, the final release description must explicitly list every delivery issue and pull request included in production. Production publication failures leave the tag in place and require a new corrective version.
+After an approved release merge reaches `master`, the repository workflow validates the version, creates the immutable tag and GitHub Release, and opens a `master` to `develop` backport pull request. The release requires an authoritative issue; the backport creates no additional branch and reuses that issue. Before completion, the final release description must explicitly list every delivery issue and pull request included in production. Production publication failures leave the tag in place and require a new corrective version.
 
 ## Prepare a version
 
