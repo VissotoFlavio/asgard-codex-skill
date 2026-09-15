@@ -6,6 +6,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+### Changed
+
+- Require every Asgard-created branch to include its authoritative issue ID in `{prefix}/{issue-id}-{name}` format ([issue #92](https://github.com/VissotoFlavio/asgard-codex-skill/issues/92), [PR #93](https://github.com/VissotoFlavio/asgard-codex-skill/pull/93)).
+
 ## [0.10.4] - 2026-09-14
 
 Release PR: [#90](https://github.com/VissotoFlavio/asgard-codex-skill/pull/90)
