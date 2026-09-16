@@ -101,10 +101,13 @@ evidence: short sanitized evidence
 retry_possible: true | false | unknown
 recommended_owner: Brokkr | Sindri | Ymir | Odin | repository-maintainer
 usage_observed:
+  intent: RELEASE
+  role: Hermod
   model_turns: integer | unavailable
   incremental_input_tokens: integer | unavailable
   incremental_cached_input_tokens: integer | unavailable
   incremental_output_tokens: integer | unavailable
+  incremental_reasoning_output_tokens: integer | unavailable
 ```
 
 Never reproduce credentials, tokens, personal data, or unnecessary exploit details. A transient-looking failure may justify recommending a rerun, but Hermod does not rerun automatically unless that exact retry authority and a bounded retry policy were supplied.

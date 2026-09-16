@@ -16,6 +16,8 @@ Start one fresh Hermod activity with no inherited conversation history when the 
 - the exact retry authority and maximum retry count, normally zero or one;
 - sanitized commands or provider queries needed to observe the state.
 
+Use `minimal` reasoning effort when the platform supports it. Raise it only after a terminal event leaves evidence genuinely ambiguous; routine status interpretation never justifies higher effort.
+
 Do not attach the implementation transcript, user conversation, full diff, reviewer reports, build logs, or prior polling output. Provide a narrow artifact or log excerpt only after a terminal failure makes it relevant.
 
 ## Wait without model polling
@@ -48,10 +50,13 @@ When the platform exposes usage, record the watcher delta rather than its inheri
 
 ```yaml
 usage_observed:
+  intent: MONITOR
+  role: Hermod
   model_turns: integer | unavailable
   incremental_input_tokens: integer | unavailable
   incremental_cached_input_tokens: integer | unavailable
   incremental_output_tokens: integer | unavailable
+  incremental_reasoning_output_tokens: integer | unavailable
 ```
 
 Token telemetry is diagnostic evidence, not an acceptance or release gate. Never keep polling solely to obtain it.
