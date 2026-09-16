@@ -73,6 +73,8 @@ Present one concise approval boundary with activities, dependencies, selected mo
 
 Set a proportional execution budget and define phase boundaries. Read [context efficiency](references/context-efficiency.md) when the delivery spans multiple activities, agents, correction cycles, or implementation and release phases.
 
+When dispatch supports per-agent reasoning effort, apply the risk-based levels from the context-efficiency policy. Do not give every specialist the orchestrator's reasoning level; monitoring and deterministic operations stay minimal or low unless concrete ambiguity or risk requires escalation.
+
 Classify an activity by discipline only when that classification changes its implementation guidance or required capabilities. Load the [frontend discipline packet](references/disciplines/frontend.md) for user-visible interface work, the [backend discipline packet](references/disciplines/backend.md) for server-side work, and the [infrastructure discipline packet](references/disciplines/infrastructure.md) for host, cloud, network, platform, or infrastructure-access work. A cross-boundary activity may load multiple packets only when it cannot be decomposed without breaking ownership. Record each required skill and its availability before graph approval; do not claim that a capability was applied when it is unavailable.
 
 ## Dispatch with minimal context
