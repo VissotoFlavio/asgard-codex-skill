@@ -125,6 +125,48 @@ class ContainedPathTests(unittest.TestCase):
         self.assertIn("migration, schema, or backfill failure to the original Regin", release)
         self.assertIn("recommended_owner: Brokkr | Sindri | Regin | Ymir", release)
 
+    def test_database_inventory_is_compact_persistent_and_never_apply_authority(self) -> None:
+        state = (VALIDATOR.SKILL_ROOT / "references" / "database-state.md").read_text(encoding="utf-8")
+        regin = (VALIDATOR.SKILL_ROOT / "references" / "agents" / "regin.md").read_text(encoding="utf-8")
+        database = (VALIDATOR.SKILL_ROOT / "references" / "disciplines" / "database.md").read_text(encoding="utf-8")
+        definition = (VALIDATOR.SKILL_ROOT / "references" / "definition-of-done.md").read_text(encoding="utf-8")
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+
+        for path in (
+            "ASGARD_CONFIG_HOME/databases",
+            "%LOCALAPPDATA%\\Asgard\\databases",
+            "${XDG_CONFIG_HOME:-$HOME/.config}/asgard/databases",
+            "~/Library/Application Support/Asgard/databases",
+        ):
+            self.assertIn(path, state)
+        for section in ("`manifest`", "`summary`", "`migrations`", "`relations`", "`schemas`", "`tables`"):
+            self.assertIn(section, state)
+        for inventory_state in ("`VALID`", "`PARTIAL`", "`STALE`", "`DRIFTED`", "`INVALID`"):
+            self.assertIn(inventory_state, state)
+
+        self.assertIn("require separate read-only DISCOVER authority", state)
+        self.assertIn("Persistence consent is separate from connection authority", state)
+        self.assertIn("explicit profile-scoped consent", state)
+        self.assertIn("only task-relevant objects and sections to reduce tokens", state)
+        self.assertIn("migrations are desired state; inventory is observed state", state)
+        self.assertIn("Never store passwords, tokens, keys, certificates, connection strings", state)
+        self.assertIn("Function/view bodies default to a digest", state)
+        self.assertIn("Stale or partial state may guide AUTHOR but never authorize APPLY", state)
+        self.assertIn("Immediately before APPLY, query live read-only", state)
+        self.assertIn("engine-aware transitive dependencies", state)
+        self.assertIn("atomically publish the complete generation", state)
+        self.assertIn("reject mixed, interrupted, malformed, corrupt", state)
+        self.assertIn("prior authority cannot be reused", state)
+        self.assertIn("schema/tenant or scoped-object namespace", state)
+        self.assertIn("override must be non-empty and absolute", state)
+        self.assertIn("reject repositories, installed skills", state)
+        self.assertIn("On partial APPLY or VERIFY failure, halt mutation", state)
+        self.assertIn("database-state.md", regin)
+        self.assertIn("database-state.md", database)
+        self.assertIn("profile and inventory state", definition)
+        self.assertIn("compact summary and only relevant object details", readme)
+        self.assertIn("never authorize `APPLY`", readme)
+
     def test_infrastructure_state_contract_enforces_security_boundaries(self) -> None:
         state = (VALIDATOR.SKILL_ROOT / "references" / "infrastructure-state.md").read_text(encoding="utf-8")
         ymir = (VALIDATOR.SKILL_ROOT / "references" / "agents" / "ymir.md").read_text(encoding="utf-8")
