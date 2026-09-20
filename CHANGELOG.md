@@ -6,6 +6,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+### Added
+
+- Define secure access to containerized databases on a VPS through loopback-only SSH forwarding, separate Ymir and Regin authority, and phase-specific opaque credential references ([issue #114](https://github.com/VissotoFlavio/asgard-codex-skill/issues/114)).
+
 ## [0.12.0] - 2026-09-20
 
 Release tracking: [issue #111](https://github.com/VissotoFlavio/asgard-codex-skill/issues/111), [PR #112](https://github.com/VissotoFlavio/asgard-codex-skill/pull/112).
