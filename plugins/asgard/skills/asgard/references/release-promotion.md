@@ -79,7 +79,7 @@ Always merge backport pull requests with a merge commit after all backport gates
 
 ## Failure report
 
-On a definitive failure, stop and return. Route a confirmed application, test, or build failure to the original Brokkr or Sindri. Use Mimir only when the cause is ambiguous; use Ymir for confirmed infrastructure ownership. Do not automatically redispatch Odin's complete reviewer set. After a correction, rerun only affected validation and approvals before starting one fresh watcher for the new revision.
+On a definitive failure, stop and return. Route a confirmed application, test, or build failure to the original Brokkr or Sindri, and a confirmed migration, schema, or backfill failure to the original Regin. Use Mimir only when the cause is ambiguous; use Ymir for confirmed infrastructure ownership. Do not automatically redispatch Odin's complete reviewer set. After a correction, rerun only affected validation and approvals before starting one fresh watcher for the new revision.
 
 Return:
 
@@ -95,11 +95,11 @@ workflow: name | not applicable
 job: name | not applicable
 failed_step: value | unknown
 workflow_run: url | not applicable
-classification: application | test | build | deployment | infrastructure | permission | timeout | cancelled | ambiguous | unknown
+classification: application | database | test | build | deployment | infrastructure | permission | timeout | cancelled | ambiguous | unknown
 summary: concise observed cause
 evidence: short sanitized evidence
 retry_possible: true | false | unknown
-recommended_owner: Brokkr | Sindri | Ymir | Odin | repository-maintainer
+recommended_owner: Brokkr | Sindri | Regin | Ymir | Odin | repository-maintainer
 usage_observed:
   intent: RELEASE
   role: Hermod
