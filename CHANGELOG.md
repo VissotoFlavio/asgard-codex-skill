@@ -8,7 +8,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ### Added
 
-- Add Regin's persistent, consent-scoped database profiles and compact inventory contract with selective refresh and mandatory live preflight before `APPLY` ([issue #109](https://github.com/VissotoFlavio/asgard-codex-skill/issues/109)).
+- Add Regin's persistent, consent-scoped database profiles and compact inventory contract with selective refresh and mandatory live preflight before `APPLY` ([issue #109](https://github.com/VissotoFlavio/asgard-codex-skill/issues/109), [PR #110](https://github.com/VissotoFlavio/asgard-codex-skill/pull/110)).
 
 ## [0.11.0] - 2026-09-20
 
