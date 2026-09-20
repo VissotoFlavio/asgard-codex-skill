@@ -41,6 +41,8 @@ Do not select it implicitly for routine single-file edits, isolated diagnosis, o
 
 Specialists receive task-local context rather than the entire conversation. Their reports and passing tests are evidence; Odin still owns product decisions, inspects the candidate, and makes the acceptance decision. Mimir only resolves stated technical uncertainty read-only. Regin may design and author versioned database changes, but connecting to or mutating any durable, runtime, or non-isolated database, applying or retrying a migration, and executing a rollback each require explicit authority for the exact environment and candidate.
 
+On first use of each database profile, Regin requests separate read-only discovery authority and consent before persisting a local inventory. Later activities load a compact summary and only relevant object details, refreshing stale, incomplete, affected, or drifted sections instead of rediscovering the whole database. Profiles and inventories live outside the repository and installed plugin under `ASGARD_CONFIG_HOME/databases` when configured, otherwise the platform-local Asgard data directory. They contain no credentials or row data, never replace the runtime database as source of truth, and never authorize `APPLY`; live preflight remains mandatory.
+
 Odin applies Asgard once: specialist tasks do not invoke `$asgard` again. Multi-phase deliveries use compact checkpoints, fresh agent contexts, bounded reports, and a proportional default budget of three simultaneous agents and one grouped correction cycle. Exact paths, revisions, run URLs, and validation conclusions replace copied transcripts, full diffs, and successful logs.
 
 ## Intent catalog
