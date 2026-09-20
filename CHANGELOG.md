@@ -6,6 +6,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+## [0.12.0] - 2026-09-20
+
+Release tracking: [issue #111](https://github.com/VissotoFlavio/asgard-codex-skill/issues/111).
+
 ### Added
 
 - Add Regin's persistent, consent-scoped database profiles and compact inventory contract with selective refresh and mandatory live preflight before `APPLY` ([issue #109](https://github.com/VissotoFlavio/asgard-codex-skill/issues/109), [PR #110](https://github.com/VissotoFlavio/asgard-codex-skill/pull/110)).
@@ -138,7 +142,8 @@ Release tracking: [issue #40](https://github.com/VissotoFlavio/asgard-codex-skil
 
 - Add Forseti as the delivery-governance specialist, with independent issue-to-release traceability gates and official artwork ([issue #38](https://github.com/VissotoFlavio/asgard-codex-skill/issues/38), [PR #39](https://github.com/VissotoFlavio/asgard-codex-skill/pull/39)).
 
-[Unreleased]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.11.0...develop
+[Unreleased]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.12.0...develop
+[0.12.0]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.11.0...v0.12.0
 [0.11.0]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.10.6...v0.11.0
 [0.10.6]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.10.5...v0.10.6
 [0.10.5]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.10.4...v0.10.5
