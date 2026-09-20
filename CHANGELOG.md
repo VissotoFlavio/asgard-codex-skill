@@ -6,6 +6,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+### Changed
+
+- Require database-related issues and pull requests to carry the composable `database` discipline label alongside their nature labels ([issue #102](https://github.com/VissotoFlavio/asgard-codex-skill/issues/102), [PR #104](https://github.com/VissotoFlavio/asgard-codex-skill/pull/104)).
+
 ## [0.10.5] - 2026-09-15
 
 Release PR: [#95](https://github.com/VissotoFlavio/asgard-codex-skill/pull/95)
