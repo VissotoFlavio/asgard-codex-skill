@@ -8,7 +8,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ### Added
 
-- Add Regin as the database architecture specialist with explicit authority boundaries for schema design, migrations, validation, application, retry, and rollback ([issue #103](https://github.com/VissotoFlavio/asgard-codex-skill/issues/103)).
+- Add Regin as the database architecture specialist with explicit authority boundaries for schema design, migrations, validation, application, retry, and rollback ([issue #103](https://github.com/VissotoFlavio/asgard-codex-skill/issues/103), [PR #105](https://github.com/VissotoFlavio/asgard-codex-skill/pull/105)).
 
 ## [0.10.5] - 2026-09-15
 
