@@ -8,7 +8,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ### Added
 
-- Define secure access to containerized databases on a VPS through loopback-only SSH forwarding, separate Ymir and Regin authority, and phase-specific opaque credential references ([issue #114](https://github.com/VissotoFlavio/asgard-codex-skill/issues/114)).
+- Define secure access to containerized databases on a VPS through loopback-only SSH forwarding, separate Ymir and Regin authority, and phase-specific opaque credential references ([issue #114](https://github.com/VissotoFlavio/asgard-codex-skill/issues/114), [PR #115](https://github.com/VissotoFlavio/asgard-codex-skill/pull/115)).
 
 ## [0.12.0] - 2026-09-20
 
