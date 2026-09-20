@@ -6,6 +6,14 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+## [0.13.0] - 2026-09-20
+
+Release PR: [#116](https://github.com/VissotoFlavio/asgard-codex-skill/pull/116).
+
+### Added
+
+- Define secure access to containerized databases on a VPS through loopback-only SSH forwarding, separate Ymir and Regin authority, and phase-specific opaque credential references ([issue #114](https://github.com/VissotoFlavio/asgard-codex-skill/issues/114), [PR #115](https://github.com/VissotoFlavio/asgard-codex-skill/pull/115)).
+
 ## [0.12.0] - 2026-09-20
 
 Release tracking: [issue #111](https://github.com/VissotoFlavio/asgard-codex-skill/issues/111), [PR #112](https://github.com/VissotoFlavio/asgard-codex-skill/pull/112).
@@ -142,7 +150,8 @@ Release tracking: [issue #40](https://github.com/VissotoFlavio/asgard-codex-skil
 
 - Add Forseti as the delivery-governance specialist, with independent issue-to-release traceability gates and official artwork ([issue #38](https://github.com/VissotoFlavio/asgard-codex-skill/issues/38), [PR #39](https://github.com/VissotoFlavio/asgard-codex-skill/pull/39)).
 
-[Unreleased]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.12.0...develop
+[Unreleased]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.13.0...develop
+[0.13.0]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.12.0...v0.13.0
 [0.12.0]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.11.0...v0.12.0
 [0.11.0]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.10.6...v0.11.0
 [0.10.6]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.10.5...v0.10.6
