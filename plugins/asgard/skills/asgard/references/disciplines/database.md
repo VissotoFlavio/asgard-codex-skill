@@ -1,6 +1,6 @@
 # Database discipline
 
-Load for schema, migration, index, partition, or backfill work. Supplements Regin; grants no connection or mutation authority. Follow `references/database-state.md` for profiles, first-use discovery, compact inventories, freshness, and drift.
+Load for schema, migration, index, partition, or backfill work. Supplements Regin; grants no connection or mutation authority. Follow `references/database-state.md` for persisted state and `references/database-vps-access.md` for container access through a VPS.
 
 ## Activity contract
 

@@ -6,6 +6,8 @@ Load this packet for work on hosts, cloud resources, networks, OS services, cont
 
 Use `references/infrastructure-state.md` for profiles and inventories. Remote read-only discovery does not authorize durable local writes. Profiles locate a destination and reference external credentials; inventories are observed metadata snapshots. Neither may contain secrets.
 
+For a containerized database on a VPS, follow `references/database-vps-access.md`. Ymir owns SSH, tunnel, host/container exposure, and credential mechanisms, but never inherits database `DISCOVER`, `VALIDATE`, or `APPLY` authority.
+
 Before dispatch, record provider, required tools and skills, availability, expected identity, access level, and whether APPLY may be requested. Provider skills are capabilities, not permission sources.
 
 For SSH/Linux, confirm first-use identity out of band, prefer SSH agent/config, and discover only authorized metadata. Detect OS, architecture, systemd, Docker/Compose, relevant services, and bounded workloads. Never disable host-key checking, scan arbitrary filesystems, read secret files, or capture environment values.

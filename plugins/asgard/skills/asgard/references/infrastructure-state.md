@@ -12,6 +12,8 @@ It must not contain passwords, passphrases, private keys, access keys, session t
 
 First use requires identity confirmation through a trusted out-of-band channel. Identity absent, unverifiable, or mismatched fails closed. Validate it on every connection and immediately before APPLY; a mismatch stops work and requires explicit reauthorization, never an automatic profile rewrite.
 
+For access to a containerized database on a VPS, follow `references/database-vps-access.md`; keep SSH/tunnel authority separate from database-phase authority.
+
 ## Inventory
 
 An inventory is a timestamped, bounded snapshot with schema and collector versions, profile identity, collection time, provenance, access level, scope, completeness, and unknown or denied sections. It may record operating-system identity, architecture, capabilities, service names and versions, Docker/Compose projects, container/image identifiers, health, published ports, networks, volumes, and secret names when necessary. Never record secret contents or environment-variable values.
