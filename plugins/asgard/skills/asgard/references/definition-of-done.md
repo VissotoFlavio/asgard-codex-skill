@@ -21,6 +21,7 @@ Required reviewers and rationale:
 Execution budget: simultaneous agents | correction cycles | report words | inherited history
 Delivery governance and traceability: Forseti | not applicable
 Authoritative delivery issue and pull-request edit authority:
+GitHub classification: nature labels | discipline labels | rationale
 Excluded or unauthorized operations:
 ```
 

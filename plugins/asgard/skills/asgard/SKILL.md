@@ -71,6 +71,8 @@ Inspect only the code and evidence needed to decompose the delivery. Give each a
 
 Present one concise approval boundary with activities, dependencies, selected mode and implementers, DoD, review routing, isolation, conflict risks, validation, integration, optional publication, and still-unauthorized operations. Read [definition-of-done.md](references/definition-of-done.md) only when constructing the activity contracts.
 
+Classify every authoritative issue and eligible pull request using [GitHub classification labels](references/github-label-governance.md). Require at least one nature label and every materially affected discipline; database work always carries `database`. Classification is composable, so cross-boundary work may carry multiple discipline labels. Require the issue and pull request to agree on their required classification before governance approval.
+
 Set a proportional execution budget and define phase boundaries. Read [context efficiency](references/context-efficiency.md) when the delivery spans multiple activities, agents, correction cycles, or implementation and release phases.
 
 When dispatch supports per-agent reasoning effort, apply the risk-based levels from the context-efficiency policy. Do not give every specialist the orchestrator's reasoning level; monitoring and deterministic operations stay minimal or low unless concrete ambiguity or risk requires escalation.
