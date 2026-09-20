@@ -29,6 +29,7 @@ Do not select it implicitly for routine single-file edits, isolated diagnosis, o
 | **Odin** | Plans the execution graph, coordinates specialists, reviews evidence, and owns final acceptance. |
 | **Brokkr** | Implements bounded application work within an established architecture. |
 | **Sindri** | Implements one inseparable application activity that requires architectural ownership. |
+| **Regin** | Owns database architecture and safe schema evolution, including tables, keys, constraints, indexes, relationships, migrations, and data backfills. |
 | **Ymir** | Discovers, plans, applies authorized infrastructure changes, and verifies the resulting environment. |
 | **Mimir** | Resolves a stated code, documentation, or technical uncertainty. |
 | **Tyr** | Independently validates material rules, contracts, compatibility, and consistency. |
@@ -38,7 +39,7 @@ Do not select it implicitly for routine single-file edits, isolated diagnosis, o
 | **Forseti** | Enforces issue, pull-request, changelog, and release traceability, including the narrowly authorized automatic `Closes #<issue>` repair. |
 | **Hermod** | Promotes an approved revision through explicitly authorized version-control and release operations. |
 
-Specialists receive task-local context rather than the entire conversation. Their reports and passing tests are evidence; Odin still owns product decisions, inspects the candidate, and makes the acceptance decision. Mimir only resolves stated technical uncertainty read-only.
+Specialists receive task-local context rather than the entire conversation. Their reports and passing tests are evidence; Odin still owns product decisions, inspects the candidate, and makes the acceptance decision. Mimir only resolves stated technical uncertainty read-only. Regin may design and author versioned database changes, but connecting to or mutating any durable, runtime, or non-isolated database, applying or retrying a migration, and executing a rollback each require explicit authority for the exact environment and candidate.
 
 Odin applies Asgard once: specialist tasks do not invoke `$asgard` again. Multi-phase deliveries use compact checkpoints, fresh agent contexts, bounded reports, and a proportional default budget of three simultaneous agents and one grouped correction cycle. Exact paths, revisions, run URLs, and validation conclusions replace copied transcripts, full diffs, and successful logs.
 
@@ -75,7 +76,8 @@ Natural-language request
   -> DISCOVERY produces a decision-ready brief and stops for approval, when requested
   -> approved issue preparation or creation occurs only when authorized
   -> Odin defines the delivery execution graph and Definition of Done
-  -> Brokkr or Sindri implements application work
+  -> Brokkr or Sindri implements application work,
+     Regin authors database evolution,
      and/or Ymir performs authorized infrastructure work
   -> implementers validate their final activity once
   -> Odin reviews the exact candidate
@@ -116,6 +118,8 @@ When the repository requires traceability, Forseti checks the evidence available
 4. the changelog links the issue and pull request;
 5. the final published release description explicitly enumerates every included delivery issue and pull request;
 6. a release has its own authoritative issue and uses `release/<issue-id>-<version>`; the CI-created `master` to `develop` backport creates no additional branch and reuses that issue.
+
+GitHub classification uses two cumulative axes. Every authoritative issue and eligible pull request has at least one nature label, such as `bug`, `enhancement`, `documentation`, or `release`, plus every materially affected discipline. Database schema, tables, columns, keys, constraints, indexes, relationships, migrations, backfills, or compatibility work always requires `database`. Cross-boundary work may also carry labels such as `backend` or `infrastructure`; one discipline never hides another. Required nature and discipline labels must agree between the issue and its pull request, while operational labels may differ.
 
 When an eligible delivery PR lacks its closing reference, Forseti appends a standalone `Closes #<issue>` line automatically if exactly one open, same-repository issue is authoritative and PR edit authority is already recorded. It preserves the existing body, performs at most one edit, and verifies the provider-recognized relationship afterward. Ambiguous or conflicting issue candidates require correction instead of guessing. Missing evidence that cannot exist yet is `PENDING`; a violated invariant is `CHANGES_REQUIRED`. Forseti's approval covers governance only.
 

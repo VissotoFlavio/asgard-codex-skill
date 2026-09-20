@@ -71,17 +71,20 @@ Inspect only the code and evidence needed to decompose the delivery. Give each a
 
 Present one concise approval boundary with activities, dependencies, selected mode and implementers, DoD, review routing, isolation, conflict risks, validation, integration, optional publication, and still-unauthorized operations. Read [definition-of-done.md](references/definition-of-done.md) only when constructing the activity contracts.
 
+Classify every authoritative issue and eligible pull request using [GitHub classification labels](references/github-label-governance.md). Require at least one nature label and every materially affected discipline; database work always carries `database`. Classification is composable, so cross-boundary work may carry multiple discipline labels. Require the issue and pull request to agree on their required classification before governance approval.
+
 Set a proportional execution budget and define phase boundaries. Read [context efficiency](references/context-efficiency.md) when the delivery spans multiple activities, agents, correction cycles, or implementation and release phases.
 
 When dispatch supports per-agent reasoning effort, apply the risk-based levels from the context-efficiency policy. Do not give every specialist the orchestrator's reasoning level; monitoring and deterministic operations stay minimal or low unless concrete ambiguity or risk requires escalation.
 
-Classify an activity by discipline only when that classification changes its implementation guidance or required capabilities. Load the [frontend discipline packet](references/disciplines/frontend.md) for user-visible interface work, the [backend discipline packet](references/disciplines/backend.md) for server-side work, and the [infrastructure discipline packet](references/disciplines/infrastructure.md) for host, cloud, network, platform, or infrastructure-access work. A cross-boundary activity may load multiple packets only when it cannot be decomposed without breaking ownership. Record each required skill and its availability before graph approval; do not claim that a capability was applied when it is unavailable.
+Classify an activity by discipline only when that classification changes its implementation guidance or required capabilities. Load the [frontend discipline packet](references/disciplines/frontend.md) for user-visible interface work, the [backend discipline packet](references/disciplines/backend.md) for server-side work, the [database discipline packet](references/disciplines/database.md) for database structure or persisted-data evolution, and the [infrastructure discipline packet](references/disciplines/infrastructure.md) for host, cloud, network, platform, or infrastructure-access work. A cross-boundary activity may load multiple packets only when it cannot be decomposed without breaking ownership. Record each required skill and its availability before graph approval; do not claim that a capability was applied when it is unavailable.
 
 ## Dispatch with minimal context
 
-Use Brokkr for bounded application implementation, Sindri instead for one inseparable application-architectural activity, and Ymir for authorized infrastructure discovery, planning, execution, and verification. Use Mimir only to resolve a stated uncertainty. Load only the reference for each role actually dispatched:
+Use Brokkr for bounded application implementation, Sindri instead for one inseparable application-architectural activity, Regin for database architecture and versioned database evolution, and Ymir for authorized infrastructure discovery, planning, execution, and verification. Use Mimir only to resolve a stated uncertainty. Load only the reference for each role actually dispatched:
 
 - [Brokkr](references/agents/brokkr.md) or [Sindri](references/agents/sindri.md)
+- [Regin](references/agents/regin.md) for database activities
 - [Ymir](references/agents/ymir.md) for infrastructure activities
 - [Mimir](references/agents/mimir.md) when investigation is required
 - [Tyr](references/agents/tyr.md) for material rules, contracts, compatibility, persistence, or cross-boundary consistency

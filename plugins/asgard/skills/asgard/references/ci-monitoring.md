@@ -40,7 +40,7 @@ Bind every result to the observed revision. On success, return the required chec
 
 Before an authorized merge, Hermod performs exactly one fresh provider read to confirm the pull-request head still matches the observed revision and that required checks, reviews, conflicts, draft state, and mergeability remain acceptable. This safety read is not a second watcher. If the revision changed, discard the stale success and start one new watcher for the new revision only when authority still permits it.
 
-Route a confirmed application, test, or build failure to the original Brokkr or Sindri. Use Mimir only when evidence cannot classify the cause. Use Ymir for a confirmed infrastructure failure. Odin decides which validations and approvals the correction invalidates; unaffected reviewers remain approved. A new revision receives one new isolated watcher and never reuses stale success.
+Route a confirmed application, test, or build failure to the original Brokkr or Sindri, and a confirmed migration, schema, or backfill failure to the original Regin. Use Mimir only when evidence cannot classify the cause. Use Ymir for a confirmed infrastructure failure. Odin decides which validations and approvals the correction invalidates; unaffected reviewers remain approved. A new revision receives one new isolated watcher and never reuses stale success.
 
 Do not rerun automatically unless the original authority includes a retry count and the failure matches its stated transient conditions. Exhausting that count is terminal.
 

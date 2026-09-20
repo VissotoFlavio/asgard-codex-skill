@@ -56,7 +56,7 @@ class ContainedPathTests(unittest.TestCase):
 
     def test_specialist_packets_are_independently_loadable(self) -> None:
         agents = VALIDATOR.SKILL_ROOT / "references" / "agents"
-        expected = {"odin", "brokkr", "sindri", "ymir", "mimir", "tyr", "loki", "bragi", "heimdall", "forseti", "hermod"}
+        expected = {"odin", "brokkr", "sindri", "regin", "ymir", "mimir", "tyr", "loki", "bragi", "heimdall", "forseti", "hermod"}
         self.assertEqual({path.stem for path in agents.glob("*.md")}, expected)
         for role in expected:
             packet = (agents / f"{role}.md").read_text(encoding="utf-8")
@@ -64,13 +64,17 @@ class ContainedPathTests(unittest.TestCase):
 
     def test_discipline_packets_are_independently_loadable(self) -> None:
         disciplines = VALIDATOR.SKILL_ROOT / "references" / "disciplines"
-        expected = {"backend", "frontend", "infrastructure"}
+        expected = {"backend", "database", "frontend", "infrastructure"}
         self.assertEqual({path.stem for path in disciplines.glob("*.md")}, expected)
         for discipline in expected:
             packet = (disciplines / f"{discipline}.md").read_text(encoding="utf-8")
             self.assertLess(len(packet), 2_500, discipline)
         backend = (disciplines / "backend.md").read_text(encoding="utf-8")
         self.assertIn("$dotnet-best-practices", backend)
+        self.assertIn("route structural ownership to Regin", backend)
+        database = (disciplines / "database.md").read_text(encoding="utf-8")
+        for term in ("AUTHOR", "VALIDATE", "APPLY", "PK/FK", "indexes", "expand/contract"):
+            self.assertIn(term, database)
         frontend = (disciplines / "frontend.md").read_text(encoding="utf-8")
         self.assertIn("$frontend-design", frontend)
         self.assertIn("$web-design-guidelines", frontend)
@@ -82,7 +86,44 @@ class ContainedPathTests(unittest.TestCase):
         self.assertIn("rollback and retries require exact authority", infrastructure)
 
         definition = (VALIDATOR.SKILL_ROOT / "references" / "definition-of-done.md").read_text(encoding="utf-8")
-        self.assertIn("Implementer: Brokkr | Sindri | Ymir", definition)
+        self.assertIn("Implementer: Brokkr | Sindri | Regin | Ymir", definition)
+
+    def test_regin_owns_database_structure_without_implicit_runtime_authority(self) -> None:
+        skill = (VALIDATOR.SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
+        roles = (VALIDATOR.SKILL_ROOT / "references" / "roles-and-packets.md").read_text(encoding="utf-8")
+        regin = (VALIDATOR.SKILL_ROOT / "references" / "agents" / "regin.md").read_text(encoding="utf-8")
+        database = (VALIDATOR.SKILL_ROOT / "references" / "disciplines" / "database.md").read_text(encoding="utf-8")
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+
+        self.assertIn("references/agents/regin.md", skill)
+        self.assertIn("references/disciplines/database.md", skill)
+        self.assertIn("Database architecture and versioned evolution", roles)
+        self.assertIn("# Regin", regin)
+        self.assertIn("Never self-approve", regin)
+        self.assertIn("one never authorizes another", regin)
+        self.assertIn("clean-tree review or canonical digest of every artifact, including untracked", regin)
+        self.assertIn("durable, runtime, or non-isolated database mutation", regin)
+        self.assertIn("durable, runtime, or non-isolated database mutation", database)
+        self.assertIn("any durable, runtime, or non-isolated database", readme)
+        self.assertIn("absence blocks", regin)
+        self.assertIn("repository deploy automation executes; Hermod only promotes/monitors", regin)
+        self.assertNotIn("Hermod applies", regin)
+        self.assertIn("cluster/server, database/catalog, schema/tenant, and effective principal/role", regin)
+        self.assertIn("Missing or mismatched fields fail closed", regin)
+        self.assertIn("phase-scoped least privilege", regin)
+        self.assertIn("Owner/superuser or grants need justification and separate Ymir authorization", regin)
+        self.assertIn("After partial failure, halt mutation", regin)
+        self.assertIn("new authority bound to that state", regin)
+        self.assertIn("| **Regin** |", readme)
+        self.assertNotIn("reginpng.png", readme.lower())
+
+        hermod = (VALIDATOR.SKILL_ROOT / "references" / "agents" / "hermod.md").read_text(encoding="utf-8")
+        monitoring = (VALIDATOR.SKILL_ROOT / "references" / "ci-monitoring.md").read_text(encoding="utf-8")
+        release = (VALIDATOR.SKILL_ROOT / "references" / "release-promotion.md").read_text(encoding="utf-8")
+        self.assertIn("or deploy directly", hermod)
+        self.assertIn("migration, schema, or backfill failure to the original Regin", monitoring)
+        self.assertIn("migration, schema, or backfill failure to the original Regin", release)
+        self.assertIn("recommended_owner: Brokkr | Sindri | Regin | Ymir", release)
 
     def test_infrastructure_state_contract_enforces_security_boundaries(self) -> None:
         state = (VALIDATOR.SKILL_ROOT / "references" / "infrastructure-state.md").read_text(encoding="utf-8")
@@ -172,8 +213,19 @@ class WorkflowGovernanceTests(unittest.TestCase):
         self.assertIn("never guess, replace, or add several references", text)
         self.assertIn("never implies technical acceptance", text)
 
+        labels = (VALIDATOR.SKILL_ROOT / "references" / "github-label-governance.md").read_text(encoding="utf-8")
+        self.assertIn("Require at least one repository-defined nature label", labels)
+        self.assertIn("A database activity always requires `database`", labels)
+        self.assertIn("Labels are cumulative", labels)
+        self.assertIn("same required nature and discipline classification", labels)
+        self.assertIn("Operational labels may differ", labels)
+        self.assertIn("label creation is an external mutation and requires explicit authority", labels)
+        self.assertIn("never infer that `backend` subsumes `database`", text)
+
         skill = (VALIDATOR.SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
         self.assertIn("references/agents/forseti.md", skill)
+        self.assertIn("references/github-label-governance.md", skill)
+        self.assertIn("database work always carries `database`", skill)
         release = (VALIDATOR.SKILL_ROOT / "references" / "release-promotion.md").read_text(encoding="utf-8")
         self.assertIn("RELEASE_TRACEABILITY_APPROVED", release)
         self.assertIn("RELEASE_NOTES_RECONCILED", release)

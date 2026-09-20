@@ -15,3 +15,5 @@ For mixed-stack activities, apply the skill only to the .NET-owned artifacts and
 Put only affected invariants in the DoD. Consider public contracts, authorization, validation, persistence, transactions, idempotency, concurrency, retries, partial failures, observability, and compatibility when the activity can change them. Route material contract or consistency risk to Tyr, adversarial behavior to Loki, and security or availability risk to Heimdall.
 
 Database migrations, infrastructure changes, deployment, and new dependencies remain unauthorized unless the user explicitly grants that authority.
+
+Load the database discipline packet and route structural ownership to Regin when work changes schema, keys, constraints, indexes, relationships, migrations, backfills, or database compatibility. Backend and Database may both apply; neither subsumes the other.
