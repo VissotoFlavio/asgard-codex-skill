@@ -119,6 +119,8 @@ When the repository requires traceability, Forseti checks the evidence available
 5. the final published release description explicitly enumerates every included delivery issue and pull request;
 6. a release has its own authoritative issue and uses `release/<issue-id>-<version>`; the CI-created `master` to `develop` backport creates no additional branch and reuses that issue.
 
+GitHub classification uses two cumulative axes. Every authoritative issue and eligible pull request has at least one nature label, such as `bug`, `enhancement`, `documentation`, or `release`, plus every materially affected discipline. Database schema, tables, columns, keys, constraints, indexes, relationships, migrations, backfills, or compatibility work always requires `database`. Cross-boundary work may also carry labels such as `backend` or `infrastructure`; one discipline never hides another. Required nature and discipline labels must agree between the issue and its pull request, while operational labels may differ.
+
 When an eligible delivery PR lacks its closing reference, Forseti appends a standalone `Closes #<issue>` line automatically if exactly one open, same-repository issue is authoritative and PR edit authority is already recorded. It preserves the existing body, performs at most one edit, and verifies the provider-recognized relationship afterward. Ambiguous or conflicting issue candidates require correction instead of guessing. Missing evidence that cannot exist yet is `PENDING`; a violated invariant is `CHANGES_REQUIRED`. Forseti's approval covers governance only.
 
 ## Install the plugin
