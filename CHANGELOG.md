@@ -6,6 +6,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+## [0.11.0] - 2026-09-20
+
 ### Added
 
 - Add Regin as the database architecture specialist with explicit authority boundaries for schema design, migrations, validation, application, retry, and rollback ([issue #103](https://github.com/VissotoFlavio/asgard-codex-skill/issues/103), [PR #105](https://github.com/VissotoFlavio/asgard-codex-skill/pull/105)).
@@ -13,6 +15,14 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 ### Changed
 
 - Require database-related issues and pull requests to carry the composable `database` discipline label alongside their nature labels ([issue #102](https://github.com/VissotoFlavio/asgard-codex-skill/issues/102), [PR #104](https://github.com/VissotoFlavio/asgard-codex-skill/pull/104)).
+
+## [0.10.6] - 2026-09-16
+
+Release tracking: [issue #97](https://github.com/VissotoFlavio/asgard-codex-skill/issues/97), [release PR #99](https://github.com/VissotoFlavio/asgard-codex-skill/pull/99).
+
+### Changed
+
+- Reduce orchestration output and reasoning-token usage with role-specific report budgets, risk-scaled effort, deterministic state checks, and compact completion records ([PR #98](https://github.com/VissotoFlavio/asgard-codex-skill/pull/98)).
 
 ## [0.10.5] - 2026-09-15
 
@@ -122,7 +132,9 @@ Release tracking: [issue #40](https://github.com/VissotoFlavio/asgard-codex-skil
 
 - Add Forseti as the delivery-governance specialist, with independent issue-to-release traceability gates and official artwork ([issue #38](https://github.com/VissotoFlavio/asgard-codex-skill/issues/38), [PR #39](https://github.com/VissotoFlavio/asgard-codex-skill/pull/39)).
 
-[Unreleased]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.10.5...develop
+[Unreleased]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.11.0...develop
+[0.11.0]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.10.6...v0.11.0
+[0.10.6]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.10.5...v0.10.6
 [0.10.5]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.10.4...v0.10.5
 [0.10.4]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.10.3...v0.10.4
 [0.10.3]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.10.2...v0.10.3
