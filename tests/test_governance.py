@@ -327,11 +327,15 @@ class WorkflowGovernanceTests(unittest.TestCase):
         self.assertIn("For every GitHub interaction, use the authenticated GitHub CLI", skill)
         self.assertIn("Require `gh auth status` to succeed", skill)
         self.assertIn("`--json`, `--jq`", skill)
+        self.assertIn("send Markdown as real multiline text", skill)
+        self.assertIn("literal escape sequences such as `\\n`", skill)
+        self.assertIn("body-file/stdin mechanisms", skill)
         self.assertIn("Browser use is an extreme last resort", skill)
         self.assertIn("documented capability gap", skill)
         self.assertIn("user explicitly authorizes that browser operation", skill)
         self.assertIn("never justify a silent browser fallback", skill)
         self.assertIn("use the authenticated `gh` CLI", forseti)
+        self.assertIn("preserve Markdown with real line breaks", forseti)
         self.assertIn("does not silently fall back to a browser", readme)
 
     def test_release_version_is_determined_without_user_confirmation(self) -> None:
