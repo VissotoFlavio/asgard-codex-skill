@@ -6,6 +6,14 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+## [0.13.1] - 2026-09-24
+
+Release tracking: [issue #120](https://github.com/VissotoFlavio/asgard-codex-skill/issues/120).
+
+### Fixed
+
+- Preserve real Markdown line breaks when Asgard prepares or repairs GitHub pull-request bodies, avoiding literal `\n` text in rendered descriptions ([issue #118](https://github.com/VissotoFlavio/asgard-codex-skill/issues/118), [PR #119](https://github.com/VissotoFlavio/asgard-codex-skill/pull/119)).
+
 ## [0.13.0] - 2026-09-20
 
 Release PR: [#116](https://github.com/VissotoFlavio/asgard-codex-skill/pull/116).
@@ -150,7 +158,8 @@ Release tracking: [issue #40](https://github.com/VissotoFlavio/asgard-codex-skil
 
 - Add Forseti as the delivery-governance specialist, with independent issue-to-release traceability gates and official artwork ([issue #38](https://github.com/VissotoFlavio/asgard-codex-skill/issues/38), [PR #39](https://github.com/VissotoFlavio/asgard-codex-skill/pull/39)).
 
-[Unreleased]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.13.0...develop
+[Unreleased]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.13.1...develop
+[0.13.1]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.13.0...v0.13.1
 [0.13.0]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.12.0...v0.13.0
 [0.12.0]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.11.0...v0.12.0
 [0.11.0]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.10.6...v0.11.0
