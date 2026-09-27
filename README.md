@@ -35,7 +35,7 @@ Do not select it implicitly for routine single-file edits, isolated diagnosis, o
 | **Tyr** | Independently validates material rules, contracts, compatibility, and consistency. |
 | **Loki** | Searches adversarially for behavioral gaps and edge cases. |
 | **Bragi** | Reviews completed code for human readability and maintainability using context-sensitive SOLID, DRY, KISS, YAGNI, and Tell, Don't Ask. |
-| **Heimdall** | Independently reviews security, privacy, isolation, abuse, and availability risks. |
+| **Heimdall** | Independently reviews security, privacy, isolation, abuse, availability, and risk-justified deep vulnerability analysis. |
 | **Forseti** | Enforces issue, pull-request, changelog, and release traceability, including the narrowly authorized automatic `Closes #<issue>` repair. |
 | **Hermod** | Promotes an approved revision through explicitly authorized version-control and release operations. |
 
@@ -46,6 +46,8 @@ On first use of each database profile, Regin requests separate read-only discove
 For a database container on a VPS, keep its port private or bound only to VPS loopback and connect through a loopback-only SSH local forward. Ymir owns the verified VPS, tunnel, Docker/network exposure, and external credential mechanisms; Regin separately verifies the database and uses distinct least-privilege principals for application runtime, `DISCOVER`, isolated `VALIDATE`, migration `APPLY`, and emergency administration. Profiles retain only opaque credential references. Tunnel access never authorizes a database phase, and public exposure, identity drift, excess privilege, or tunnel loss fails closed.
 
 Odin applies Asgard once: specialist tasks do not invoke `$asgard` again. Multi-phase deliveries use compact checkpoints, fresh agent contexts, bounded reports, and a proportional default budget of three simultaneous agents and one grouped correction cycle. Exact paths, revisions, run URLs, and validation conclusions replace copied transcripts, full diffs, and successful logs.
+
+When a user requests vulnerability discovery or Heimdall identifies a need for deeper analysis, Asgard can route a bounded `Security` discipline review. Heimdall uses `$api-security-review` for API surfaces and `$web-security-review` for web application surfaces when those skills are installed. If a relevant skill is missing, Odin asks whether to install it; when installation is declined or unavailable, Heimdall continues with the native security review and records the fallback rather than claiming the specialized skill was applied.
 
 ## Intent catalog
 

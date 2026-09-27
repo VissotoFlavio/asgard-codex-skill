@@ -13,7 +13,7 @@ Use this index only when role selection is unclear. The main skill links directl
 | Rules, contracts, compatibility, or consistency review | Tyr | [agents/tyr.md](agents/tyr.md) |
 | Adversarial behavior and edge-case review | Loki | [agents/loki.md](agents/loki.md) |
 | Human readability, maintainability, and code-quality review | Bragi | [agents/bragi.md](agents/bragi.md) |
-| Security, privacy, isolation, abuse, or availability review | Heimdall | [agents/heimdall.md](agents/heimdall.md) |
+| Security, privacy, isolation, abuse, availability, or deep vulnerability review | Heimdall | [agents/heimdall.md](agents/heimdall.md) |
 | Approved version-control and release promotion | Hermod | [agents/hermod.md](agents/hermod.md) |
 
 Odin is the primary agent. It owns the graph, DoDs, routing, integration, evidence review, correction decisions, and final acceptance.
