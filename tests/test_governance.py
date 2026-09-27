@@ -64,7 +64,7 @@ class ContainedPathTests(unittest.TestCase):
 
     def test_discipline_packets_are_independently_loadable(self) -> None:
         disciplines = VALIDATOR.SKILL_ROOT / "references" / "disciplines"
-        expected = {"backend", "database", "frontend", "infrastructure"}
+        expected = {"backend", "database", "frontend", "infrastructure", "security"}
         self.assertEqual({path.stem for path in disciplines.glob("*.md")}, expected)
         for discipline in expected:
             packet = (disciplines / f"{discipline}.md").read_text(encoding="utf-8")
@@ -84,9 +84,34 @@ class ContainedPathTests(unittest.TestCase):
         self.assertIn("Material drift invalidates the plan and authority", infrastructure)
         self.assertIn("absent, unverifiable, or mismatched identity fails closed", infrastructure)
         self.assertIn("rollback and retries require exact authority", infrastructure)
+        security = (disciplines / "security.md").read_text(encoding="utf-8")
+        self.assertIn("$api-security-review", security)
+        self.assertIn("$web-security-review", security)
+        self.assertIn("ask the user whether to install it", security)
+        self.assertIn("continue with Heimdall's native review", security)
 
         definition = (VALIDATOR.SKILL_ROOT / "references" / "definition-of-done.md").read_text(encoding="utf-8")
         self.assertIn("Implementer: Brokkr | Sindri | Regin | Ymir", definition)
+        self.assertIn("For deep vulnerability analysis, record `Security`", definition)
+
+    def test_heimdall_deep_security_analysis_uses_optional_skills_with_fallback(self) -> None:
+        skill = (VALIDATOR.SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
+        heimdall = (VALIDATOR.SKILL_ROOT / "references" / "agents" / "heimdall.md").read_text(encoding="utf-8")
+        security = (VALIDATOR.SKILL_ROOT / "references" / "disciplines" / "security.md").read_text(encoding="utf-8")
+        roles = (VALIDATOR.SKILL_ROOT / "references" / "roles-and-packets.md").read_text(encoding="utf-8")
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+
+        self.assertIn("references/disciplines/security.md", skill)
+        self.assertIn("deep vulnerability analysis", skill)
+        self.assertIn("load the security discipline packet", heimdall)
+        self.assertIn("ask whether the user wants to install it", heimdall)
+        self.assertIn("continue without it and record the fallback", heimdall)
+        self.assertIn("Installing a skill is optional and requires explicit user authorization", security)
+        self.assertIn("API gateways, webhooks, API authentication", security)
+        self.assertIn("XSS/CSRF risk, security headers, CORS", security)
+        self.assertIn("deep vulnerability review", roles)
+        self.assertIn("Odin asks whether to install it", readme)
+        self.assertIn("records the fallback", readme)
 
     def test_regin_owns_database_structure_without_implicit_runtime_authority(self) -> None:
         skill = (VALIDATOR.SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
