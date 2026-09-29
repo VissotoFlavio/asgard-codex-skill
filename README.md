@@ -49,6 +49,8 @@ Odin applies Asgard once: specialist tasks do not invoke `$asgard` again. Multi-
 
 When a user requests vulnerability discovery or Heimdall identifies a need for deeper analysis, Asgard can route a bounded `Security` discipline review. Heimdall uses `$api-security-review` for API surfaces and `$web-security-review` for web application surfaces when those skills are installed. If a relevant skill is missing, Odin asks whether to install it; when installation is declined or unavailable, Heimdall continues with the native security review and records the fallback rather than claiming the specialized skill was applied.
 
+Deep security review is not run for every ordinary delivery pull request. Ask for it explicitly with language such as `--validate-security` when a PR or candidate needs deeper vulnerability analysis before release. During release preparation, Asgard runs deep security review by default before opening the release pull request, using the API and web security skills when the release affects those surfaces. To skip that default release gate, use `--skip-release-security` or equivalent explicit language with a reason; Asgard records the reason, reduced scope, and residual risk in the release evidence. Confirmed blocking vulnerabilities stop release preparation before the release PR is opened so corrections can land first.
+
 ## Intent catalog
 
 Asgard recognizes natural-language requests as `DISCOVERY`, `DELIVERY`, `REVIEW`, `INFRASTRUCTURE`, `DEPLOY`, `RELEASE`, or `MONITOR`. It infers a clear intent and asks only when ambiguity would materially change the result, scope, environment, or authority.
@@ -65,6 +67,8 @@ Natural examples:
 - “Planeje esta mudança de infraestrutura, mas não aplique.”
 - “Faça deploy da revisão aprovada em staging.”
 - “Prepare a release 2.4.0 sem publicar.”
+- “Prepare a release 2.4.1, mas use --skip-release-security porque só há alteração de README.”
+- “Revise este PR com --validate-security antes de abrir release.”
 - “Monitore o CI do PR 42.”
 
 ## Delivery modes
@@ -73,6 +77,8 @@ Natural examples:
 - **Standard:** multiple activities or material behavioral risk, with independent Loki and Heimdall review, Tyr when contracts or rules are affected, and Bragi when production code is added or structurally changed.
 - **Critical:** security-sensitive, persistent, concurrent, irreversible, regulated, or broadly exposed work, using every applicable independent gate.
 - **Release:** an approved candidate promoted by Hermod after required Forseti traceability and explicit mutation authority are recorded.
+
+Release mode includes a default deep security validation gate before the release pull request is opened. This gate can be skipped only by explicit user request with a recorded reason, and a confirmed blocking vulnerability returns the flow to correction instead of publication.
 
 ## Core flow
 
