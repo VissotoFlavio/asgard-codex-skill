@@ -1,6 +1,8 @@
 # Security discipline
 
-Load this packet when an activity or review explicitly needs deep vulnerability analysis beyond Heimdall's proportional default review. Deep analysis is appropriate for externally exposed surfaces, authentication or authorization changes, sensitive data handling, unsafe parsing, SSRF-capable inputs, file upload, webhooks, rate limiting, gateway or middleware configuration, session handling, CORS, or user-requested vulnerability discovery.
+Load this packet when an activity or review needs deep vulnerability analysis beyond Heimdall's proportional default review. Deep analysis fits exposed surfaces, authn/authz changes, sensitive data, unsafe parsing, SSRF-capable inputs, uploads, webhooks, rate limiting, gateway or middleware config, sessions, CORS, release preparation, explicit `--validate-security`, or user-requested vulnerability discovery.
+
+For ordinary delivery pull requests, run deep analysis only when requested, flagged with `--validate-security`, or justified by material security risk. For releases, run deep analysis by default before opening the release pull request. A release may skip deep analysis only when the user explicitly requests `--skip-release-security` or equivalent language and provides a reason; record the reason, fallback scope, and residual risk in the release evidence.
 
 ## Optional specialist skills
 
@@ -13,4 +15,4 @@ If a relevant skill is unavailable, ask the user whether to install it before th
 
 ## Review scope
 
-Use deep analysis only for the bounded candidate, paths, contracts, and threat surfaces in the activity contract. Prefer credible exploit paths, negative tests, and prioritized remediation over exhaustive checklist output. Never expose secrets, personal data, live exploit details, or unnecessary operational information.
+Use deep analysis only for the bounded candidate, paths, contracts, and threat surfaces in the activity contract. Release security review covers the approved delivery inventory since the previous release and affected API or web surfaces. Prefer credible exploit paths, negative tests, and prioritized remediation over exhaustive checklist output. Confirmed blocking vulnerabilities stop release preparation before the release pull request is opened; route corrections to the owning implementer and rerun only affected validation and reviews. Never expose secrets, personal data, live exploit details, or unnecessary operational information.
