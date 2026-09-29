@@ -24,6 +24,7 @@ DELIVERY_APPROVED
   -> DELIVERY_CI_PASSED
   -> DELIVERY_MERGED_TO_DEVELOP
   -> VERSION_DETERMINED
+  -> RELEASE_SECURITY_REVIEWED
   -> RELEASE_BRANCH_CREATED
   -> APPLICATION_VERSION_UPDATED
   -> RELEASE_PR_OPEN
@@ -62,6 +63,14 @@ After merging the delivery, synchronize local `develop` and analyze only the app
 When more than one category applies, use the highest required increment: `major` over `minor`, and `minor` over `patch`. Calculate the next version from the current stable SemVer by incrementing the selected component and resetting every component to its right to zero. Record the current version, selected increment, resulting version, confidence, and evidence. Do not stop solely for version selection or request confirmation of the inferred version.
 
 Create `release/<issue-id>-<major.minor.patch>` for the resulting version from synchronized `develop`, using the authoritative release issue ID. Update only authoritative version artifacts and required generated counterparts, validate that the application reports the determined version, and use a Conventional Commit such as `chore(release): bump version to 1.2.3`.
+
+## Release security validation
+
+Before creating the release branch or opening the release pull request, run a bounded deep security review of the release candidate using the security discipline packet. Select `$api-security-review` for affected API surfaces and `$web-security-review` for affected web surfaces when those skills are available. If a selected skill is missing, ask whether the user wants to install it; when installation is declined or unavailable, continue with Heimdall's native review and record the fallback.
+
+An ordinary delivery pull request does not receive this deep review by default. Run it early for a non-release candidate only when the user requests `--validate-security` or equivalent language, or when Odin records a material security risk. A release may skip the default deep review only when the user explicitly requests `--skip-release-security` or equivalent language and provides a reason. Record that reason, the reduced review scope, and residual risk in the release evidence.
+
+Confirmed blocking vulnerabilities prevent release branch creation and release pull-request opening. Route corrections to the owning implementer, rerun the affected validation and security review, then resume release preparation from the same synchronized base or a newly approved corrected base.
 
 ## Master promotion, tag, and release
 

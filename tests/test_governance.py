@@ -89,10 +89,14 @@ class ContainedPathTests(unittest.TestCase):
         self.assertIn("$web-security-review", security)
         self.assertIn("ask the user whether to install it", security)
         self.assertIn("continue with Heimdall's native review", security)
+        self.assertIn("release preparation", security)
+        self.assertIn("--validate-security", security)
+        self.assertIn("--skip-release-security", security)
 
         definition = (VALIDATOR.SKILL_ROOT / "references" / "definition-of-done.md").read_text(encoding="utf-8")
         self.assertIn("Implementer: Brokkr | Sindri | Regin | Ymir", definition)
         self.assertIn("For deep vulnerability analysis, record `Security`", definition)
+        self.assertIn("For release security validation", definition)
 
     def test_heimdall_deep_security_analysis_uses_optional_skills_with_fallback(self) -> None:
         skill = (VALIDATOR.SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
@@ -112,6 +116,25 @@ class ContainedPathTests(unittest.TestCase):
         self.assertIn("deep vulnerability review", roles)
         self.assertIn("Odin asks whether to install it", readme)
         self.assertIn("records the fallback", readme)
+        self.assertIn("Asgard runs deep security review by default before opening the release pull request", readme)
+        self.assertIn("--validate-security", readme)
+        self.assertIn("--skip-release-security", readme)
+
+    def test_release_security_validation_runs_before_release_pr_with_recorded_skip(self) -> None:
+        release = (VALIDATOR.SKILL_ROOT / "references" / "release-promotion.md").read_text(encoding="utf-8")
+        definition = (VALIDATOR.SKILL_ROOT / "references" / "definition-of-done.md").read_text(encoding="utf-8")
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+
+        self.assertIn("-> RELEASE_SECURITY_REVIEWED", release)
+        self.assertIn("Before creating the release branch or opening the release pull request", release)
+        self.assertIn("security discipline packet", release)
+        self.assertIn("An ordinary delivery pull request does not receive this deep review by default", release)
+        self.assertIn("`--validate-security`", release)
+        self.assertIn("`--skip-release-security`", release)
+        self.assertIn("Confirmed blocking vulnerabilities prevent release branch creation", release)
+        self.assertIn("release security validation decision and evidence", definition)
+        self.assertIn("Release mode includes a default deep security validation gate", readme)
+        self.assertIn("confirmed blocking vulnerability returns the flow to correction", readme)
 
     def test_regin_owns_database_structure_without_implicit_runtime_authority(self) -> None:
         skill = (VALIDATOR.SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
