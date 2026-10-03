@@ -127,9 +127,10 @@ When the repository requires traceability, Forseti checks the evidence available
 1. one bounded issue defines new delivery work and its acceptance criteria when repository policy requires it;
 2. every created branch is named `{prefix}/{issue-id}-{name}` using its authoritative issue, and the pull request identifies the same issue with a provider-recognized `Closes #<issue>` relationship;
 3. required labels, templates, reviews, and checks are present;
-4. the changelog links the issue and pull request;
+4. every delivery pull request updates the changelog with links to the issue and pull request;
 5. the final published release description explicitly enumerates every included delivery issue and pull request;
-6. a release has its own authoritative issue and uses `release/<issue-id>-<version>`; the CI-created `master` to `develop` backport creates no additional branch and reuses that issue.
+6. every release updates the changelog with the delivered version; if no changelog exists, Asgard asks before creating it;
+7. a release creates no issue and uses `release/<version>`; the CI-created `master` to `develop` backport creates no additional branch or issue.
 
 GitHub classification uses two cumulative axes. Every authoritative issue and eligible pull request has at least one nature label, such as `bug`, `enhancement`, `documentation`, or `release`, plus every materially affected discipline. Database schema, tables, columns, keys, constraints, indexes, relationships, migrations, backfills, or compatibility work always requires `database`. Cross-boundary work may also carry labels such as `backend` or `infrastructure`; one discipline never hides another. Required nature and discipline labels must agree between the issue and its pull request, while operational labels may differ.
 
@@ -182,16 +183,16 @@ Start a new task after installation and invoke `$asgard`.
 ## Repository and release workflow
 
 - `develop` contains the next candidate changes.
-- Every created branch follows `{prefix}/{issue-id}-{name}`, where `name` is a short lowercase kebab-case slug and the ID belongs to its authoritative issue.
+- Every delivery branch follows `{prefix}/{issue-id}-{name}`, where `name` is a short lowercase kebab-case slug and the ID belongs to its authoritative issue. Release branches use `release/<version>` and do not require an issue.
 - `feature/<issue-id>-<name>`, `fix/<issue-id>-<name>`, `docs/<issue-id>-<name>`, and related delivery branches originate from and return to `develop`.
-- `release/<issue-id>-<version>` originates from `develop` and targets `master`.
+- `release/<version>` originates from `develop` and targets `master`.
 - `hotfix/<issue-id>-<version>` originates from and targets `master`.
 - `master` contains stable, versioned releases.
 - Squash is reserved for delivery pull requests created from `develop` and targeting `develop`; release and backport pull requests always use merge commits.
-- [CHANGELOG.md](./CHANGELOG.md) records deliveries with issue and pull-request links.
+- [CHANGELOG.md](./CHANGELOG.md) is updated for every delivery PR and records each release version; delivery entries include issue and pull-request links.
 - [GitHub Releases](https://github.com/VissotoFlavio/asgard-codex-skill/releases) contains stable release notes.
 
-After an approved release merge reaches `master`, the repository workflow validates the version, creates the immutable tag and GitHub Release, and opens a `master` to `develop` backport pull request. The release requires an authoritative issue; the backport creates no additional branch and reuses that issue. Before completion, the final release description must explicitly list every delivery issue and pull request included in production. Production publication failures leave the tag in place and require a new corrective version.
+After an approved release merge reaches `master`, the repository workflow validates the version, creates the immutable tag and GitHub Release, and opens a `master` to `develop` backport pull request. The release creates no issue; the backport creates no additional branch or issue. Before completion, the final release description must explicitly list every delivery issue and pull request included in production. Production publication failures leave the tag in place and require a new corrective version.
 
 ## Prepare a version
 

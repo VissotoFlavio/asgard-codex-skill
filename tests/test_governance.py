@@ -364,7 +364,7 @@ class WorkflowGovernanceTests(unittest.TestCase):
         release = (VALIDATOR.SKILL_ROOT / "references" / "release-promotion.md").read_text(encoding="utf-8")
         self.assertIn("RELEASE_TRACEABILITY_APPROVED", release)
         self.assertIn("RELEASE_NOTES_RECONCILED", release)
-        self.assertIn("Release work requires exactly one authoritative issue", release)
+        self.assertIn("Release work does not require or create an issue", release)
         self.assertIn("Automatically generated notes alone do not satisfy this gate", release)
 
     def test_github_operations_are_cli_first_with_guarded_browser_exception(self) -> None:
@@ -393,19 +393,37 @@ class WorkflowGovernanceTests(unittest.TestCase):
         self.assertIn("use the highest required increment", text)
         self.assertIn("Do not stop solely for version selection", text)
 
-    def test_all_created_branches_require_an_authoritative_issue(self) -> None:
+    def test_delivery_branches_require_issues_and_releases_do_not(self) -> None:
         skill = (VALIDATOR.SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
         release = (VALIDATOR.SKILL_ROOT / "references" / "release-promotion.md").read_text(encoding="utf-8")
         forseti = (VALIDATOR.SKILL_ROOT / "references" / "agents" / "forseti.md").read_text(encoding="utf-8")
         definition = (VALIDATOR.SKILL_ROOT / "references" / "definition-of-done.md").read_text(encoding="utf-8")
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
 
-        self.assertIn("Every branch created by Asgard requires exactly one authoritative issue", skill)
+        self.assertIn("Every delivery branch created by Asgard requires exactly one authoritative issue", skill)
         self.assertIn("`{prefix}/{issue-id}-{name}`", skill)
-        self.assertIn("Release work requires exactly one authoritative issue", release)
-        self.assertIn("`release/<issue-id>-<version>`", definition)
-        self.assertIn("Release work requires an authoritative issue", forseti)
+        self.assertIn("Release work does not require or create an issue", release)
+        self.assertIn("`release/<version>`", definition)
+        self.assertIn("Release work does not require or create an authoritative issue", forseti)
         self.assertIn("`{prefix}/{issue-id}-{name}`", readme)
+        self.assertIn("`release/<version>`", readme)
+
+    def test_delivery_and_release_changelog_rules_are_explicit(self) -> None:
+        skill = (VALIDATOR.SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
+        hermod = (VALIDATOR.SKILL_ROOT / "references" / "agents" / "hermod.md").read_text(encoding="utf-8")
+        forseti = (VALIDATOR.SKILL_ROOT / "references" / "agents" / "forseti.md").read_text(encoding="utf-8")
+        release = (VALIDATOR.SKILL_ROOT / "references" / "release-promotion.md").read_text(encoding="utf-8")
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+        changelog = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
+
+        for text in (skill, hermod, forseti, release, readme):
+            self.assertIn("changelog", text.lower())
+        self.assertIn("If no changelog exists, ask the user", skill)
+        self.assertIn("Before any delivery PR is opened, ensure the changelog is updated", hermod)
+        self.assertIn("delivery PRs update the changelog", forseti)
+        self.assertIn("Before opening the release pull request, verify that the changelog records the new version", release)
+        self.assertIn("every release updates the changelog with the delivered version", readme)
+        self.assertIn("issue #131", changelog)
 
     def test_hermod_owns_issue_based_branch_creation(self) -> None:
         hermod = (VALIDATOR.SKILL_ROOT / "references" / "agents" / "hermod.md").read_text(encoding="utf-8")
