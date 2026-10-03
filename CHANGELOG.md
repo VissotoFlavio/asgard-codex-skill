@@ -8,7 +8,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ### Changed
 
-- Align Asgard governance with Codex development rules: releases do not create issues, delivery and release changelog updates are mandatory, and missing changelogs require user confirmation before creation ([issue #131](https://github.com/VissotoFlavio/asgard-codex-skill/issues/131)).
+- Align Asgard governance with Codex development rules: releases do not create issues, delivery and release changelog updates are mandatory, and missing changelogs require user confirmation before creation ([issue #131](https://github.com/VissotoFlavio/asgard-codex-skill/issues/131), [PR #132](https://github.com/VissotoFlavio/asgard-codex-skill/pull/132)).
 
 ## [0.13.1] - 2026-09-24
 
