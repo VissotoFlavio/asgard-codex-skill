@@ -275,6 +275,24 @@ class ContainedPathTests(unittest.TestCase):
 
 
 class WorkflowGovernanceTests(unittest.TestCase):
+    def test_technical_refinement_blocks_governed_mutations(self) -> None:
+        skill = (VALIDATOR.SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
+        definition = (VALIDATOR.SKILL_ROOT / "references" / "definition-of-done.md").read_text(encoding="utf-8")
+        odin = (VALIDATOR.SKILL_ROOT / "references" / "agents" / "odin.md").read_text(encoding="utf-8")
+        ymir = (VALIDATOR.SKILL_ROOT / "references" / "agents" / "ymir.md").read_text(encoding="utf-8")
+        forseti = (VALIDATOR.SKILL_ROOT / "references" / "agents" / "forseti.md").read_text(encoding="utf-8")
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+
+        self.assertIn("## Refine before every mutation", skill)
+        self.assertIn("Before the first mutation in any governed activity", skill)
+        self.assertIn("Read-only discovery, review, and monitoring", skill)
+        self.assertIn("Technical refinement record and mutation gate", definition)
+        self.assertIn("Before any mutation, record the Technical Refinement", definition)
+        self.assertIn("Before mutation, complete and persist Technical Refinement", odin)
+        self.assertIn("before any infrastructure mutation", ymir)
+        self.assertIn("Technical Refinement record before mutation", forseti)
+        self.assertIn("## Technical refinement gate", readme)
+
     def test_intent_routing_preserves_authority_and_discovery_boundary(self) -> None:
         skill = (VALIDATOR.SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
         for intent in ("DISCOVERY", "DELIVERY", "REVIEW", "INFRASTRUCTURE", "DEPLOY", "RELEASE", "MONITOR"):

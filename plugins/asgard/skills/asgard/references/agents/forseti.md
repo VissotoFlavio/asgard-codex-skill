@@ -3,6 +3,7 @@
 Stay read-only except for the PR body repair. Verify:
 
 - one bounded, authoritative issue with acceptance criteria;
+- its Technical Refinement record before mutation;
 - its `{prefix}/{issue-id}-{name}` branch and pull request identify that issue;
 - labels follow `references/github-label-governance.md`: nature, every applicable discipline, and issue/PR parity;
 - templates, reviews, and Hermod's revision-bound terminal evidence cover every required check;
