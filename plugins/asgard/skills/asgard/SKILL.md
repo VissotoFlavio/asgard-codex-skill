@@ -23,6 +23,14 @@ Infer intent from natural language when it is clear. Ask one focused question on
 
 Intent and authority are separate dimensions. Record the inferred intent and the current authority ceiling before action. A request to deliver, deploy, release, or operate infrastructure does not implicitly authorize issue creation, implementation, commits, pushes, pull requests, publication, deployment, migration, destructive action, dependency installation, or infrastructure mutation. Never reinterpret an intent keyword as protected-operation authority.
 
+## Refine before every mutation
+
+Before the first mutation in any governed activity, Odin must complete a proportional **Technical Refinement**. This is a mandatory gate for delivery, infrastructure, deploy, release, and any other workflow that will edit code, create or modify GitHub artifacts, change version control, mutate data or infrastructure, or publish an artifact. Read-only discovery, review, and monitoring may proceed without it unless they transition to a mutation.
+
+Refinement may use read-only inspection and must state the intended outcome, affected artifacts or resources, expected validation, primary risks, exclusions, dependencies, and authority boundary. Scale its depth to risk: a Lean activity records those minimums; infrastructure, database, security, release, or operational work also records observed state, expected impact, recovery or rollback approach, and approval needed for each protected operation.
+
+Persist the refinement in the authoritative issue as a clearly identified Markdown comment before the first subsequent mutation when GitHub write authority is available. Reuse or update that record rather than creating duplicate refinements. If the issue itself must be created, complete the refinement first and include it in the initial issue body; do not create a branch or start implementation until the issue records it. If persistence is required but write authority is unavailable, stop with the refinement ready for the authorized actor. A refinement documents the plan; it never grants mutation authority.
+
 ## Use command-line GitHub integrations
 
 For every GitHub interaction, use the authenticated GitHub CLI. Require `gh auth status` to succeed for the intended host and account, prefer `gh api` for explicit REST or GraphQL operations, and use focused `gh issue`, `gh pr`, `gh run`, or `gh release` commands when clearer. Request only the fields needed for the decision with `--json`, `--jq`, or explicit API selection, and paginate only when completeness matters.
@@ -69,7 +77,7 @@ Do not use Asgard when Lean would merely reproduce ordinary single-agent work wi
 
 ## Build the execution graph
 
-Inspect only the code and evidence needed to decompose the delivery. Give each activity one observable objective, bounded ownership, focused validation, dependencies, primary failure mode, and rejection conditions. Classify dependencies as `SEQUENTIAL_REQUIRED`, `PARALLEL_SAFE`, `PARALLEL_WITH_COORDINATION`, or `DEFER_DECISION`; do not parallelize merely to fill slots.
+Inspect only the code and evidence needed to refine and decompose the delivery. Complete the mandatory Technical Refinement before any mutation, then give each activity one observable objective, bounded ownership, focused validation, dependencies, primary failure mode, and rejection conditions. Classify dependencies as `SEQUENTIAL_REQUIRED`, `PARALLEL_SAFE`, `PARALLEL_WITH_COORDINATION`, or `DEFER_DECISION`; do not parallelize merely to fill slots.
 
 Present one concise approval boundary with activities, dependencies, selected mode and implementers, DoD, review routing, isolation, conflict risks, validation, integration, optional publication, and still-unauthorized operations. Read [definition-of-done.md](references/definition-of-done.md) only when constructing the activity contracts.
 

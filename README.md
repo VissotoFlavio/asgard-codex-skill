@@ -51,6 +51,12 @@ When a user requests vulnerability discovery or Heimdall identifies a need for d
 
 Deep security review is not run for every ordinary delivery pull request. Ask for it explicitly with language such as `--validate-security` when a PR or candidate needs deeper vulnerability analysis before release. During release preparation, Asgard runs deep security review by default before opening the release pull request, using the API and web security skills when the release affects those surfaces. To skip that default release gate, use `--skip-release-security` or equivalent explicit language with a reason; Asgard records the reason, reduced scope, and residual risk in the release evidence. Confirmed blocking vulnerabilities stop release preparation before the release PR is opened so corrections can land first.
 
+## Technical refinement gate
+
+Before any governed mutation, Asgard completes a proportional technical refinement. It records the intended outcome, affected artifacts or resources, validation, primary risks, exclusions, dependencies, and authority boundary. Lean work remains concise; infrastructure, database, security, release, and operational work additionally records observed state, expected impact, rollback or recovery, and the approval required for each protected operation.
+
+When an authoritative issue already exists and GitHub write authority is available, Asgard persists the refinement in a clearly identified Markdown comment before the first subsequent mutation. If creating the issue is the first mutation, its initial body contains the refinement. Read-only discovery, review, and monitoring need no refinement unless they transition to a mutable activity. A refinement documents a plan and never grants authority to execute it.
+
 ## Intent catalog
 
 Asgard recognizes natural-language requests as `DISCOVERY`, `DELIVERY`, `REVIEW`, `INFRASTRUCTURE`, `DEPLOY`, `RELEASE`, or `MONITOR`. It infers a clear intent and asks only when ambiguity would materially change the result, scope, environment, or authority.
@@ -87,6 +93,7 @@ Natural-language request
   -> Odin infers intent and records the separate authority ceiling
   -> DISCOVERY produces a decision-ready brief and stops for approval, when requested
   -> approved issue preparation or creation occurs only when authorized
+  -> Odin completes and persists the proportional Technical Refinement before mutation
   -> Odin defines the delivery execution graph and Definition of Done
   -> Brokkr or Sindri implements application work,
      Regin authors database evolution,
@@ -114,7 +121,7 @@ At discussion-to-implementation, implementation-to-review, and approval-to-relea
 
 ## Definitions of Done and authority
 
-Every activity receives an observable objective, bounded artifact ownership, dependencies, primary failure mode, focused validation, rejection conditions, and applicable reviewers. Tests normally run once after the implementer has inspected the final diff.
+Every activity receives an observable objective, a Technical Refinement record before mutation, bounded artifact ownership, dependencies, primary failure mode, focused validation, rejection conditions, and applicable reviewers. Tests normally run once after the implementer has inspected the final diff.
 
 Approval never grants authority to commit, push, open or merge pull requests, publish releases, deploy, migrate data, mutate infrastructure, add dependencies, or perform destructive operations. Repository instructions and explicit user authority remain controlling.
 

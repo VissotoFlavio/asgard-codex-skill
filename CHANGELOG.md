@@ -4,6 +4,12 @@ All notable changes to this project are documented in this file.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.15.0] - 2026-10-03
+
+### Added
+
+- Require a proportional Technical Refinement before every governed mutation, preserving it in the authoritative issue and expanding operational details for infrastructure, database, security, and release work ([issue #135](https://github.com/VissotoFlavio/asgard-codex-skill/issues/135)).
+
 ## [0.14.1] - 2026-10-02
 
 Release contents: [issue #131](https://github.com/VissotoFlavio/asgard-codex-skill/issues/131), [PR #132](https://github.com/VissotoFlavio/asgard-codex-skill/pull/132).
