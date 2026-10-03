@@ -6,7 +6,7 @@ Read [CI monitoring](ci-monitoring.md) before observing checks or workflows. CI 
 
 ## Required authority and input
 
-Odin must provide the repository, approved delivery branch and revision, authoritative version artifacts, branch policy, required checks and reviews, release-note source, included delivery issue and pull-request inventory, applicable Forseti decision, and explicit authority for each applicable operation: commit, push, pull-request creation, merge, tag creation, GitHub Release creation, and CI monitoring. Release work requires exactly one authoritative issue before Hermod creates its branch. A CI-created backport from `master` to `develop` creates no additional branch and requires no separate issue. Missing authority stops before the affected mutation.
+Odin must provide the repository, approved delivery branch and revision, authoritative version artifacts, branch policy, required checks and reviews, changelog source, release-note source, included delivery issue and pull-request inventory, applicable Forseti decision, and explicit authority for each applicable operation: commit, push, pull-request creation, merge, tag creation, GitHub Release creation, and CI monitoring. Release work does not require or create an issue. A CI-created backport from `master` to `develop` creates no additional branch or issue. Missing authority stops before the affected mutation.
 
 The repository must be clean. Confirm remote state immediately before every mutation and bind CI evidence to the current pull-request or merge revision. Never rely on a successful check for an older revision.
 
@@ -62,7 +62,7 @@ After merging the delivery, synchronize local `develop` and analyze only the app
 
 When more than one category applies, use the highest required increment: `major` over `minor`, and `minor` over `patch`. Calculate the next version from the current stable SemVer by incrementing the selected component and resetting every component to its right to zero. Record the current version, selected increment, resulting version, confidence, and evidence. Do not stop solely for version selection or request confirmation of the inferred version.
 
-Create `release/<issue-id>-<major.minor.patch>` for the resulting version from synchronized `develop`, using the authoritative release issue ID. Update only authoritative version artifacts and required generated counterparts, validate that the application reports the determined version, and use a Conventional Commit such as `chore(release): bump version to 1.2.3`.
+Before opening the release pull request, verify that the changelog records the new version. If no changelog exists, ask the user before creating it. Create `release/<major.minor.patch>` for the resulting version from synchronized `develop`, without a release issue. Update only authoritative version artifacts, the changelog, and required generated counterparts; validate that the application reports the determined version; and use a Conventional Commit such as `chore(release): bump version to 1.2.3`.
 
 ## Release security validation
 
@@ -82,7 +82,7 @@ Repository Actions own package generation, publication, and environment deployme
 
 ## CI-created backport
 
-After production publication, discover the pull request created by CI directly from `master` to `develop` using reliable workflow output, version, revision, and repository metadata. Because this backport creates no branch, it reuses the release issue and requires no separate issue unless repository policy explicitly overrides this rule. Confirm both branches belong to the same repository, the head is the published `master` revision, and the changes return production state without unrelated divergence. Multiple plausible matches or a missing backport after the configured monitoring window block promotion.
+After production publication, discover the pull request created by CI directly from `master` to `develop` using reliable workflow output, version, revision, and repository metadata. Because this backport creates no branch or issue, it has no closing issue reference. Confirm both branches belong to the same repository, the head is the published `master` revision, and the changes return production state without unrelated divergence. Multiple plausible matches or a missing backport after the configured monitoring window block promotion.
 
 Always merge backport pull requests with a merge commit after all backport gates pass. Never squash a backport, even though it targets `develop`; preserving the release ancestry prevents avoidable conflicts in later release and backport flows. Synchronize local `develop` and verify its application version equals production before declaring `RELEASE_COMPLETE`.
 
