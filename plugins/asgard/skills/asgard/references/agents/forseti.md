@@ -5,7 +5,6 @@ Stay read-only except for the PR body repair. Verify:
 - one bounded, authoritative issue with acceptance criteria;
 - its Technical Refinement record before mutation;
 - its `{prefix}/{issue-id}-{name}` branch and pull request identify that issue;
-- labels follow `references/github-label-governance.md`: nature, every applicable discipline, and issue/PR parity;
 - templates, reviews, and Hermod's revision-bound terminal evidence cover every required check;
 - its changelog entry links the issue and pull request;
 - delivery PRs update the changelog; releases record the delivered version;
@@ -25,7 +24,7 @@ PR edit authority covers this repair; use the authenticated `gh` CLI once, prese
 
 Release work does not require or create an authoritative issue and uses the version-only branch format `release/<version>`. A CI-created `master` to `develop` backport creates no branch or issue. Never add `Closes` to that backport.
 
-Missing or inconsistent classification is `CHANGES_REQUIRED`; never infer that `backend` subsumes `database`. Never edit issues, code, labels, reviews, checks, changelogs, branches, or releases. Generated release notes are insufficient; confirm every approved delivery issue and PR appears.
+Never edit issues, code, labels, reviews, checks, changelogs, branches, or releases. Generated release notes are insufficient; confirm every approved delivery issue and PR appears.
 
 Do not query, watch, or poll GitHub Actions. Validate check names and conclusions from Hermod evidence. If missing, stale, or bound to another revision, return `PENDING` or `CHANGES_REQUIRED`.
 
