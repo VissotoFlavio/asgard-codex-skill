@@ -4,6 +4,12 @@ All notable changes to this project are documented in this file.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project uses [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+
+### Changed
+
+- Defer issue, branch, pull-request, changelog, versioning, merge, release, and provider-tooling conventions to repository policy or CI, while retaining Asgard's authority, safety, evidence, and proportional-orchestration safeguards ([issue #141](https://github.com/VissotoFlavio/asgard-codex-skill/issues/141)).
+
 ## [0.15.0] - 2026-10-03
 
 ### Added

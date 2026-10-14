@@ -36,7 +36,7 @@ Do not select it implicitly for routine single-file edits, isolated diagnosis, o
 | **Loki** | Searches adversarially for behavioral gaps and edge cases. |
 | **Bragi** | Reviews completed code for human readability and maintainability using context-sensitive SOLID, DRY, KISS, YAGNI, and Tell, Don't Ask. |
 | **Heimdall** | Independently reviews security, privacy, isolation, abuse, availability, and risk-justified deep vulnerability analysis. |
-| **Forseti** | Enforces issue, pull-request, changelog, and release traceability, including the narrowly authorized automatic `Closes #<issue>` repair. |
+| **Forseti** | Verifies repository-required delivery and release traceability, including a narrowly authorized metadata repair when policy permits it. |
 | **Hermod** | Promotes an approved revision through explicitly authorized version-control and release operations. |
 
 Specialists receive task-local context rather than the entire conversation. Their reports and passing tests are evidence; Odin still owns product decisions, inspects the candidate, and makes the acceptance decision. Mimir only resolves stated technical uncertainty read-only. Regin may design and author versioned database changes, but connecting to or mutating any durable, runtime, or non-isolated database, applying or retrying a migration, and executing a rollback each require explicit authority for the exact environment and candidate.
@@ -49,13 +49,13 @@ Odin applies Asgard once: specialist tasks do not invoke `$asgard` again. Multi-
 
 When a user requests vulnerability discovery or Heimdall identifies a need for deeper analysis, Asgard can route a bounded `Security` discipline review. Heimdall uses `$api-security-review` for API surfaces and `$web-security-review` for web application surfaces when those skills are installed. If a relevant skill is missing, Odin asks whether to install it; when installation is declined or unavailable, Heimdall continues with the native security review and records the fallback rather than claiming the specialized skill was applied.
 
-Deep security review is not run for every ordinary delivery pull request. Ask for it explicitly with language such as `--validate-security` when a PR or candidate needs deeper vulnerability analysis before release. During release preparation, Asgard runs deep security review by default before opening the release pull request, using the API and web security skills when the release affects those surfaces. To skip that default release gate, use `--skip-release-security` or equivalent explicit language with a reason; Asgard records the reason, reduced scope, and residual risk in the release evidence. Confirmed blocking vulnerabilities stop release preparation before the release PR is opened so corrections can land first.
+Deep security review is not run for every ordinary delivery. Run it when requested, required by repository policy, or justified by material risk. Confirmed blocking vulnerabilities stop the affected promotion step so corrections can land first.
 
-## Technical refinement gate
+## Technical refinement
 
-Before any governed mutation, Asgard completes a proportional technical refinement. It records the intended outcome, affected artifacts or resources, validation, primary risks, exclusions, dependencies, and authority boundary. Lean work remains concise; infrastructure, database, security, release, and operational work additionally records observed state, expected impact, rollback or recovery, and the approval required for each protected operation.
+Before a material mutation, Asgard prepares a proportional technical refinement when it improves the delivery decision. It records the intended outcome, affected artifacts or resources, validation, primary risks, exclusions, dependencies, and authority boundary. Lean work remains concise; infrastructure, database, security, release, and operational work additionally records observed state, expected impact, rollback or recovery, and the approval required for each protected operation.
 
-When an authoritative issue already exists and GitHub write authority is available, Asgard persists the refinement in a clearly identified Markdown comment before the first subsequent mutation. If creating the issue is the first mutation, its initial body contains the refinement. Read-only discovery, review, and monitoring need no refinement unless they transition to a mutable activity. A refinement documents a plan and never grants authority to execute it.
+When repository policy or the user requires a persisted plan, Asgard uses the designated artifact and format. It does not assume an issue, GitHub, or a comment structure. A refinement documents a plan and never grants authority to execute it.
 
 ## Intent catalog
 
@@ -84,7 +84,7 @@ Natural examples:
 - **Critical:** security-sensitive, persistent, concurrent, irreversible, regulated, or broadly exposed work, using every applicable independent gate.
 - **Release:** an approved candidate promoted by Hermod after required Forseti traceability and explicit mutation authority are recorded.
 
-Release mode includes a default deep security validation gate before the release pull request is opened. This gate can be skipped only by explicit user request with a recorded reason, and a confirmed blocking vulnerability returns the flow to correction instead of publication.
+Release mode applies deep security validation when repository policy, the user, or material risk requires it. A confirmed blocking vulnerability returns the flow to correction instead of publication.
 
 ## Core flow
 
@@ -92,8 +92,8 @@ Release mode includes a default deep security validation gate before the release
 Natural-language request
   -> Odin infers intent and records the separate authority ceiling
   -> DISCOVERY produces a decision-ready brief and stops for approval, when requested
-  -> approved issue preparation or creation occurs only when authorized
-  -> Odin completes and persists the proportional Technical Refinement before mutation
+  -> repository-policy artifacts are prepared only when authorized
+  -> Odin prepares proportional Technical Refinement when useful or policy-required
   -> Odin defines the delivery execution graph and Definition of Done
   -> Brokkr or Sindri implements application work,
      Regin authors database evolution,
@@ -121,27 +121,17 @@ At discussion-to-implementation, implementation-to-review, and approval-to-relea
 
 ## Definitions of Done and authority
 
-Every activity receives an observable objective, a Technical Refinement record before mutation, bounded artifact ownership, dependencies, primary failure mode, focused validation, rejection conditions, and applicable reviewers. Tests normally run once after the implementer has inspected the final diff.
+Every activity receives an observable objective, proportionate refinement when useful or policy-required, bounded artifact ownership, dependencies, primary failure mode, focused validation, rejection conditions, and applicable reviewers. Tests normally run once after the implementer has inspected the final diff.
 
 Approval never grants authority to commit, push, open or merge pull requests, publish releases, deploy, migrate data, mutate infrastructure, add dependencies, or perform destructive operations. Repository instructions and explicit user authority remain controlling.
 
-For GitHub, Asgard uses the authenticated `gh` CLI for issues, pull requests, reviews, checks, workflows, merges, tags, and releases, requesting only the structured fields needed. It does not silently fall back to a browser when authentication, authorization, scopes, or commands fail. Browser operation is reserved for a documented CLI/API capability gap and requires an explanation plus explicit user authorization for that exceptional operation.
+For GitHub, Asgard uses the repository's authorized tooling. It does not silently fall back to an unapproved client when authentication, authorization, scopes, or commands fail. Browser operation is reserved for a documented capability gap and requires an explanation plus explicit user authorization for that exceptional operation.
 
 ## Delivery governance
 
-When the repository requires traceability, Forseti checks the evidence available at each lifecycle phase:
+When the repository requires traceability, Forseti checks the policy-required evidence available at each lifecycle phase. That can include issues, branches, pull requests, closing relationships, labels, changelogs, release notes, or checks, but Asgard does not define the taxonomy or make any of them universal.
 
-1. one bounded issue defines new delivery work and its acceptance criteria when repository policy requires it;
-2. every created branch is named `{prefix}/{issue-id}-{name}` using its authoritative issue, and the pull request identifies the same issue with a provider-recognized `Closes #<issue>` relationship;
-3. required labels, templates, reviews, and checks are present;
-4. every delivery pull request updates the changelog with links to the issue and pull request;
-5. the final published release description explicitly enumerates every included delivery issue and pull request;
-6. every release updates the changelog with the delivered version; if no changelog exists, Asgard asks before creating it;
-7. a release creates no issue and uses `release/<version>`; the CI-created `master` to `develop` backport creates no additional branch or issue.
-
-GitHub classification uses two cumulative axes. Every authoritative issue and eligible pull request has at least one nature label, such as `bug`, `enhancement`, `documentation`, or `release`, plus every materially affected discipline. Database schema, tables, columns, keys, constraints, indexes, relationships, migrations, backfills, or compatibility work always requires `database`. Cross-boundary work may also carry labels such as `backend` or `infrastructure`; one discipline never hides another. Required nature and discipline labels must agree between the issue and its pull request, while operational labels may differ.
-
-When an eligible delivery PR lacks its closing reference, Forseti appends a standalone `Closes #<issue>` line automatically if exactly one open, same-repository issue is authoritative and PR edit authority is already recorded. It preserves the existing body, performs at most one edit, and verifies the provider-recognized relationship afterward. Ambiguous or conflicting issue candidates require correction instead of guessing. Missing evidence that cannot exist yet is `PENDING`; a violated invariant is `CHANGES_REQUIRED`. Forseti's approval covers governance only.
+When policy requires a provider-recognized closing reference, Forseti may repair one absent, unambiguous reference only with authority for that exact edit. Missing evidence that cannot exist yet is `PENDING`; a violated repository invariant is `CHANGES_REQUIRED`. Forseti's approval covers governance only.
 
 ## Install the plugin
 

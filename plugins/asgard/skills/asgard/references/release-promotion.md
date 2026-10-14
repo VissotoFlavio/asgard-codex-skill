@@ -1,90 +1,52 @@
 # Hermod Release Promotion
 
-Read this reference before dispatching Hermod. Hermod promotes an Odin-approved delivery through Git hosting and observes deployment performed by repository Actions. Hermod does not accept the delivery, change product code to repair failures, or deploy directly.
+Read this reference before dispatching Hermod. Hermod promotes an Odin-approved delivery through the repository's authorized release workflow and observes publication or deployment. Hermod does not accept the delivery, change product code to repair failures, or deploy directly.
 
-Read [CI monitoring](ci-monitoring.md) before observing checks or workflows. CI observation must use one fresh, task-local Hermod activity rather than the implementation or review context.
+Read [CI monitoring](ci-monitoring.md) before observing checks or workflows. CI observation uses one fresh, task-local Hermod activity rather than the implementation or review context.
 
 ## Required authority and input
 
-Odin must provide the repository, approved delivery branch and revision, authoritative version artifacts, branch policy, required checks and reviews, changelog source, release-note source, included delivery issue and pull-request inventory, applicable Forseti decision, and explicit authority for each applicable operation: commit, push, pull-request creation, merge, tag creation, GitHub Release creation, and CI monitoring. Release work does not require or create an issue. A CI-created backport from `master` to `develop` creates no additional branch or issue. Missing authority stops before the affected mutation.
+Odin provides the approved candidate revision, repository release policy, required checks and reviews, release artifacts and notes when applicable, applicable Forseti decision, and explicit authority for each intended mutation. Repository policy determines whether releases use branches, pull requests, issues, changelogs, versioning, tags, backports, or provider releases. Missing policy or authority stops before the affected mutation.
 
-The repository must be clean. Confirm remote state immediately before every mutation and bind CI evidence to the current pull-request or merge revision. Never rely on a successful check for an older revision.
+The repository must be clean. Confirm remote state immediately before every mutation and bind CI evidence to the current candidate revision. Never rely on a successful check for an older revision.
 
-## GitHub command policy
+## Provider and repository tooling
 
-Use the GitHub CLI for every GitHub integration. Start by requiring `gh auth status` to succeed for the intended host and account. Prefer `gh api` with explicit REST or GraphQL endpoints for pull requests, reviews, required checks, workflow runs, merge operations, tags, and releases. Use focused commands such as `gh run view`, `gh pr`, or `gh release` only when they provide a clearer supported operation than the API endpoint.
+Use the repository's authorized provider and repository tooling. When the GitHub CLI is the approved tool, verify authentication for the intended host and account and use focused commands or its API. Do not silently substitute an unapproved provider client after an authentication or authorization failure.
 
-Use `git` for repository operations such as status, fetch, branch creation, commits, tags, and push; do not use a browser, connector, or a different API client as a silent fallback for failed `gh` authentication or authorization. Stop and report the failed `gh` command, sanitized response, host, account, and required scope. Paginate collection endpoints when the complete result affects a decision. Hermod owns all live Actions queries and the single pull-request head and merge-gate re-read immediately before merging; Odin and Forseti reuse Hermod's revision-bound evidence instead of querying again.
+Use the repository's authorized version-control tooling for status, fetch, branch creation, commits, tags, and push. Hermod owns live CI queries and the final revision and merge-gate re-read immediately before an authorized merge; Odin and Forseti reuse that revision-bound evidence.
 
-## State machine
+## Promotion flow
 
 ```text
-DELIVERY_APPROVED
-  -> DELIVERY_PR_OPEN
-  -> DELIVERY_CI_PASSED
-  -> DELIVERY_MERGED_TO_DEVELOP
-  -> VERSION_DETERMINED
-  -> RELEASE_SECURITY_REVIEWED
-  -> RELEASE_BRANCH_CREATED
-  -> APPLICATION_VERSION_UPDATED
-  -> RELEASE_PR_OPEN
-  -> RELEASE_CI_PASSED
-  -> RELEASE_MERGED_TO_MASTER
-  -> VERSION_TAGGED
-  -> PRODUCTION_ACTIONS_RUNNING
-  -> PRODUCTION_DEPLOYED
-  -> GITHUB_RELEASE_PUBLISHED
-  -> RELEASE_NOTES_RECONCILED
-  -> RELEASE_TRACEABILITY_APPROVED
-  -> BACKPORT_DISCOVERED
-  -> BACKPORT_CI_PASSED
-  -> BACKPORT_MERGED_TO_DEVELOP
+CANDIDATE_APPROVED
+  -> REPOSITORY_GATES_PASSED
+  -> POLICY_REQUIRED_PROMOTION
+  -> PUBLICATION_OR_DEPLOYMENT_OBSERVED
+  -> POLICY_REQUIRED_TRACEABILITY_RECONCILED
   -> RELEASE_COMPLETE
 
 Any failure -> BLOCKED -> REPORT_TO_ODIN
 ```
 
-Resume idempotently from observed repository state. Do not duplicate branches, pull requests, tags, or releases. Treat an ambiguous match as a blocker.
+Resume idempotently from observed repository state. Do not duplicate repository artifacts. Treat an ambiguous match as a blocker.
 
-## Delivery integration
+## Apply repository policy
 
-Delivery branches created from `develop` and targeting `develop` are the only pull requests eligible for squash merge. Prefer squash for those deliveries. Before merging, inspect whether the branch is an active base for dependent branches. When squash would destroy ancestry required by those branches, use a merge commit. If protections do not allow the safe method, stop and report; do not rebase or force-push dependent branches automatically.
+Before every release mutation, determine and follow the repository's documented policy for:
 
-Merge only when the pull request is not a draft, has no conflicts, satisfies required reviews, is current when required, passes every required check for its current revision, and the provider reports it mergeable. Failed, cancelled, or timed-out required checks block the merge. Pending checks pause promotion inside the bounded watcher without producing repeated model turns.
+- source and target revisions, branches, pull requests, and merge method;
+- version source, version-selection authority, and version-artifact updates;
+- changelog, release notes, tags, provider releases, and included-delivery inventory;
+- CI checks, approvals, deployment triggers, backports, and completion evidence.
 
-## Version decision
+When a required policy is absent or ambiguous, present the choices and obtain the user's decision. Do not infer a branch model, semantic-versioning increment, commit convention, tag format, changelog requirement, merge method, backport, or provider-release format.
 
-After merging the delivery, synchronize local `develop` and analyze only the approved delivery. Determine the next version without asking the user to choose or confirm the increment:
-
-- `major` for incompatible public behavior, contract, or data changes;
-- `minor` for backward-compatible functionality;
-- `patch` for backward-compatible fixes or internal improvements.
-
-When more than one category applies, use the highest required increment: `major` over `minor`, and `minor` over `patch`. Calculate the next version from the current stable SemVer by incrementing the selected component and resetting every component to its right to zero. Record the current version, selected increment, resulting version, confidence, and evidence. Do not stop solely for version selection or request confirmation of the inferred version.
-
-Before opening the release pull request, verify that the changelog records the new version. If no changelog exists, ask the user before creating it. Create `release/<major.minor.patch>` for the resulting version from synchronized `develop`, without a release issue. Update only authoritative version artifacts, the changelog, and required generated counterparts; validate that the application reports the determined version; and use a Conventional Commit such as `chore(release): bump version to 1.2.3`.
+Merge only when the candidate is current, has no unresolved conflicts, satisfies the repository-required checks and reviews, and the provider reports it mergeable when applicable. Failed, cancelled, or timed-out required checks block the merge. Pending checks pause promotion inside the bounded watcher without repeated model turns.
 
 ## Release security validation
 
-Before creating the release branch or opening the release pull request, run a bounded deep security review of the release candidate using the security discipline packet. Select `$api-security-review` for affected API surfaces and `$web-security-review` for affected web surfaces when those skills are available. If a selected skill is missing, ask whether the user wants to install it; when installation is declined or unavailable, continue with Heimdall's native review and record the fallback.
-
-An ordinary delivery pull request does not receive this deep review by default. Run it early for a non-release candidate only when the user requests `--validate-security` or equivalent language, or when Odin records a material security risk. A release may skip the default deep review only when the user explicitly requests `--skip-release-security` or equivalent language and provides a reason. Record that reason, the reduced review scope, and residual risk in the release evidence.
-
-Confirmed blocking vulnerabilities prevent release branch creation and release pull-request opening. Route corrections to the owning implementer, rerun the affected validation and security review, then resume release preparation from the same synchronized base or a newly approved corrected base.
-
-## Master promotion, tag, and release
-
-Release branches originate from `develop` and target `master`. Always merge release pull requests with a merge commit after their current-revision gates pass.
-
-Create `v<major.minor.patch>` for the exact master merge revision and never move or reuse a published version tag. Respect the repository trigger: publish the tag before monitoring when the tag starts packaging or deployment. Derive GitHub Release notes from the approved delivery inventory. After required production Actions succeed and the release exists, create or edit its description so every included delivery issue and pull request is explicit, then re-read it and obtain Forseti approval. Automatically generated notes alone do not satisfy this gate. If deployment fails after tagging, report and leave the immutable tag in place; a correction receives a new version.
-
-Repository Actions own package generation, publication, and environment deployment. Hermod only monitors them. A master merge is not deployment success.
-
-## CI-created backport
-
-After production publication, discover the pull request created by CI directly from `master` to `develop` using reliable workflow output, version, revision, and repository metadata. Because this backport creates no branch or issue, it has no closing issue reference. Confirm both branches belong to the same repository, the head is the published `master` revision, and the changes return production state without unrelated divergence. Multiple plausible matches or a missing backport after the configured monitoring window block promotion.
-
-Always merge backport pull requests with a merge commit after all backport gates pass. Never squash a backport, even though it targets `develop`; preserving the release ancestry prevents avoidable conflicts in later release and backport flows. Synchronize local `develop` and verify its application version equals production before declaring `RELEASE_COMPLETE`.
+Run deep security analysis when repository policy requires it, the user requests it, or Odin records material security risk. Select applicable security skills when available; if a selected skill is unavailable, report the limitation and use the approved fallback. Confirmed blocking vulnerabilities stop the affected promotion step. Route corrections to the owning implementer, then rerun only affected validation and review.
 
 ## Failure report
 
@@ -95,11 +57,11 @@ Return:
 ```yaml
 agent: Hermod
 status: BLOCKED
-phase: DELIVERY_PR | RELEASE_PR | TAG | PRODUCTION_DEPLOY | GITHUB_RELEASE | BACKPORT
+phase: repository-defined phase
 repository: owner/repository
-version: value | not selected
-pull_request: url | not applicable
-revision: sha
+release_identifier: value | not applicable
+candidate_revision: sha
+artifact: url | not applicable
 workflow: name | not applicable
 job: name | not applicable
 failed_step: value | unknown
@@ -109,18 +71,10 @@ summary: concise observed cause
 evidence: short sanitized evidence
 retry_possible: true | false | unknown
 recommended_owner: Brokkr | Sindri | Regin | Ymir | Odin | repository-maintainer
-usage_observed:
-  intent: RELEASE
-  role: Hermod
-  model_turns: integer | unavailable
-  incremental_input_tokens: integer | unavailable
-  incremental_cached_input_tokens: integer | unavailable
-  incremental_output_tokens: integer | unavailable
-  incremental_reasoning_output_tokens: integer | unavailable
 ```
 
-Never reproduce credentials, tokens, personal data, or unnecessary exploit details. A transient-looking failure may justify recommending a rerun, but Hermod does not rerun automatically unless that exact retry authority and a bounded retry policy were supplied.
+Never reproduce credentials, tokens, personal data, or unnecessary exploit details. A transient-looking failure may justify recommending a rerun, but Hermod does not rerun automatically unless exact retry authority and a bounded retry policy were supplied.
 
 ## Completion record
 
-Return the selected version; delivery, release, and backport pull-request URLs and merge revisions; master release revision; tag and GitHub Release URLs; production workflow and deployed revision; synchronized develop revision and version; merge methods; residual risks; and excluded operations not performed.
+Return the approved candidate revision, policy-required artifact URLs and revisions, publication or deployment evidence, residual risks, and excluded operations not performed.
