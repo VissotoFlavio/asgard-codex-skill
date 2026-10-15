@@ -10,6 +10,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 - Defer issue, branch, pull-request, changelog, versioning, merge, release, and provider-tooling conventions to repository policy or CI, while retaining Asgard's authority, safety, evidence, and proportional-orchestration safeguards ([issue #141](https://github.com/VissotoFlavio/asgard-codex-skill/issues/141)).
 
+## [0.15.1] - 2026-10-13
+
+### Changed
+
+- Remove Asgard's built-in GitHub label-classification governance. Issue and pull-request labels are now governed only by repository policy or CI requirements.
+
 ## [0.15.0] - 2026-10-03
 
 ### Added
@@ -178,6 +184,7 @@ Release tracking: [issue #40](https://github.com/VissotoFlavio/asgard-codex-skil
 
 [Unreleased]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.16.0...develop
 [0.16.0]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.15.0...v0.16.0
+[0.15.1]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.15.0...v0.15.1
 [0.13.1]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.13.0...v0.13.1
 [0.13.0]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.12.0...v0.13.0
 [0.12.0]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.11.0...v0.12.0
