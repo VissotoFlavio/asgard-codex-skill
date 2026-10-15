@@ -7,7 +7,7 @@ Create a task-local contract before implementation. Include only fields that cha
 ```text
 Activity:
 Objective and observable outcome:
-Technical refinement record and mutation gate:
+Technical refinement, when useful or policy-required:
 Owned production and test artifacts:
 Dependencies and base state:
 Discipline and rationale:
@@ -21,8 +21,7 @@ Mode: Lean | Standard | Critical | Release
 Required reviewers and rationale:
 Execution budget: simultaneous agents | correction cycles | report words | inherited history
 Delivery governance and traceability: Forseti | not applicable
-Authoritative delivery issue and pull-request edit authority:
-GitHub classification: nature labels | discipline labels | rationale
+Repository-policy artifacts and edit authority:
 Excluded or unauthorized operations:
 ```
 
@@ -35,11 +34,11 @@ Omit discipline and required skills when they do not change execution. For a .NE
 - **Lean:** record the observable outcome, owned artifacts, focused validation, primary failure mode, and exclusions. Add a specialist reviewer only for an identified risk; use Bragi when maintainability is an explicit acceptance concern.
 - **Standard:** also record material compatibility, domain, authorization, data, concurrency, and cross-boundary invariants; require Loki and Heimdall, Tyr when contracts or rules are material, and Bragi when production code is added or structurally changed.
 - **Critical:** make every relevant security, privacy, persistence, transaction, isolation, abuse, availability, rollback, and negative-test expectation explicit; require Bragi for production-code candidates.
-- **Release:** additionally record the release security validation decision and evidence, the `release/<version>` branch, exact approved revision, changelog update for the delivered version, included delivery issue and pull-request inventory, release-note source, the CI-created backport's lack of a branch or issue, and authority for each repository or publication mutation.
+- **Release:** additionally record the release security validation decision and evidence, exact approved revision, repository-required versioning, traceability, publication, and recovery evidence, and authority for each repository or publication mutation.
 
 Avoid generic invariant checklists. An invariant belongs in the contract only when the activity can affect it.
 
-Before any mutation, record the Technical Refinement in the authoritative issue as a clearly identified Markdown comment when GitHub write authority exists. It must identify the outcome, affected artifacts or resources, validation, primary risk, exclusions, dependencies, and authority boundary. The issue body carries that record when the issue itself is the first GitHub mutation. For infrastructure, database, security, release, or operational work, also record observed state, expected impact, recovery or rollback approach, and authority for each protected operation. A read-only activity records refinement only if it will transition to mutation.
+When refinement is useful or policy-required, record it in the repository-designated artifact and format. It must identify the outcome, affected artifacts or resources, validation, primary risk, exclusions, dependencies, and authority boundary. For infrastructure, database, security, release, or operational work, also record observed state, expected impact, recovery or rollback approach, and authority for each protected operation.
 
 Default to at most three simultaneous agents, one grouped correction cycle, 400 report words per agent, and no inherited conversation history. These are decision budgets, not acceptance gates. Increase only the field required by a documented risk or indivisible dependency, and record the reason before dispatch. A failed correction cycle stops for Odin to reassess rather than spawning an open-ended retry chain.
 
