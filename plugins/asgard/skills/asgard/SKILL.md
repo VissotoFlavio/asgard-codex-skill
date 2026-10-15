@@ -23,17 +23,15 @@ Infer intent from natural language when it is clear. Ask one focused question on
 
 Intent and authority are separate dimensions. Record the inferred intent and the current authority ceiling before action. A request to deliver, deploy, release, or operate infrastructure does not implicitly authorize issue creation, implementation, commits, pushes, pull requests, publication, deployment, migration, destructive action, dependency installation, or infrastructure mutation. Never reinterpret an intent keyword as protected-operation authority.
 
-## Refine before every mutation
+## Refine before material mutation
 
-Before the first mutation in any governed activity, Odin must complete a proportional **Technical Refinement**. This is a mandatory gate for delivery, infrastructure, deploy, release, and any other workflow that will edit code, create or modify GitHub artifacts, change version control, mutate data or infrastructure, or publish an artifact. Read-only discovery, review, and monitoring may proceed without it unless they transition to a mutation.
+Before a material mutation, prepare a proportional **Technical Refinement** when it improves the delivery decision. State the intended outcome, affected artifacts or resources, expected validation, primary risks, exclusions, dependencies, and authority boundary. Scale its depth to risk: infrastructure, database, security, release, or operational work also records observed state, expected impact, recovery or rollback approach, and approval needed for each protected operation.
 
-Refinement may use read-only inspection and must state the intended outcome, affected artifacts or resources, expected validation, primary risks, exclusions, dependencies, and authority boundary. Scale its depth to risk: a Lean activity records those minimums; infrastructure, database, security, release, or operational work also records observed state, expected impact, recovery or rollback approach, and approval needed for each protected operation.
-
-Persist the refinement in the authoritative issue as a clearly identified Markdown comment before the first subsequent mutation when GitHub write authority is available. Reuse or update that record rather than creating duplicate refinements. If the issue itself must be created, complete the refinement first and include it in the initial issue body; do not create a branch or start implementation until the issue records it. If persistence is required but write authority is unavailable, stop with the refinement ready for the authorized actor. A refinement documents the plan; it never grants mutation authority.
+Persist the refinement only when repository policy requires a planning record or the user asks for one. Use the repository's designated artifact and format; do not assume an issue, GitHub, or a particular comment structure. A refinement documents the plan; it never grants mutation authority.
 
 ## Use command-line GitHub integrations
 
-For every GitHub interaction, use the authenticated GitHub CLI. Require `gh auth status` to succeed for the intended host and account, prefer `gh api` for explicit REST or GraphQL operations, and use focused `gh issue`, `gh pr`, `gh run`, or `gh release` commands when clearer. Request only the fields needed for the decision with `--json`, `--jq`, or explicit API selection, and paginate only when completeness matters.
+For GitHub work, use the repository's authorized tooling. When the GitHub CLI is selected, verify its authentication for the intended host and account, request only the fields needed for the decision, and use its focused commands or API consistently. Do not impose GitHub-specific tooling on repositories that use another approved provider or workflow.
 
 When creating or editing pull requests, issues, comments, or releases, send Markdown as real multiline text. Do not pass bodies containing literal escape sequences such as `\n`, quoted JSON strings, or shell-escaped text that GitHub will render verbatim. Prefer `gh` body-file/stdin mechanisms or an API JSON encoder that preserves newline characters, then re-read the artifact when formatting affects traceability or review.
 
@@ -59,7 +57,7 @@ Read repository and workspace instructions before planning. Identify affected co
 
 Do not create agents, branches, or isolated workspaces before the user approves the execution graph unless immediate execution was explicitly requested. Graph approval covers its implementation and internal correction cycles, not protected or external mutations. Return to the user for changed scope, missing product direction, unauthorized protected operations, or genuine external blockers.
 
-Every delivery branch created by Asgard requires exactly one authoritative issue and must be named `{prefix}/{issue-id}-{name}`, with a short lowercase kebab-case `name`. Release branches use the repository's version-only release format and do not require or create an issue. Odin records the delivery issue and expected branch name; only Hermod creates branches, after validating the repository's prefix and source/target policy. A CI-created backport directly from `master` to `develop` creates no branch and does not create or reuse an issue.
+For repository changes, discover the repository's issue, branch, pull-request, and traceability policy before creating artifacts. Apply that policy when it exists; otherwise propose a lightweight convention without making it a governance blocker. Hermod creates branches only after validating the applicable source, target, naming, and traceability requirements.
 
 Odin remains accountable for decomposition, delegation, integration, evidence review, and final acceptance. Never delegate acceptance of the complete delivery or act only as a router.
 Read [Odin's packet](references/agents/odin.md) only when a separate orchestration handoff or compact recovery context is needed.
@@ -77,7 +75,7 @@ Do not use Asgard when Lean would merely reproduce ordinary single-agent work wi
 
 ## Build the execution graph
 
-Inspect only the code and evidence needed to refine and decompose the delivery. Complete the mandatory Technical Refinement before any mutation, then give each activity one observable objective, bounded ownership, focused validation, dependencies, primary failure mode, and rejection conditions. Classify dependencies as `SEQUENTIAL_REQUIRED`, `PARALLEL_SAFE`, `PARALLEL_WITH_COORDINATION`, or `DEFER_DECISION`; do not parallelize merely to fill slots.
+Inspect only the code and evidence needed to refine and decompose the delivery. Give each activity one observable objective, bounded ownership, focused validation, dependencies, primary failure mode, and rejection conditions. Classify dependencies as `SEQUENTIAL_REQUIRED`, `PARALLEL_SAFE`, `PARALLEL_WITH_COORDINATION`, or `DEFER_DECISION`; do not parallelize merely to fill slots.
 
 Present one concise approval boundary with activities, dependencies, selected mode and implementers, DoD, review routing, isolation, conflict risks, validation, integration, optional publication, and still-unauthorized operations. Read [definition-of-done.md](references/definition-of-done.md) only when constructing the activity contracts.
 
@@ -130,9 +128,9 @@ At a material phase boundary, replace accumulated narrative with the compact che
 
 ## Publish only when authorized
 
-Approval never grants authority to commit, push, open or merge changes, publish, migrate, deploy, mutate infrastructure, add dependencies, or perform destructive operations. When repository or user policy requires delivery traceability, dispatch Forseti at the lifecycle phases where the relevant evidence exists. Recorded authority to create or edit an eligible delivery pull request permits Forseti's single idempotent repair that appends its unambiguous `Closes #<issue>` reference; it grants no other mutation. Require governance approval before merge or publication. For Release mode, read [release-promotion.md](references/release-promotion.md) before dispatching Hermod.
+Approval never grants authority to commit, push, open or merge changes, publish, migrate, deploy, mutate infrastructure, add dependencies, or perform destructive operations. When repository or user policy requires delivery traceability, dispatch Forseti at the lifecycle phases where the relevant evidence exists. A closing-reference repair is permitted only when that policy requires it and authority covers the exact edit. For Release mode, read [release-promotion.md](references/release-promotion.md) before dispatching Hermod.
 
-A release flow does not create or require an issue. Hermod creates `release/<version>` from `develop`, and the CI-created backport directly from `master` to `develop` creates no additional branch or issue. Carry the included delivery issues and pull requests into the release notes. Every delivery pull request updates the changelog; every release records the delivered version in the changelog. If no changelog exists, ask the user before creating it.
+Follow the repository's release, versioning, changelog, merge, tag, backport, and publication policy. If it is absent or ambiguous, present the available options and obtain the user's decision rather than imposing a workflow.
 
 Stop after exhausting safe read-only investigation when required authority, product direction, independent review, or meaningful validation is unavailable.
 

@@ -1,19 +1,13 @@
 # Forseti
 
-Stay read-only except for the PR body repair. Verify:
+Stay read-only except for a repository-required, authorized metadata repair. Verify only the traceability artifacts required by repository or user policy:
 
-- one bounded, authoritative issue with acceptance criteria;
-- its Technical Refinement record before mutation;
-- its `{prefix}/{issue-id}-{name}` branch and pull request identify that issue;
 - templates, reviews, and Hermod's revision-bound terminal evidence cover every required check;
-- its changelog entry links the issue and pull request;
-- delivery PRs update the changelog; releases record the delivered version;
-- ask before creating if absent;
-- final release notes enumerate every included delivery issue and pull request without unrelated claims.
+- policy-required issue, branch, pull-request, changelog, release-note, or planning records are present and consistent.
 
 ## Automatic closing reference
 
-Every eligible delivery pull request must contain a standalone `Closes #<issue>` line. If absent, append it automatically without changing content only when:
+When repository policy requires a provider-recognized closing reference, repair an absent unambiguous reference only when:
 
 - Odin recorded one authoritative open issue;
 - the issue belongs to the pull request's base repository;
@@ -22,9 +16,7 @@ Every eligible delivery pull request must contain a standalone `Closes #<issue>`
 
 PR edit authority covers this repair; use the authenticated `gh` CLI once, preserve Markdown with real line breaks, then re-read the provider-recognized closing-issue relationship. Never submit literal `\n` escapes or serialized text. Ambiguous candidates are `CHANGES_REQUIRED`; never guess, replace, or add several references.
 
-Release work does not require or create an authoritative issue and uses the version-only branch format `release/<version>`. A CI-created `master` to `develop` backport creates no branch or issue. Never add `Closes` to that backport.
-
-Never edit issues, code, labels, reviews, checks, changelogs, branches, or releases. Generated release notes are insufficient; confirm every approved delivery issue and PR appears.
+Never infer a repository's branch, issue, label, changelog, versioning, or release-note convention. Never edit issues, code, labels, reviews, checks, changelogs, branches, or releases beyond the authorized metadata repair.
 
 Do not query, watch, or poll GitHub Actions. Validate check names and conclusions from Hermod evidence. If missing, stale, or bound to another revision, return `PENDING` or `CHANGES_REQUIRED`.
 

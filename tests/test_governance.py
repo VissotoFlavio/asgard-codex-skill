@@ -116,25 +116,22 @@ class ContainedPathTests(unittest.TestCase):
         self.assertIn("deep vulnerability review", roles)
         self.assertIn("Odin asks whether to install it", readme)
         self.assertIn("records the fallback", readme)
-        self.assertIn("Asgard runs deep security review by default before opening the release pull request", readme)
+        self.assertIn("Run it when requested, required by repository policy, or justified by material risk", readme)
         self.assertIn("--validate-security", readme)
         self.assertIn("--skip-release-security", readme)
 
-    def test_release_security_validation_runs_before_release_pr_with_recorded_skip(self) -> None:
+    def test_release_security_validation_follows_policy_or_material_risk(self) -> None:
         release = (VALIDATOR.SKILL_ROOT / "references" / "release-promotion.md").read_text(encoding="utf-8")
         definition = (VALIDATOR.SKILL_ROOT / "references" / "definition-of-done.md").read_text(encoding="utf-8")
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
 
-        self.assertIn("-> RELEASE_SECURITY_REVIEWED", release)
-        self.assertIn("Before creating the release branch or opening the release pull request", release)
-        self.assertIn("security discipline packet", release)
-        self.assertIn("An ordinary delivery pull request does not receive this deep review by default", release)
-        self.assertIn("`--validate-security`", release)
-        self.assertIn("`--skip-release-security`", release)
-        self.assertIn("Confirmed blocking vulnerabilities prevent release branch creation", release)
+        self.assertIn("Run deep security analysis when repository policy requires it", release)
+        self.assertIn("the user requests it", release)
+        self.assertIn("material security risk", release)
+        self.assertIn("Confirmed blocking vulnerabilities stop the affected promotion step", release)
         self.assertIn("release security validation decision and evidence", definition)
-        self.assertIn("Release mode includes a default deep security validation gate", readme)
-        self.assertIn("confirmed blocking vulnerability returns the flow to correction", readme)
+        self.assertIn("Deep security review is not run for every ordinary delivery", readme)
+        self.assertIn("Confirmed blocking vulnerabilities stop the affected promotion step", readme)
 
     def test_regin_owns_database_structure_without_implicit_runtime_authority(self) -> None:
         skill = (VALIDATOR.SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
@@ -275,7 +272,7 @@ class ContainedPathTests(unittest.TestCase):
 
 
 class WorkflowGovernanceTests(unittest.TestCase):
-    def test_technical_refinement_blocks_governed_mutations(self) -> None:
+    def test_technical_refinement_is_proportional_and_policy_aware(self) -> None:
         skill = (VALIDATOR.SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
         definition = (VALIDATOR.SKILL_ROOT / "references" / "definition-of-done.md").read_text(encoding="utf-8")
         odin = (VALIDATOR.SKILL_ROOT / "references" / "agents" / "odin.md").read_text(encoding="utf-8")
@@ -283,15 +280,15 @@ class WorkflowGovernanceTests(unittest.TestCase):
         forseti = (VALIDATOR.SKILL_ROOT / "references" / "agents" / "forseti.md").read_text(encoding="utf-8")
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
 
-        self.assertIn("## Refine before every mutation", skill)
-        self.assertIn("Before the first mutation in any governed activity", skill)
-        self.assertIn("Read-only discovery, review, and monitoring", skill)
-        self.assertIn("Technical refinement record and mutation gate", definition)
-        self.assertIn("Before any mutation, record the Technical Refinement", definition)
-        self.assertIn("Before mutation, complete and persist Technical Refinement", odin)
-        self.assertIn("before any infrastructure mutation", ymir)
-        self.assertIn("Technical Refinement record before mutation", forseti)
-        self.assertIn("## Technical refinement gate", readme)
+        self.assertIn("## Refine before material mutation", skill)
+        self.assertIn("when it improves the delivery decision", skill)
+        self.assertIn("Persist the refinement only when repository policy requires", skill)
+        self.assertIn("Technical refinement, when useful or policy-required", definition)
+        self.assertIn("repository-designated artifact", definition)
+        self.assertIn("when useful; persist it only when policy", odin)
+        self.assertIn("persist it only when repository policy", ymir)
+        self.assertNotIn("Technical Refinement record before mutation", forseti)
+        self.assertIn("## Technical refinement", readme)
 
     def test_intent_routing_preserves_authority_and_discovery_boundary(self) -> None:
         skill = (VALIDATOR.SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
@@ -351,73 +348,59 @@ class WorkflowGovernanceTests(unittest.TestCase):
         self.assertIn("Dispatch Bragi only after `IMPLEMENTER_COMPLETE`", gates)
         self.assertIn("does not start services or rerun broad validations", gates)
 
-    def test_forseti_governs_traceability_with_limited_pr_repair(self) -> None:
+    def test_forseti_applies_repository_traceability_with_limited_metadata_repair(self) -> None:
         text = (VALIDATOR.SKILL_ROOT / "references" / "agents" / "forseti.md").read_text(encoding="utf-8")
-        self.assertIn("one bounded, authoritative issue", text)
-        self.assertIn("changelog entry", text)
-        self.assertIn("release notes enumerate every included delivery issue and pull request", text)
-        self.assertIn("`{prefix}/{issue-id}-{name}`", text)
-        self.assertIn("Generated release notes are insufficient", text)
-        self.assertIn("Stay read-only except for the PR body repair", text)
-        self.assertIn("Every eligible delivery pull request must contain", text)
-        self.assertIn("append it automatically", text)
+        self.assertIn("repository or user policy", text)
+        self.assertIn("policy-required issue, branch, pull-request", text)
+        self.assertIn("authorized metadata repair", text)
+        self.assertIn("provider-recognized closing reference", text)
         self.assertIn("provider-recognized closing-issue relationship", text)
-        self.assertIn("Never add `Closes` to that backport", text)
         self.assertIn("never guess, replace, or add several references", text)
         self.assertIn("never implies technical acceptance", text)
+        self.assertIn("Never infer a repository's branch, issue, label", text)
 
         skill = (VALIDATOR.SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
         self.assertIn("references/agents/forseti.md", skill)
         self.assertNotIn("github-label-governance", skill)
         self.assertFalse((VALIDATOR.SKILL_ROOT / "references" / "github-label-governance.md").exists())
         release = (VALIDATOR.SKILL_ROOT / "references" / "release-promotion.md").read_text(encoding="utf-8")
-        self.assertIn("RELEASE_TRACEABILITY_APPROVED", release)
-        self.assertIn("RELEASE_NOTES_RECONCILED", release)
-        self.assertIn("Release work does not require or create an issue", release)
-        self.assertIn("Automatically generated notes alone do not satisfy this gate", release)
+        self.assertIn("Repository policy determines", release)
+        self.assertIn("Do not infer a branch model", release)
 
     def test_github_operations_are_cli_first_with_guarded_browser_exception(self) -> None:
         skill = (VALIDATOR.SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
         forseti = (VALIDATOR.SKILL_ROOT / "references" / "agents" / "forseti.md").read_text(encoding="utf-8")
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
 
-        self.assertIn("For every GitHub interaction, use the authenticated GitHub CLI", skill)
-        self.assertIn("Require `gh auth status` to succeed", skill)
-        self.assertIn("`--json`, `--jq`", skill)
+        self.assertIn("repository's authorized tooling", skill)
         self.assertIn("send Markdown as real multiline text", skill)
         self.assertIn("literal escape sequences such as `\\n`", skill)
         self.assertIn("body-file/stdin mechanisms", skill)
-        self.assertIn("Browser use is an extreme last resort", skill)
-        self.assertIn("documented capability gap", skill)
-        self.assertIn("user explicitly authorizes that browser operation", skill)
-        self.assertIn("never justify a silent browser fallback", skill)
-        self.assertIn("use the authenticated `gh` CLI", forseti)
+        self.assertIn("Do not impose GitHub-specific tooling", skill)
+        self.assertIn("authenticated `gh` CLI", forseti)
         self.assertIn("preserve Markdown with real line breaks", forseti)
-        self.assertIn("does not silently fall back to a browser", readme)
+        self.assertIn("does not silently fall back to an unapproved client", readme)
 
-    def test_release_version_is_determined_without_user_confirmation(self) -> None:
+    def test_release_policy_is_not_inferred(self) -> None:
         text = (VALIDATOR.SKILL_ROOT / "references" / "release-promotion.md").read_text(encoding="utf-8")
-        self.assertIn("-> VERSION_DETERMINED", text)
-        self.assertNotIn("AWAITING_VERSION_DECISION", text)
-        self.assertIn("use the highest required increment", text)
-        self.assertIn("Do not stop solely for version selection", text)
+        self.assertIn("Repository policy determines", text)
+        self.assertIn("obtain the user's decision", text)
+        self.assertIn("Do not infer a branch model", text)
 
-    def test_delivery_branches_require_issues_and_releases_do_not(self) -> None:
+    def test_repository_policy_controls_branch_and_issue_conventions(self) -> None:
         skill = (VALIDATOR.SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
         release = (VALIDATOR.SKILL_ROOT / "references" / "release-promotion.md").read_text(encoding="utf-8")
         forseti = (VALIDATOR.SKILL_ROOT / "references" / "agents" / "forseti.md").read_text(encoding="utf-8")
         definition = (VALIDATOR.SKILL_ROOT / "references" / "definition-of-done.md").read_text(encoding="utf-8")
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
 
-        self.assertIn("Every delivery branch created by Asgard requires exactly one authoritative issue", skill)
-        self.assertIn("`{prefix}/{issue-id}-{name}`", skill)
-        self.assertIn("Release work does not require or create an issue", release)
-        self.assertIn("`release/<version>`", definition)
-        self.assertIn("Release work does not require or create an authoritative issue", forseti)
-        self.assertIn("`{prefix}/{issue-id}-{name}`", readme)
-        self.assertIn("`release/<version>`", readme)
+        self.assertIn("discover the repository's issue, branch", skill)
+        self.assertIn("Repository policy determines", release)
+        self.assertIn("repository-required versioning", definition)
+        self.assertIn("Never infer a repository's branch", forseti)
+        self.assertIn("does not define the taxonomy", readme)
 
-    def test_delivery_and_release_changelog_rules_are_explicit(self) -> None:
+    def test_changelog_rules_follow_repository_policy(self) -> None:
         skill = (VALIDATOR.SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
         hermod = (VALIDATOR.SKILL_ROOT / "references" / "agents" / "hermod.md").read_text(encoding="utf-8")
         forseti = (VALIDATOR.SKILL_ROOT / "references" / "agents" / "forseti.md").read_text(encoding="utf-8")
@@ -426,20 +409,19 @@ class WorkflowGovernanceTests(unittest.TestCase):
         changelog = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
 
         for text in (skill, hermod, forseti, release, readme):
-            self.assertIn("changelog", text.lower())
-        self.assertIn("If no changelog exists, ask the user", skill)
-        self.assertIn("Before any delivery PR is opened, ensure the changelog is updated", hermod)
-        self.assertIn("delivery PRs update the changelog", forseti)
-        self.assertIn("Before opening the release pull request, verify that the changelog records the new version", release)
-        self.assertIn("every release updates the changelog with the delivered version", readme)
+            self.assertIn("policy", text.lower())
+        self.assertIn("release, versioning, changelog", skill)
+        self.assertIn("changelog, and release policy", hermod)
+        self.assertIn("changelog, versioning", forseti)
+        self.assertIn("changelog, release notes", release)
+        self.assertIn("does not define the taxonomy", readme)
         self.assertIn("issue #131", changelog)
 
-    def test_hermod_owns_issue_based_branch_creation(self) -> None:
+    def test_hermod_owns_policy_based_branch_creation(self) -> None:
         hermod = (VALIDATOR.SKILL_ROOT / "references" / "agents" / "hermod.md").read_text(encoding="utf-8")
         self.assertIn("sole owner of branch creation", hermod)
-        self.assertIn("`{prefix}/{issue-id}-{name}`", hermod)
-        self.assertIn("short lowercase kebab-case slug", hermod)
-        self.assertIn("`feature/138-frontend-documentation`", hermod)
+        self.assertIn("Apply the repository's branch naming", hermod)
+        self.assertIn("do not invent a Git-flow model", hermod)
 
     def test_ci_monitoring_is_context_isolated_and_silent_while_pending(self) -> None:
         skill = (VALIDATOR.SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
@@ -473,7 +455,7 @@ class WorkflowGovernanceTests(unittest.TestCase):
         self.assertIn("This safety read is not a second watcher", monitoring)
         self.assertIn("never repeat Actions queries in Odin or Forseti", odin)
         self.assertIn("Do not query, watch, or poll GitHub Actions", forseti)
-        self.assertIn("Odin and Forseti reuse Hermod's revision-bound evidence", release)
+        self.assertIn("Odin and Forseti reuse that revision-bound evidence", release)
 
     def test_context_efficiency_is_budgeted_and_non_recursive(self) -> None:
         skill = (VALIDATOR.SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
