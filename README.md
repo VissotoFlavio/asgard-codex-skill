@@ -59,7 +59,7 @@ When repository policy or the user requires a persisted plan, Asgard uses the de
 For a standalone, implementation-ready refinement of a specific delivery, invoke **Kvasir**. Kvasir inspects the issue and only the necessary code, selects the smallest adequate approach, and records the resulting plan in a new issue comment when the issue and comment authority are explicit. It does not implement the plan or alter Asgard's general refinement policy.
 
 <p align="center">
-  <img src="./assets/kvasir.png" alt="Kvasir, the Technical Cartographer" width="460">
+  <img src="./plugins/asgard/skills/kvasir/assets/kvasir.png" alt="Kvasir, the Technical Cartographer" width="460">
 </p>
 
 ```text

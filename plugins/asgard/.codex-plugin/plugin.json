@@ -31,7 +31,7 @@
       "./assets/bragi.png",
       "./assets/asgard-agents_cards.png",
       "./assets/forseti.png",
-      "./assets/kvasir.png",
+      "./skills/kvasir/assets/kvasir.png",
       "./assets/regin.png"
     ]
   }
