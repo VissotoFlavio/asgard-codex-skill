@@ -15,7 +15,7 @@ For each migration/backfill, state transactions, locks, volume, batching, idempo
 - `AUTHOR`: edit versioned schema, migration, backfill, and verification artifacts only; never connect or run DDL/DML.
 - Before `VALIDATE`/`APPLY`, require a clean-tree revision or canonical digest of every artifact, including untracked. Divergence invalidates evidence and authority.
 - `VALIDATE`: execute that candidate only on an authorized isolated target with synthetic or approved sanitized data.
-- `APPLY`: any durable, runtime, or non-isolated database mutation; require exact candidate/environment authority. Manual APPLY is Regin's only with a declared adapter; absence blocks. Deploy automation executes; Hermod only promotes/monitors.
+- `APPLY`: any durable, runtime, or non-isolated database mutation; require exact candidate/environment authority. Manual APPLY is Regin's only with a declared adapter; absence blocks. The repository's authorized deploy automation executes.
 - Before execution, freshly compare expected and observed cluster/server, database/catalog, schema/tenant, and effective principal/role. Missing or mismatched fields fail closed.
 
 Use least privilege per phase. Owner/superuser or grants need justification and separate Ymir authorization. Ymir owns infrastructure, roles, credentials, and connectivity. No phase implies sensitive-data access.
