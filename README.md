@@ -193,6 +193,10 @@ Hermod analyzes the candidate changes, selects the next Semantic Version, update
 
 Eir delivers a defined issue through a Pull Request, publishes evidence-backed review feedback on the Pull Request, applies authorized corrections, replies to the addressed feedback with the solution and validation evidence, and verifies the resulting candidate. It does not merge, deploy, release, or resolve review threads automatically.
 
+<p align="center">
+  <img src="./assets/eir.png" alt="Eir, the delivery corrector" width="460">
+</p>
+
 ```text
 Use $eir to review this Pull Request and publish the findings.
 ```
