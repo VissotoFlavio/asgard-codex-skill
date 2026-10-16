@@ -6,13 +6,15 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+## [0.17.0] - 2026-10-16
+
 ### Added
 
-- Add the standalone `$hermod` skill for analyzing changes from `develop`, selecting the next Semantic Version, updating the changelog, and opening a release Pull Request targeting `master` ([issue #144](https://github.com/VissotoFlavio/asgard-codex-skill/issues/144)).
+- Add the standalone `$hermod` skill for analyzing changes from `develop`, selecting the next Semantic Version, updating the changelog, and opening a release Pull Request targeting `master` ([issue #144](https://github.com/VissotoFlavio/asgard-codex-skill/issues/144), [PR #145](https://github.com/VissotoFlavio/asgard-codex-skill/pull/145)).
 
 ### Changed
 
-- Remove Hermod's release preparation and promotion responsibilities from Asgard so Hermod can be invoked directly ([issue #144](https://github.com/VissotoFlavio/asgard-codex-skill/issues/144)).
+- Remove Hermod's release preparation and promotion responsibilities from Asgard so Hermod can be invoked directly ([issue #144](https://github.com/VissotoFlavio/asgard-codex-skill/issues/144), [PR #145](https://github.com/VissotoFlavio/asgard-codex-skill/pull/145)).
 
 ## [0.16.0] - 2026-10-15
 
@@ -192,7 +194,8 @@ Release tracking: [issue #40](https://github.com/VissotoFlavio/asgard-codex-skil
 
 - Add Forseti as the delivery-governance specialist, with independent issue-to-release traceability gates and official artwork ([issue #38](https://github.com/VissotoFlavio/asgard-codex-skill/issues/38), [PR #39](https://github.com/VissotoFlavio/asgard-codex-skill/pull/39)).
 
-[Unreleased]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.16.0...develop
+[Unreleased]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.17.0...develop
+[0.17.0]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.16.0...v0.17.0
 [0.16.0]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.15.0...v0.16.0
 [0.15.1]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.15.0...v0.15.1
 [0.13.1]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.13.0...v0.13.1
