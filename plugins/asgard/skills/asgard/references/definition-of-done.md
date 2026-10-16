@@ -17,7 +17,7 @@ Applicable invariants:
 Focused validation and end-of-activity command:
 Rejection conditions:
 Implementer: Brokkr | Sindri | Regin | Ymir
-Mode: Lean | Standard | Critical | Release
+Mode: Lean | Standard | Critical
 Required reviewers and rationale:
 Execution budget: simultaneous agents | correction cycles | report words | inherited history
 Delivery governance and traceability: Forseti | not applicable
@@ -27,18 +27,17 @@ Excluded or unauthorized operations:
 
 Add execution directory, isolation, branch or revision, shared files, conflict risk, publication target, or external authority only when applicable.
 
-Omit discipline and required skills when they do not change execution. For a .NET backend activity, record `Backend` and `$dotnet-best-practices: AVAILABLE` before dispatch. For frontend work, record the applicable implementation and independent review skills from the frontend discipline packet. For database work, record Regin, technology, AUTHOR/VALIDATE/APPLY boundary, target class, profile and inventory state, schema base state, and migration/recovery authority. For a VPS database, also record Ymir, verified SSH/tunnel identities, exposure, per-phase credential references, and authority separation. For infrastructure work, record Ymir, the transport/provider, expected destination identity, access level, and required provider capabilities. For deep vulnerability analysis, record `Security`, Heimdall, each selected optional security skill, whether it is available, whether installation was offered, and any user-approved fallback. For release security validation, also record whether it was completed, activated early by `--validate-security`, or skipped by `--skip-release-security` with the user's reason and residual risk. Treat an unavailable required skill or review source as a planning blocker unless the user approves a stated fallback.
+Omit discipline and required skills when they do not change execution. For a .NET backend activity, record `Backend` and `$dotnet-best-practices: AVAILABLE` before dispatch. For frontend work, record the applicable implementation and independent review skills from the frontend discipline packet. For database work, record Regin, technology, AUTHOR/VALIDATE/APPLY boundary, target class, profile and inventory state, schema base state, and migration/recovery authority. For a VPS database, also record Ymir, verified SSH/tunnel identities, exposure, per-phase credential references, and authority separation. For infrastructure work, record Ymir, the transport/provider, expected destination identity, access level, and required provider capabilities. For deep vulnerability analysis, record `Security`, Heimdall, each selected optional security skill, whether it is available, whether installation was offered, and any user-approved fallback. Treat an unavailable required skill or review source as a planning blocker unless the user approves a stated fallback.
 
 ## Scale detail to risk
 
 - **Lean:** record the observable outcome, owned artifacts, focused validation, primary failure mode, and exclusions. Add a specialist reviewer only for an identified risk; use Bragi when maintainability is an explicit acceptance concern.
 - **Standard:** also record material compatibility, domain, authorization, data, concurrency, and cross-boundary invariants; require Loki and Heimdall, Tyr when contracts or rules are material, and Bragi when production code is added or structurally changed.
 - **Critical:** make every relevant security, privacy, persistence, transaction, isolation, abuse, availability, rollback, and negative-test expectation explicit; require Bragi for production-code candidates.
-- **Release:** additionally record the release security validation decision and evidence, exact approved revision, repository-required versioning, traceability, publication, and recovery evidence, and authority for each repository or publication mutation.
 
 Avoid generic invariant checklists. An invariant belongs in the contract only when the activity can affect it.
 
-When refinement is useful or policy-required, record it in the repository-designated artifact and format. It must identify the outcome, affected artifacts or resources, validation, primary risk, exclusions, dependencies, and authority boundary. For infrastructure, database, security, release, or operational work, also record observed state, expected impact, recovery or rollback approach, and authority for each protected operation.
+When refinement is useful or policy-required, record it in the repository-designated artifact and format. It must identify the outcome, affected artifacts or resources, validation, primary risk, exclusions, dependencies, and authority boundary. For infrastructure, database, security, or operational work, also record observed state, expected impact, recovery or rollback approach, and authority for each protected operation.
 
 Default to at most three simultaneous agents, one grouped correction cycle, 400 report words per agent, and no inherited conversation history. These are decision budgets, not acceptance gates. Increase only the field required by a documented risk or indivisible dependency, and record the reason before dispatch. A failed correction cycle stops for Odin to reassess rather than spawning an open-ended retry chain.
 

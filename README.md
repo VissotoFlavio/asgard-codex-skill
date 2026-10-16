@@ -10,14 +10,14 @@ The workflow is intentionally proportional: routine changes should stay simple, 
 
 ## When to use Asgard
 
-Use Asgard when it is explicitly requested for discovery, delivery, review, infrastructure, deploy, release, or monitoring, or when work benefits from one or more of the following:
+Use Asgard when it is explicitly requested for discovery, delivery, review, infrastructure, deploy, or monitoring, or when work benefits from one or more of the following:
 
 - decision-ready discovery before implementation;
 - multiple bounded implementation activities;
 - coordinated application and infrastructure work;
 - explicit acceptance criteria and dependency ordering;
 - independent behavioral, contract, or security review;
-- high-assurance deployment or release promotion with traceable evidence;
+- high-assurance deployment promotion with traceable evidence;
 - explicit monitoring or monitoring within a governed delivery or release flow.
 
 Do not select it implicitly for routine single-file edits, isolated diagnosis, ordinary maintenance, or standalone release observation that one agent can handle safely. Explicit monitoring remains supported. Asgard should reduce delivery risk, not add ceremony without a concrete reason.
@@ -37,7 +37,6 @@ Do not select it implicitly for routine single-file edits, isolated diagnosis, o
 | **Bragi** | Reviews completed code for human readability and maintainability using context-sensitive SOLID, DRY, KISS, YAGNI, and Tell, Don't Ask. |
 | **Heimdall** | Independently reviews security, privacy, isolation, abuse, availability, and risk-justified deep vulnerability analysis. |
 | **Forseti** | Verifies repository-required delivery and release traceability, including a narrowly authorized metadata repair when policy permits it. |
-| **Hermod** | Promotes an approved revision through explicitly authorized version-control and release operations. |
 
 Specialists receive task-local context rather than the entire conversation. Their reports and passing tests are evidence; Odin still owns product decisions, inspects the candidate, and makes the acceptance decision. Mimir only resolves stated technical uncertainty read-only. Regin may design and author versioned database changes, but connecting to or mutating any durable, runtime, or non-isolated database, applying or retrying a migration, and executing a rollback each require explicit authority for the exact environment and candidate.
 
@@ -59,9 +58,9 @@ When repository policy or the user requires a persisted plan, Asgard uses the de
 
 ## Intent catalog
 
-Asgard recognizes natural-language requests as `DISCOVERY`, `DELIVERY`, `REVIEW`, `INFRASTRUCTURE`, `DEPLOY`, `RELEASE`, or `MONITOR`. It infers a clear intent and asks only when ambiguity would materially change the result, scope, environment, or authority.
+Asgard recognizes natural-language requests as `DISCOVERY`, `DELIVERY`, `REVIEW`, `INFRASTRUCTURE`, `DEPLOY`, or `MONITOR`. It infers a clear intent and asks only when ambiguity would materially change the result, scope, environment, or authority.
 
-Intent never grants authority. Discovery produces a concise, decision-ready brief and stops for approval; it does not create issues or implement. After approval, Asgard may prepare or create issues only when authorized, then enter delivery. Application promotion belongs to Hermod, while infrastructure work belongs to Ymir. Release publication and infrastructure mutation remain separately protected operations.
+Intent never grants authority. Discovery produces a concise, decision-ready brief and stops for approval; it does not create issues or implement. After approval, Asgard may prepare or create issues only when authorized, then enter delivery. Application promotion follows the repository's authorized workflow, while infrastructure work belongs to Ymir. Release PR preparation is handled by the standalone Hermod skill.
 
 Natural examples:
 
@@ -72,9 +71,6 @@ Natural examples:
 - “Revise este PR quanto a comportamento e segurança.”
 - “Planeje esta mudança de infraestrutura, mas não aplique.”
 - “Faça deploy da revisão aprovada em staging.”
-- “Prepare a release 2.4.0 sem publicar.”
-- “Prepare a release 2.4.1, mas use --skip-release-security porque só há alteração de README.”
-- “Revise este PR com --validate-security antes de abrir release.”
 - “Monitore o CI do PR 42.”
 
 ## Delivery modes
@@ -82,9 +78,6 @@ Natural examples:
 - **Lean:** one bounded, low-risk activity with an implementer and Odin review. Add a specialist gate only for an identified risk, including Bragi when maintainability is a stated concern.
 - **Standard:** multiple activities or material behavioral risk, with independent Loki and Heimdall review, Tyr when contracts or rules are affected, and Bragi when production code is added or structurally changed.
 - **Critical:** security-sensitive, persistent, concurrent, irreversible, regulated, or broadly exposed work, using every applicable independent gate.
-- **Release:** an approved candidate promoted by Hermod after required Forseti traceability and explicit mutation authority are recorded.
-
-Release mode applies deep security validation when repository policy, the user, or material risk requires it. A confirmed blocking vulnerability returns the flow to correction instead of publication.
 
 ## Core flow
 
@@ -106,7 +99,6 @@ Natural-language request
   -> Heimdall reviews security
   -> Forseti validates required delivery traceability
   -> Odin grants final approval
-  -> Hermod promotes the approved revision when authorized
 
 Any confirmed finding
   -> Odin routes a bounded correction to the original implementer
@@ -115,9 +107,9 @@ Any confirmed finding
 
 Asgard classifies dependencies as sequential, parallel-safe, parallel-with-coordination, or deferred. It does not parallelize work merely to fill agent slots, and it avoids repeating complete reviews when integration creates no new diff or invariant.
 
-CI monitoring stays inside Hermod as one context-isolated, blocking `gh pr checks --watch` or `gh run watch` process per revision. Hermod is the sole owner of live Actions queries and returns revision-bound terminal evidence, then performs one final head and merge-gate read immediately before an authorized merge. Odin coordinates from that evidence and Forseti validates its coverage without querying Actions again. The watcher remains silent while CI is pending; unchanged CI never summons reviewers or restarts the orchestration graph.
+CI monitoring remains a bounded operational activity. The watcher stays silent while CI is pending; unchanged CI never summons reviewers or restarts the orchestration graph.
 
-At discussion-to-implementation, implementation-to-review, and approval-to-release boundaries, Odin replaces accumulated narrative with a compact phase checkpoint containing only the candidate, decisions, changed artifacts, validation, approvals, deviations, open risks, next activity, and remaining authority. When usage is available, final reporting aggregates incremental tokens by role and phase without spending extra turns to reconstruct missing telemetry.
+At discussion-to-implementation and implementation-to-review boundaries, Odin replaces accumulated narrative with a compact phase checkpoint containing only the candidate, decisions, changed artifacts, validation, approvals, deviations, open risks, next activity, and remaining authority. When usage is available, final reporting aggregates incremental tokens by role and phase without spending extra turns to reconstruct missing telemetry.
 
 ## Definitions of Done and authority
 
@@ -167,6 +159,16 @@ codex plugin add asgard@asgard-community
 
 Open a new Codex task after reinstalling.
 
+## Use Hermod directly
+
+Hermod is a standalone skill distributed by this repository. Use it when the task is to prepare and open a release Pull Request without invoking Asgard or Odin:
+
+```text
+Use $hermod to prepare and open the release Pull Request from develop to master.
+```
+
+Hermod analyzes the candidate changes, selects the next Semantic Version, updates the changelog, validates the final diff, and opens the Pull Request. Merge, tag, publication, deploy, and infrastructure changes require separate authorization.
+
 ## Install only the skill
 
 To install the standalone skill instead of the plugin, ask Codex to install:
@@ -176,6 +178,14 @@ https://github.com/VissotoFlavio/asgard-codex-skill/tree/master/plugins/asgard/s
 ```
 
 Start a new task after installation and invoke `$asgard`.
+
+To install only Hermod, use:
+
+```text
+https://github.com/VissotoFlavio/asgard-codex-skill/tree/master/plugins/asgard/skills/hermod
+```
+
+Start a new task after installation and invoke `$hermod`.
 
 ## Repository and release workflow
 

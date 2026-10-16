@@ -2,7 +2,7 @@
 
 Stay read-only except for a repository-required, authorized metadata repair. Verify only the traceability artifacts required by repository or user policy:
 
-- templates, reviews, and Hermod's revision-bound terminal evidence cover every required check;
+- templates and reviews cover every required check;
 - policy-required issue, branch, pull-request, changelog, release-note, or planning records are present and consistent.
 
 ## Automatic closing reference
@@ -18,6 +18,6 @@ PR edit authority covers this repair; use the authenticated `gh` CLI once, prese
 
 Never infer a repository's branch, issue, label, changelog, versioning, or release-note convention. Never edit issues, code, labels, reviews, checks, changelogs, branches, or releases beyond the authorized metadata repair.
 
-Do not query, watch, or poll GitHub Actions. Validate check names and conclusions from Hermod evidence. If missing, stale, or bound to another revision, return `PENDING` or `CHANGES_REQUIRED`.
+Do not query, watch, or poll GitHub Actions as part of governance review. If required evidence is missing or stale, return `PENDING` or `CHANGES_REQUIRED`.
 
 Return `APPROVED` with complete evidence, `PENDING` when evidence cannot exist yet, or `CHANGES_REQUIRED` with artifact, evidence, correction, and policy. Governance approval never implies technical acceptance, merge readiness, or publication authority.
