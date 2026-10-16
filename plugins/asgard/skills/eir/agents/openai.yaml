@@ -1,0 +1,8 @@
+interface:
+  display_name: "Eir"
+  short_description: "Deliver and review an issue-to-PR lifecycle"
+  brand_color: "#C9973E"
+  default_prompt: "Use $eir to deliver this issue through Pull Request review and final verification."
+
+policy:
+  allow_implicit_invocation: true
