@@ -189,6 +189,18 @@ Use $hermod to prepare and open the release Pull Request from develop to master.
 
 Hermod analyzes the candidate changes, selects the next Semantic Version, updates the changelog, validates the final diff, and opens the Pull Request. Merge, tag, publication, deploy, and infrastructure changes require separate authorization.
 
+## Use Eir directly
+
+Eir delivers a defined issue through a Pull Request, publishes evidence-backed review feedback on the Pull Request, applies authorized corrections, replies to the addressed feedback with the solution and validation evidence, and verifies the resulting candidate. It does not merge, deploy, release, or resolve review threads automatically.
+
+<p align="center">
+  <img src="./plugins/asgard/skills/eir/assets/eir.png" alt="Eir, the delivery corrector" width="460">
+</p>
+
+```text
+Use $eir to review this Pull Request and publish the findings.
+```
+
 ## Install only the skill
 
 To install the standalone skill instead of the plugin, ask Codex to install:
@@ -211,7 +223,13 @@ To install only Kvasir, use:
 https://github.com/VissotoFlavio/asgard-codex-skill/tree/master/plugins/asgard/skills/kvasir
 ```
 
-Start a new task after installation and invoke `$hermod` or `$kvasir`.
+To install only Eir, use:
+
+```text
+https://github.com/VissotoFlavio/asgard-codex-skill/tree/master/plugins/asgard/skills/eir
+```
+
+Start a new task after installation and invoke `$hermod`, `$kvasir`, or `$eir`.
 
 ## Repository and release workflow
 

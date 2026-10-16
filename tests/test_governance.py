@@ -441,6 +441,22 @@ class WorkflowGovernanceTests(unittest.TestCase):
         self.assertNotIn("Hermod", asgard)
         self.assertNotIn((VALIDATOR.SKILL_ROOT / "references" / "agents" / "hermod.md").as_posix(), asgard)
 
+    def test_eir_publishes_review_feedback_and_correction_replies(self) -> None:
+        eir_root = ROOT / "plugins" / "asgard" / "skills" / "eir"
+        skill = (eir_root / "SKILL.md").read_text(encoding="utf-8")
+        metadata = (eir_root / "agents" / "openai.yaml").read_text(encoding="utf-8")
+        review = (eir_root / "references" / "review.md").read_text(encoding="utf-8")
+
+        self.assertIn("name: eir", skill)
+        self.assertIn("**REVIEW**", skill)
+        self.assertNotIn("REVIEW_COMMENTS", skill)
+        for term in ("gh auth status", "gh api", "COMMENT", "reply to every corrected finding"):
+            self.assertIn(term, skill)
+        self.assertIn('display_name: "Eir"', metadata)
+        self.assertIn("Create exactly one native Pull Request review", review)
+        self.assertIn("post a reply in its original review thread", review)
+        self.assertIn("general Pull Request comment that links to the original comment", review)
+
     def test_release_runs_from_master_push_without_checkout(self) -> None:
         text = (ROOT / ".github" / "workflows" / "release.yml").read_text(encoding="utf-8")
         self.assertIn("\n  push:\n    branches: [master]", text)
