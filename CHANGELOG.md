@@ -6,6 +6,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+## [0.18.0] - 2026-10-16
+
+### Added
+
+- Add the standalone `$kvasir` skill, artwork, and public usage rules for producing evidence-backed, minimal technical refinements from a delivery demand or explicit issue, with authorized issue-comment persistence ([issue #148](https://github.com/VissotoFlavio/asgard-codex-skill/issues/148)).
+
 ## [0.17.0] - 2026-10-16
 
 ### Added
@@ -194,7 +200,8 @@ Release tracking: [issue #40](https://github.com/VissotoFlavio/asgard-codex-skil
 
 - Add Forseti as the delivery-governance specialist, with independent issue-to-release traceability gates and official artwork ([issue #38](https://github.com/VissotoFlavio/asgard-codex-skill/issues/38), [PR #39](https://github.com/VissotoFlavio/asgard-codex-skill/pull/39)).
 
-[Unreleased]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.17.0...develop
+[Unreleased]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.18.0...develop
+[0.18.0]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.17.0...v0.18.0
 [0.17.0]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.16.0...v0.17.0
 [0.16.0]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.15.0...v0.16.0
 [0.15.1]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.15.0...v0.15.1
