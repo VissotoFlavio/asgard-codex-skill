@@ -56,6 +56,26 @@ Before a material mutation, Asgard prepares a proportional technical refinement 
 
 When repository policy or the user requires a persisted plan, Asgard uses the designated artifact and format. It does not assume an issue, GitHub, or a comment structure. A refinement documents a plan and never grants authority to execute it.
 
+For a standalone, implementation-ready refinement of a specific delivery, invoke **Kvasir**. Kvasir inspects the issue and only the necessary code, selects the smallest adequate approach, and records the resulting plan in a new issue comment when the issue and comment authority are explicit. It does not implement the plan or alter Asgard's general refinement policy.
+
+<p align="center">
+  <img src="./plugins/asgard/skills/kvasir/assets/kvasir.png" alt="Kvasir, the Technical Cartographer" width="460">
+</p>
+
+```text
+Use $kvasir to refine issue #123 before implementation.
+```
+
+### Kvasir usage rules
+
+- Use Kvasir for an explicit GitHub issue or a defined delivery demand that needs an implementation-ready technical refinement; do not use it to implement, review completed code, or conduct open-ended product discovery.
+- It reads repository instructions and only the issue context, code, tests, contracts, configuration, and documentation that can change the recommended plan.
+- With an explicitly named, open issue, Kvasir creates exactly one new Markdown comment after the refinement is final. It never edits the issue body, title, labels, or existing comments. A related issue discovered during analysis is not enough to authorize a comment.
+- Without an issue, Kvasir returns the refinement in the conversation and does not create a GitHub artifact.
+- The result is `READY` only when implementation can begin without a material decision. Otherwise it is `NEEDS_DECISION` or `BLOCKED`, with the unresolved choice or smallest next action stated explicitly.
+- Kvasir records the analyzed base, evidence, minimal recommended approach, implementation map, acceptance scenarios, validation, exclusions, risks, dependencies, and authority boundaries. Database, infrastructure, security, release, and operational work also include observed state, impact, recovery or rollback, and required approvals.
+- A refinement never authorizes branches, implementation, commits, Pull Requests, dependency installation, migrations, data changes, infrastructure changes, deployment, or publication.
+
 ## Intent catalog
 
 Asgard recognizes natural-language requests as `DISCOVERY`, `DELIVERY`, `REVIEW`, `INFRASTRUCTURE`, `DEPLOY`, or `MONITOR`. It infers a clear intent and asks only when ambiguity would materially change the result, scope, environment, or authority.
@@ -185,7 +205,13 @@ To install only Hermod, use:
 https://github.com/VissotoFlavio/asgard-codex-skill/tree/master/plugins/asgard/skills/hermod
 ```
 
-Start a new task after installation and invoke `$hermod`.
+To install only Kvasir, use:
+
+```text
+https://github.com/VissotoFlavio/asgard-codex-skill/tree/master/plugins/asgard/skills/kvasir
+```
+
+Start a new task after installation and invoke `$hermod` or `$kvasir`.
 
 ## Repository and release workflow
 
