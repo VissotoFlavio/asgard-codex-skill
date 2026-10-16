@@ -8,7 +8,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ### Added
 
-- Add the standalone `$kvasir` skill for producing evidence-backed, minimal technical refinements from a delivery demand or explicit issue, with authorized issue-comment persistence ([issue #148](https://github.com/VissotoFlavio/asgard-codex-skill/issues/148)).
+- Add the standalone `$kvasir` skill, artwork, and public usage rules for producing evidence-backed, minimal technical refinements from a delivery demand or explicit issue, with authorized issue-comment persistence ([issue #148](https://github.com/VissotoFlavio/asgard-codex-skill/issues/148)).
 
 ## [0.17.0] - 2026-10-16
 
