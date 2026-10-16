@@ -1,0 +1,8 @@
+interface:
+  display_name: "Hermod"
+  short_description: "Prepare and open release Pull Requests"
+  brand_color: "#4D8CFF"
+  default_prompt: "Use $hermod to prepare and open a release Pull Request from develop to master."
+
+policy:
+  allow_implicit_invocation: true

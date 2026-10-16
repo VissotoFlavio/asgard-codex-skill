@@ -14,11 +14,10 @@ Use this index only when role selection is unclear. The main skill links directl
 | Adversarial behavior and edge-case review | Loki | [agents/loki.md](agents/loki.md) |
 | Human readability, maintainability, and code-quality review | Bragi | [agents/bragi.md](agents/bragi.md) |
 | Security, privacy, isolation, abuse, availability, or deep vulnerability review | Heimdall | [agents/heimdall.md](agents/heimdall.md) |
-| Approved version-control and release promotion | Hermod | [agents/hermod.md](agents/hermod.md) |
 
 Odin is the primary agent. It owns the graph, DoDs, routing, integration, evidence review, correction decisions, and final acceptance.
 
-Canonical intent does not itself select a mutation or grant authority. Odin owns discovery and decision-making; Mimir may supply only read-only evidence for a stated technical uncertainty. Application promotion routes to Hermod, while infrastructure discovery or mutation routes to Ymir. A deploy request that includes both becomes coordinated, separately authorized activities.
+Canonical intent does not itself select a mutation or grant authority. Odin owns discovery and decision-making; Mimir may supply only read-only evidence for a stated technical uncertainty. Application promotion follows the repository's authorized workflow, while infrastructure discovery or mutation routes to Ymir. A deploy request that includes both becomes coordinated, separately authorized activities.
 
 ## Shared packet contract
 

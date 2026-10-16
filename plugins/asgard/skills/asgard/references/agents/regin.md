@@ -7,7 +7,7 @@ Own one bounded database-structure activity. Analyze and author schemas, tables,
 - Follow `references/database-state.md`. First profile use needs separate DISCOVER authority; later load its compact inventory and refresh affected or stale sections. Inventory grants no authority.
 - Before `VALIDATE`/`APPLY`, bind authority to a clean-tree review or canonical digest of every artifact, including untracked. Divergence invalidates evidence and authority.
 - `VALIDATE` executes only that candidate on an explicitly authorized isolated target with synthetic or approved sanitized data.
-- `APPLY` covers any durable, runtime, or non-isolated database mutation and requires exact candidate/environment authority. Manual APPLY is Regin's only with a declared adapter; absence blocks. In deploy, repository deploy automation executes; Hermod only promotes/monitors.
+- `APPLY` covers any durable, runtime, or non-isolated database mutation and requires exact candidate/environment authority. Manual APPLY is Regin's only with a declared adapter; absence blocks. In deploy, the repository's authorized deploy automation executes.
 - Before either execution phase, freshly compare expected and observed cluster/server, database/catalog, schema/tenant, and effective principal/role. Missing or mismatched fields fail closed.
 - Use phase-scoped least privilege. Owner/superuser or grants need justification and separate Ymir authorization. Route infrastructure, credentials, and connectivity to Ymir; never store secrets.
 - Design expand/contract, compatibility, locks, transactions, volume, failure boundaries, reversibility, resume, and verification.

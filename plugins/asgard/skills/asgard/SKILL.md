@@ -1,6 +1,6 @@
 ---
 name: asgard
-description: Orchestrate risk-based discovery, delivery, review, infrastructure, deploy, release, and monitor work when Asgard is explicitly requested or multiple bounded activities or material risk justify coordination. Do not select it implicitly for routine edits, isolated diagnosis, ordinary maintenance, or standalone release observation that one agent can safely complete; explicit MONITOR requests and monitoring within a governed flow are supported.
+description: Orchestrate risk-based discovery, delivery, review, infrastructure, deploy, and monitor work when Asgard is explicitly requested or multiple bounded activities or material risk justify coordination. Do not select it implicitly for routine edits, isolated diagnosis, ordinary maintenance, or standalone monitoring that one agent can safely complete; explicit MONITOR requests and monitoring within a governed flow are supported.
 ---
 
 # Asgard
@@ -15,17 +15,16 @@ Classify the request into one canonical intent without treating keywords as comm
 - **DELIVERY:** plan and implement an approved outcome.
 - **REVIEW:** inspect a defined candidate or evidence without changing it.
 - **INFRASTRUCTURE:** discover, plan, apply, or verify host, cloud, network, platform, or infrastructure state through Ymir.
-- **DEPLOY:** promote an approved application revision through Hermod; route infrastructure changes needed for that promotion to Ymir.
-- **RELEASE:** run the governed version, traceability, approval, and publication flow.
-- **MONITOR:** observe a defined CI, deployment, or release state without changing it unless bounded retry authority is explicit.
+- **DEPLOY:** coordinate promotion of an approved application revision through the repository's authorized workflow; route infrastructure changes to Ymir.
+- **MONITOR:** observe a defined CI or deployment state without changing it unless bounded retry authority is explicit.
 
 Infer intent from natural language when it is clear. Ask one focused question only when ambiguity would materially change the result, scope, environment, or required authority; do not make clarification mandatory on every invocation. Resolve materially ambiguous deploy requests by identifying the revision, target environment, and whether the request is application promotion or infrastructure mutation. Resolve materially ambiguous review requests by identifying the candidate and review boundary.
 
-Intent and authority are separate dimensions. Record the inferred intent and the current authority ceiling before action. A request to deliver, deploy, release, or operate infrastructure does not implicitly authorize issue creation, implementation, commits, pushes, pull requests, publication, deployment, migration, destructive action, dependency installation, or infrastructure mutation. Never reinterpret an intent keyword as protected-operation authority.
+Intent and authority are separate dimensions. Record the inferred intent and the current authority ceiling before action. A request to deliver, deploy, or operate infrastructure does not implicitly authorize issue creation, implementation, commits, pushes, pull requests, publication, deployment, migration, destructive action, dependency installation, or infrastructure mutation. Never reinterpret an intent keyword as protected-operation authority.
 
 ## Refine before material mutation
 
-Before a material mutation, prepare a proportional **Technical Refinement** when it improves the delivery decision. State the intended outcome, affected artifacts or resources, expected validation, primary risks, exclusions, dependencies, and authority boundary. Scale its depth to risk: infrastructure, database, security, release, or operational work also records observed state, expected impact, recovery or rollback approach, and approval needed for each protected operation.
+Before a material mutation, prepare a proportional **Technical Refinement** when it improves the delivery decision. State the intended outcome, affected artifacts or resources, expected validation, primary risks, exclusions, dependencies, and authority boundary. Scale its depth to risk: infrastructure, database, security, or operational work also records observed state, expected impact, recovery or rollback approach, and approval needed for each protected operation.
 
 Persist the refinement only when repository policy requires a planning record or the user asks for one. Use the repository's designated artifact and format; do not assume an issue, GitHub, or a particular comment structure. A refinement documents the plan; it never grants mutation authority.
 
@@ -57,7 +56,7 @@ Read repository and workspace instructions before planning. Identify affected co
 
 Do not create agents, branches, or isolated workspaces before the user approves the execution graph unless immediate execution was explicitly requested. Graph approval covers its implementation and internal correction cycles, not protected or external mutations. Return to the user for changed scope, missing product direction, unauthorized protected operations, or genuine external blockers.
 
-For repository changes, discover the repository's issue, branch, pull-request, and traceability policy before creating artifacts. Apply that policy when it exists; otherwise propose a lightweight convention without making it a governance blocker. Hermod creates branches only after validating the applicable source, target, naming, and traceability requirements.
+For repository changes, discover the repository's issue, branch, pull-request, and traceability policy before creating artifacts. Apply that policy when it exists; otherwise propose a lightweight convention without making it a governance blocker.
 
 Odin remains accountable for decomposition, delegation, integration, evidence review, and final acceptance. Never delegate acceptance of the complete delivery or act only as a router.
 Read [Odin's packet](references/agents/odin.md) only when a separate orchestration handoff or compact recovery context is needed.
@@ -69,7 +68,6 @@ Choose once during planning and increase rigor if new risk appears:
 - **Lean:** one bounded, low-risk activity with localized impact. Use one implementer and Odin review. Add only reviewers justified by a concrete risk, including Bragi when maintainability is a stated concern.
 - **Standard:** multiple activities or material behavioral risk. Use independent Loki and Heimdall review; add Tyr for material rules or contracts, and Bragi when the candidate adds production code or changes its structure.
 - **Critical:** security-sensitive, externally exposed, persistent, concurrent, irreversible, regulated, or broad cross-boundary work. Use all applicable independent gates and strict correction loops; require Bragi for production-code candidates.
-- **Release:** add Forseti when issue-to-release traceability is required, then Hermod only after the candidate is approved and exact publication authority is recorded.
 
 Do not use Asgard when Lean would merely reproduce ordinary single-agent work without meaningful delegation or independent review.
 
@@ -79,7 +77,7 @@ Inspect only the code and evidence needed to refine and decompose the delivery. 
 
 Present one concise approval boundary with activities, dependencies, selected mode and implementers, DoD, review routing, isolation, conflict risks, validation, integration, optional publication, and still-unauthorized operations. Read [definition-of-done.md](references/definition-of-done.md) only when constructing the activity contracts.
 
-Set a proportional execution budget and define phase boundaries. Read [context efficiency](references/context-efficiency.md) when the delivery spans multiple activities, agents, correction cycles, or implementation and release phases.
+Set a proportional execution budget and define phase boundaries. Read [context efficiency](references/context-efficiency.md) when the delivery spans multiple activities, agents, correction cycles, or implementation and review phases.
 
 When dispatch supports per-agent reasoning effort, apply the risk-based levels from the context-efficiency policy. Do not give every specialist the orchestrator's reasoning level; monitoring and deterministic operations stay minimal or low unless concrete ambiguity or risk requires escalation.
 
@@ -97,14 +95,13 @@ Use Brokkr for bounded application implementation, Sindri instead for one insepa
 - [Loki](references/agents/loki.md) for adversarial behavioral review
 - [Bragi](references/agents/bragi.md) for human-readable, maintainable code and context-sensitive SOLID, DRY, KISS, YAGNI, or Tell, Don't Ask review
 - [Heimdall](references/agents/heimdall.md) for security, privacy, isolation, abuse, or availability review
-- [Forseti](references/agents/forseti.md) for required issue, pull-request, changelog, and release traceability
-- [Hermod](references/agents/hermod.md) only for approved publication or promotion
+- [Forseti](references/agents/forseti.md) for required issue, pull-request, and delivery traceability
 
 Do not pass the full conversation by default. Give each agent only its role packet, activity contract, applicable workspace rules, relevant paths or candidate diff, stable dependencies, focused validation, and explicit exclusions. When the platform supports history selection, dispatch with no inherited conversation history (for example, `fork_turns="none"`) and put every required input in the task-local packet. If an agent must inherit history, justify that exception in the graph and do not use it for waiting, polling, CI observation, or other operational monitoring.
 
 Do not mention or invoke `$asgard` in a specialist task. Odin has already applied the orchestration policy; specialists receive only the selected role packet and task-local contract. Require another skill only when that specialist genuinely needs its distinct discipline guidance.
 
-Treat waiting as an operational state, not a reason for another model turn. For CI or release observation, use one context-isolated Hermod activity and read [CI monitoring](references/ci-monitoring.md). Do not dispatch reviewers while checks remain pending or restart Asgard merely to report unchanged state.
+Treat waiting as an operational state, not a reason for another model turn. Do not dispatch reviewers while checks remain pending or restart Asgard merely to report unchanged state.
 
 When a discipline packet requires a skill, explicitly name that skill in the assigned agent's contract and require the agent to use it before making discipline-specific decisions. Repository and user instructions remain authoritative when skill guidance is generic or conflicts with established project conventions.
 
@@ -128,9 +125,9 @@ At a material phase boundary, replace accumulated narrative with the compact che
 
 ## Publish only when authorized
 
-Approval never grants authority to commit, push, open or merge changes, publish, migrate, deploy, mutate infrastructure, add dependencies, or perform destructive operations. When repository or user policy requires delivery traceability, dispatch Forseti at the lifecycle phases where the relevant evidence exists. A closing-reference repair is permitted only when that policy requires it and authority covers the exact edit. For Release mode, read [release-promotion.md](references/release-promotion.md) before dispatching Hermod.
+Approval never grants authority to commit, push, open or merge changes, publish, migrate, deploy, mutate infrastructure, add dependencies, or perform destructive operations. When repository or user policy requires delivery traceability, dispatch Forseti at the lifecycle phases where the relevant evidence exists. A closing-reference repair is permitted only when that policy requires it and authority covers the exact edit.
 
-Follow the repository's release, versioning, changelog, merge, tag, backport, and publication policy. If it is absent or ambiguous, present the available options and obtain the user's decision rather than imposing a workflow.
+Follow the repository's versioning, changelog, merge, tag, backport, and publication policy when a delivery workflow reaches those artifacts. If it is absent or ambiguous, present the available options and obtain the user's decision rather than imposing a workflow.
 
 Stop after exhausting safe read-only investigation when required authority, product direction, independent review, or meaningful validation is unavailable.
 
@@ -141,6 +138,5 @@ Stop after exhausting safe read-only investigation when required authority, prod
 - “Develop this feature with Asgard” -> `DELIVERY`, subject to graph approval and the authority ceiling.
 - “Review this pull request for behavioral and security risks” -> `REVIEW`, with Loki and Heimdall when justified.
 - “Plan the production network change” -> `INFRASTRUCTURE`, routed to Ymir; applying it remains unauthorized until explicit approval.
-- “Deploy revision abc123 to staging” -> `DEPLOY`, routed to Hermod for application promotion; any required infrastructure mutation is a distinct Ymir activity.
-- “Prepare release 2.4.0” -> `RELEASE`, using release gates without inferring publication authority.
-- “Monitor CI for pull request 42” -> `MONITOR`, using one silent, context-isolated Hermod watcher.
+- “Deploy revision abc123 to staging” -> `DEPLOY`, using the repository's authorized promotion workflow; any required infrastructure mutation is a distinct Ymir activity.
+- “Monitor CI for pull request 42” -> `MONITOR`, with bounded read-only observation.

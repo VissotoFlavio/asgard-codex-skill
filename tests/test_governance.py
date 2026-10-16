@@ -56,7 +56,7 @@ class ContainedPathTests(unittest.TestCase):
 
     def test_specialist_packets_are_independently_loadable(self) -> None:
         agents = VALIDATOR.SKILL_ROOT / "references" / "agents"
-        expected = {"odin", "brokkr", "sindri", "regin", "ymir", "mimir", "tyr", "loki", "bragi", "heimdall", "forseti", "hermod"}
+        expected = {"odin", "brokkr", "sindri", "regin", "ymir", "mimir", "tyr", "loki", "bragi", "heimdall", "forseti"}
         self.assertEqual({path.stem for path in agents.glob("*.md")}, expected)
         for role in expected:
             packet = (agents / f"{role}.md").read_text(encoding="utf-8")
@@ -89,14 +89,11 @@ class ContainedPathTests(unittest.TestCase):
         self.assertIn("$web-security-review", security)
         self.assertIn("ask the user whether to install it", security)
         self.assertIn("continue with Heimdall's native review", security)
-        self.assertIn("release preparation", security)
         self.assertIn("--validate-security", security)
-        self.assertIn("--skip-release-security", security)
 
         definition = (VALIDATOR.SKILL_ROOT / "references" / "definition-of-done.md").read_text(encoding="utf-8")
         self.assertIn("Implementer: Brokkr | Sindri | Regin | Ymir", definition)
         self.assertIn("For deep vulnerability analysis, record `Security`", definition)
-        self.assertIn("For release security validation", definition)
 
     def test_heimdall_deep_security_analysis_uses_optional_skills_with_fallback(self) -> None:
         skill = (VALIDATOR.SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
@@ -117,21 +114,6 @@ class ContainedPathTests(unittest.TestCase):
         self.assertIn("Odin asks whether to install it", readme)
         self.assertIn("records the fallback", readme)
         self.assertIn("Run it when requested, required by repository policy, or justified by material risk", readme)
-        self.assertIn("--validate-security", readme)
-        self.assertIn("--skip-release-security", readme)
-
-    def test_release_security_validation_follows_policy_or_material_risk(self) -> None:
-        release = (VALIDATOR.SKILL_ROOT / "references" / "release-promotion.md").read_text(encoding="utf-8")
-        definition = (VALIDATOR.SKILL_ROOT / "references" / "definition-of-done.md").read_text(encoding="utf-8")
-        readme = (ROOT / "README.md").read_text(encoding="utf-8")
-
-        self.assertIn("Run deep security analysis when repository policy requires it", release)
-        self.assertIn("the user requests it", release)
-        self.assertIn("material security risk", release)
-        self.assertIn("Confirmed blocking vulnerabilities stop the affected promotion step", release)
-        self.assertIn("release security validation decision and evidence", definition)
-        self.assertIn("Deep security review is not run for every ordinary delivery", readme)
-        self.assertIn("Confirmed blocking vulnerabilities stop the affected promotion step", readme)
 
     def test_regin_owns_database_structure_without_implicit_runtime_authority(self) -> None:
         skill = (VALIDATOR.SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
@@ -151,7 +133,7 @@ class ContainedPathTests(unittest.TestCase):
         self.assertIn("durable, runtime, or non-isolated database mutation", database)
         self.assertIn("any durable, runtime, or non-isolated database", readme)
         self.assertIn("absence blocks", regin)
-        self.assertIn("repository deploy automation executes; Hermod only promotes/monitors", regin)
+        self.assertIn("repository's authorized deploy automation executes", regin)
         self.assertNotIn("Hermod applies", regin)
         self.assertIn("cluster/server, database/catalog, schema/tenant, and effective principal/role", regin)
         self.assertIn("Missing or mismatched fields fail closed", regin)
@@ -162,13 +144,6 @@ class ContainedPathTests(unittest.TestCase):
         self.assertIn("| **Regin** |", readme)
         self.assertNotIn("reginpng.png", readme.lower())
 
-        hermod = (VALIDATOR.SKILL_ROOT / "references" / "agents" / "hermod.md").read_text(encoding="utf-8")
-        monitoring = (VALIDATOR.SKILL_ROOT / "references" / "ci-monitoring.md").read_text(encoding="utf-8")
-        release = (VALIDATOR.SKILL_ROOT / "references" / "release-promotion.md").read_text(encoding="utf-8")
-        self.assertIn("or deploy directly", hermod)
-        self.assertIn("migration, schema, or backfill failure to the original Regin", monitoring)
-        self.assertIn("migration, schema, or backfill failure to the original Regin", release)
-        self.assertIn("recommended_owner: Brokkr | Sindri | Regin | Ymir", release)
 
     def test_database_inventory_is_compact_persistent_and_never_apply_authority(self) -> None:
         state = (VALIDATOR.SKILL_ROOT / "references" / "database-state.md").read_text(encoding="utf-8")
@@ -292,7 +267,7 @@ class WorkflowGovernanceTests(unittest.TestCase):
 
     def test_intent_routing_preserves_authority_and_discovery_boundary(self) -> None:
         skill = (VALIDATOR.SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
-        for intent in ("DISCOVERY", "DELIVERY", "REVIEW", "INFRASTRUCTURE", "DEPLOY", "RELEASE", "MONITOR"):
+        for intent in ("DISCOVERY", "DELIVERY", "REVIEW", "INFRASTRUCTURE", "DEPLOY", "MONITOR"):
             self.assertIn(f"**{intent}:**", skill)
         self.assertIn("Ask one focused question only when ambiguity would materially change", skill)
         self.assertIn("Intent and authority are separate dimensions", skill)
@@ -317,9 +292,9 @@ class WorkflowGovernanceTests(unittest.TestCase):
     def test_deploy_routing_separates_application_and_infrastructure(self) -> None:
         skill = (VALIDATOR.SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
         roles = (VALIDATOR.SKILL_ROOT / "references" / "roles-and-packets.md").read_text(encoding="utf-8")
-        self.assertIn("promote an approved application revision through Hermod", skill)
-        self.assertIn("route infrastructure changes needed for that promotion to Ymir", skill)
-        self.assertIn("Application promotion routes to Hermod", roles)
+        self.assertIn("coordinate promotion of an approved application revision", skill)
+        self.assertIn("route infrastructure changes to Ymir", skill)
+        self.assertIn("Application promotion follows the repository's authorized workflow", roles)
         self.assertIn("separately authorized activities", roles)
 
     def test_readme_documents_intents_without_removed_bragi_section(self) -> None:
@@ -333,7 +308,7 @@ class WorkflowGovernanceTests(unittest.TestCase):
         ):
             self.assertIn(example, readme)
         self.assertIn("Intent never grants authority", readme)
-        self.assertIn("Application promotion belongs to Hermod", readme)
+        self.assertIn("Release PR preparation is handled by the standalone Hermod skill", readme)
 
     def test_bragi_reviews_only_completed_code_quality_candidate(self) -> None:
         bragi = (VALIDATOR.SKILL_ROOT / "references" / "agents" / "bragi.md").read_text(encoding="utf-8")
@@ -363,9 +338,7 @@ class WorkflowGovernanceTests(unittest.TestCase):
         self.assertIn("references/agents/forseti.md", skill)
         self.assertNotIn("github-label-governance", skill)
         self.assertFalse((VALIDATOR.SKILL_ROOT / "references" / "github-label-governance.md").exists())
-        release = (VALIDATOR.SKILL_ROOT / "references" / "release-promotion.md").read_text(encoding="utf-8")
-        self.assertIn("Repository policy determines", release)
-        self.assertIn("Do not infer a branch model", release)
+        self.assertNotIn("Hermod", skill)
 
     def test_github_operations_are_cli_first_with_guarded_browser_exception(self) -> None:
         skill = (VALIDATOR.SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
@@ -381,81 +354,29 @@ class WorkflowGovernanceTests(unittest.TestCase):
         self.assertIn("preserve Markdown with real line breaks", forseti)
         self.assertIn("does not silently fall back to an unapproved client", readme)
 
-    def test_release_policy_is_not_inferred(self) -> None:
-        text = (VALIDATOR.SKILL_ROOT / "references" / "release-promotion.md").read_text(encoding="utf-8")
-        self.assertIn("Repository policy determines", text)
-        self.assertIn("obtain the user's decision", text)
-        self.assertIn("Do not infer a branch model", text)
-
     def test_repository_policy_controls_branch_and_issue_conventions(self) -> None:
         skill = (VALIDATOR.SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
-        release = (VALIDATOR.SKILL_ROOT / "references" / "release-promotion.md").read_text(encoding="utf-8")
         forseti = (VALIDATOR.SKILL_ROOT / "references" / "agents" / "forseti.md").read_text(encoding="utf-8")
         definition = (VALIDATOR.SKILL_ROOT / "references" / "definition-of-done.md").read_text(encoding="utf-8")
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
 
         self.assertIn("discover the repository's issue, branch", skill)
-        self.assertIn("Repository policy determines", release)
-        self.assertIn("repository-required versioning", definition)
+        self.assertIn("Repository-policy artifacts and edit authority", definition)
         self.assertIn("Never infer a repository's branch", forseti)
         self.assertIn("does not define the taxonomy", readme)
 
     def test_changelog_rules_follow_repository_policy(self) -> None:
         skill = (VALIDATOR.SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
-        hermod = (VALIDATOR.SKILL_ROOT / "references" / "agents" / "hermod.md").read_text(encoding="utf-8")
         forseti = (VALIDATOR.SKILL_ROOT / "references" / "agents" / "forseti.md").read_text(encoding="utf-8")
-        release = (VALIDATOR.SKILL_ROOT / "references" / "release-promotion.md").read_text(encoding="utf-8")
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
         changelog = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
 
-        for text in (skill, hermod, forseti, release, readme):
+        for text in (skill, forseti, readme):
             self.assertIn("policy", text.lower())
-        self.assertIn("release, versioning, changelog", skill)
-        self.assertIn("changelog, and release policy", hermod)
+        self.assertIn("versioning, changelog", skill)
         self.assertIn("changelog, versioning", forseti)
-        self.assertIn("changelog, release notes", release)
         self.assertIn("does not define the taxonomy", readme)
         self.assertIn("issue #131", changelog)
-
-    def test_hermod_owns_policy_based_branch_creation(self) -> None:
-        hermod = (VALIDATOR.SKILL_ROOT / "references" / "agents" / "hermod.md").read_text(encoding="utf-8")
-        self.assertIn("sole owner of branch creation", hermod)
-        self.assertIn("Apply the repository's branch naming", hermod)
-        self.assertIn("do not invent a Git-flow model", hermod)
-
-    def test_ci_monitoring_is_context_isolated_and_silent_while_pending(self) -> None:
-        skill = (VALIDATOR.SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
-        odin = (VALIDATOR.SKILL_ROOT / "references" / "agents" / "odin.md").read_text(encoding="utf-8")
-        hermod = (VALIDATOR.SKILL_ROOT / "references" / "agents" / "hermod.md").read_text(encoding="utf-8")
-        release = (VALIDATOR.SKILL_ROOT / "references" / "release-promotion.md").read_text(encoding="utf-8")
-        monitoring = (VALIDATOR.SKILL_ROOT / "references" / "ci-monitoring.md").read_text(encoding="utf-8")
-
-        self.assertIn('fork_turns="none"', skill)
-        self.assertIn("one Hermod activity with no inherited conversation history", odin)
-        self.assertIn("remain silent while the observed state is unchanged and pending", hermod)
-        self.assertIn("one fresh, task-local Hermod activity", release)
-        self.assertIn("gh run watch <run-id> --exit-status --compact", monitoring)
-        self.assertIn("Never create parallel watchers for the same revision", monitoring)
-        self.assertIn("Use Mimir only when evidence cannot classify the cause", monitoring)
-        self.assertIn("unaffected reviewers remain approved", monitoring)
-        self.assertIn("incremental_cached_input_tokens", monitoring)
-
-    def test_hermod_exclusively_owns_actions_queries_and_watchers(self) -> None:
-        odin = (VALIDATOR.SKILL_ROOT / "references" / "agents" / "odin.md").read_text(encoding="utf-8")
-        hermod = (VALIDATOR.SKILL_ROOT / "references" / "agents" / "hermod.md").read_text(encoding="utf-8")
-        forseti = (VALIDATOR.SKILL_ROOT / "references" / "agents" / "forseti.md").read_text(encoding="utf-8")
-        monitoring = (VALIDATOR.SKILL_ROOT / "references" / "ci-monitoring.md").read_text(encoding="utf-8")
-        release = (VALIDATOR.SKILL_ROOT / "references" / "release-promotion.md").read_text(encoding="utf-8")
-
-        self.assertIn("sole owner of provider queries for live CI state", hermod)
-        self.assertIn("gh pr checks <pr> --watch --required --fail-fast", hermod)
-        self.assertIn("gh run watch <run-id> --exit-status --compact", monitoring)
-        self.assertIn("starts only one blocking watcher per revision", monitoring)
-        self.assertIn("exactly one fresh provider read", monitoring)
-        self.assertIn("This safety read is not a second watcher", monitoring)
-        self.assertIn("never repeat Actions queries in Odin or Forseti", odin)
-        self.assertIn("Do not query, watch, or poll GitHub Actions", forseti)
-        self.assertIn("Odin and Forseti reuse that revision-bound evidence", release)
 
     def test_context_efficiency_is_budgeted_and_non_recursive(self) -> None:
         skill = (VALIDATOR.SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
@@ -488,12 +409,12 @@ class WorkflowGovernanceTests(unittest.TestCase):
         header = skill.split("---", 2)[1]
         self.assertIn("multiple bounded activities or material risk", header)
         self.assertIn("ordinary maintenance", header)
-        self.assertIn("release observation", header)
+        self.assertIn("monitoring", header.lower())
 
     def test_activation_contract_covers_all_intents_and_explicit_monitoring(self) -> None:
         skill = (VALIDATOR.SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
         header = skill.split("---", 2)[1]
-        for intent in ("discovery", "delivery", "review", "infrastructure", "deploy", "release", "monitor"):
+        for intent in ("discovery", "delivery", "review", "infrastructure", "deploy", "monitor"):
             self.assertIn(intent, header.lower())
         self.assertIn("Asgard is explicitly requested", header)
         self.assertIn("explicit MONITOR requests", header)
@@ -501,10 +422,24 @@ class WorkflowGovernanceTests(unittest.TestCase):
 
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
         when_to_use = readme.split("## When to use Asgard", 1)[1].split("## Roles", 1)[0]
-        for intent in ("discovery", "delivery", "review", "infrastructure", "deploy", "release", "monitoring"):
+        for intent in ("discovery", "delivery", "review", "infrastructure", "deploy", "monitoring"):
             self.assertIn(intent, when_to_use.lower())
         self.assertIn("Explicit monitoring remains supported", when_to_use)
         self.assertIn("Do not select it implicitly", when_to_use)
+
+    def test_hermod_is_independent_and_owns_release_pr_preparation(self) -> None:
+        hermod_root = ROOT / "plugins" / "asgard" / "skills" / "hermod"
+        skill = (hermod_root / "SKILL.md").read_text(encoding="utf-8")
+        metadata = (hermod_root / "agents" / "openai.yaml").read_text(encoding="utf-8")
+        asgard = (VALIDATOR.SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
+
+        self.assertIn("name: hermod", skill)
+        self.assertIn("without invoking Asgard or Odin", skill)
+        for term in ("develop", "release/<version>", "master", "Semantic Version", "CHANGELOG.md", "gh auth status", "gh pr create"):
+            self.assertIn(term, skill)
+        self.assertIn("display_name: \"Hermod\"", metadata)
+        self.assertNotIn("Hermod", asgard)
+        self.assertNotIn((VALIDATOR.SKILL_ROOT / "references" / "agents" / "hermod.md").as_posix(), asgard)
 
     def test_release_runs_from_master_push_without_checkout(self) -> None:
         text = (ROOT / ".github" / "workflows" / "release.yml").read_text(encoding="utf-8")

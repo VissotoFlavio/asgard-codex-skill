@@ -31,7 +31,7 @@ Use no inherited conversation history when the platform supports it. If a specia
 
 ## Checkpoint phase transitions
 
-Create one compact checkpoint when moving between material phases such as discussion to implementation, implementation to integrated review, or approval to release:
+Create one compact checkpoint when moving between material phases such as discussion to implementation or implementation to integrated review:
 
 ```yaml
 phase_checkpoint:
