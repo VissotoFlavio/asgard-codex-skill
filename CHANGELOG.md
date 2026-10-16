@@ -6,6 +6,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+### Added
+
+- Add the standalone `$eir` skill for delivering a defined issue through Pull Request review, published feedback, authorized correction replies, and final verification ([issue #152](https://github.com/VissotoFlavio/asgard-codex-skill/issues/152)).
+
 ## [0.18.0] - 2026-10-16
 
 ### Added
