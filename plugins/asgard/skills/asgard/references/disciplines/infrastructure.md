@@ -1,21 +1,19 @@
 # Infrastructure discipline
 
-Load this packet for work on hosts, cloud resources, networks, OS services, container platforms, runtime configuration, or infrastructure access. It supplements Ymir and grants no authority.
+Load this guidance for work on hosts, cloud resources, networks, OS services, container platforms, runtime configuration, or infrastructure access. It supplements the `$ymir` leaf skill and grants no authority.
 
-## Profile and inventory contract
+## Canonical operational guidance
 
-Use `references/infrastructure-state.md` for profiles and inventories. Remote read-only discovery does not authorize durable local writes. Profiles locate a destination and reference external credentials; inventories are observed metadata snapshots. Neither may contain secrets.
+Route infrastructure work to `$ymir`; its skill-local guidance is canonical for profiles, inventories, VPS container database access, credentials, identity, drift, and partial-failure controls. This root guidance grants no authority and does not duplicate those operational policies.
 
-For a containerized database on a VPS, follow `references/database-vps-access.md`. Ymir owns SSH, tunnel, host/container exposure, and credential mechanisms, but never inherits database `DISCOVER`, `VALIDATE`, or `APPLY` authority.
+Before dispatch, record provider, required tools and skills, availability, expected identity, access level, and whether `APPLY` may be requested. Provider skills are capabilities, not permission sources.
 
-Before dispatch, record provider, required tools and skills, availability, expected identity, access level, and whether APPLY may be requested. Provider skills are capabilities, not permission sources.
+For SSH/Linux, require first-use identity confirmation out of band and define only the authorized discovery boundary: OS, architecture, systemd, Docker/Compose, relevant services, and bounded workloads. `$ymir` applies its canonical transport and secret-handling controls.
 
-For SSH/Linux, confirm first-use identity out of band, prefer SSH agent/config, and discover only authorized metadata. Detect OS, architecture, systemd, Docker/Compose, relevant services, and bounded workloads. Never disable host-key checking, scan arbitrary filesystems, read secret files, or capture environment values.
-
-For AWS, only detect AWS CLI, profile/SSO, expected account/role/region, adapter, and required skills. Do not install or operate without user authority and suitable capability. Other providers fail closed likewise.
+For AWS, record AWS CLI, profile/SSO, expected account/role/region, adapter, and required skills. Do not install or operate without user authority and suitable capability. Other providers fail closed likewise.
 
 ## Infrastructure invariants
 
-Follow `DISCOVER -> PLAN -> APPLY -> VERIFY`. Before APPLY, revalidate identity and affected state; absent, unverifiable, or mismatched identity fails closed. Material drift invalidates the plan and authority, requiring a regenerated plan, impact, recovery path, and fresh approval. Stale, corrupt, malformed, or unsupported state cannot authorize APPLY. On partial APPLY or failed VERIFY, halt mutation, rediscover and report actual state; rollback and retries require exact authority. Credentials, migrations, deployment, destructive actions, firewall or privilege changes, restarts, infrastructure mutation, persistence, and dependency installation remain protected unless explicitly authorized.
+Require `$ymir` to follow its canonical `DISCOVER -> PLAN -> APPLY -> VERIFY` model. The task-local contract must state the exact authority, expected impact, recovery, verification, and protected operations; the root guidance does not restate or grant operational controls.
 
-Route material contracts and state consistency to Tyr, behavioral and recovery failure modes to Loki, and identity, secrets, privilege, exposure, or availability to independent Heimdall review. Remote execution evidence never constitutes final acceptance.
+Select `$tyr` for material contracts or state consistency, `$loki` for behavioral or recovery failure modes, and `$heimdall` for identity, secrets, privilege, exposure, or availability review when their independent boundary is justified. Odin selects these leaf skills. Remote execution evidence never constitutes final acceptance.

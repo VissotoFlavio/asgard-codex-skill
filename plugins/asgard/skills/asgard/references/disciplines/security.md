@@ -1,6 +1,6 @@
 # Security discipline
 
-Load this packet when an activity or review needs deep vulnerability analysis beyond Heimdall's proportional default review. Deep analysis fits exposed surfaces, authn/authz changes, sensitive data, unsafe parsing, SSRF-capable inputs, uploads, webhooks, rate limiting, gateway or middleware config, sessions, CORS, explicit `--validate-security`, or user-requested vulnerability discovery.
+Load this guidance when an activity or review needs deep vulnerability analysis beyond `$heimdall`'s proportional default review. Deep analysis fits exposed surfaces, authn/authz changes, sensitive data, unsafe parsing, SSRF-capable inputs, uploads, webhooks, rate limiting, gateway or middleware config, sessions, CORS, explicit `--validate-security`, or user-requested vulnerability discovery.
 
 For ordinary delivery pull requests, run deep analysis only when requested, flagged with `--validate-security`, or justified by material security risk.
 

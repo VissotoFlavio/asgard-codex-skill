@@ -22,23 +22,29 @@ Use Asgard when it is explicitly requested for discovery, delivery, review, infr
 
 Do not select it implicitly for routine single-file edits, isolated diagnosis, ordinary maintenance, or standalone release observation that one agent can handle safely. Explicit monitoring remains supported. Asgard should reduce delivery risk, not add ceremony without a concrete reason.
 
-## Roles
+## Role model
 
-| Role | Responsibility |
-| --- | --- |
-| **Odin** | Plans the execution graph, coordinates specialists, reviews evidence, and owns final acceptance. |
-| **Brokkr** | Implements bounded application work within an established architecture. |
-| **Sindri** | Implements one inseparable application activity that requires architectural ownership. |
-| **Regin** | Owns database architecture and safe schema evolution, including tables, keys, constraints, indexes, relationships, migrations, and data backfills. |
-| **Ymir** | Discovers, plans, applies authorized infrastructure changes, and verifies the resulting environment. |
-| **Mimir** | Resolves a stated code, documentation, or technical uncertainty. |
-| **Tyr** | Independently validates material rules, contracts, compatibility, and consistency. |
-| **Loki** | Searches adversarially for behavioral gaps and edge cases. |
-| **Bragi** | Reviews completed code for human readability and maintainability using context-sensitive SOLID, DRY, KISS, YAGNI, and Tell, Don't Ask. |
-| **Heimdall** | Independently reviews security, privacy, isolation, abuse, availability, and risk-justified deep vulnerability analysis. |
-| **Forseti** | Verifies repository-required delivery and release traceability, including a narrowly authorized metadata repair when policy permits it. |
+`$asgard` is Odin-only: it plans the execution graph, selects specialists, coordinates their evidence, and owns final acceptance. Complete Odin orchestration requires the Asgard plugin to be installed, because its routing catalog and the leaf skills are distributed with that plugin.
+
+The ten leaf skills are also direct entry points. A direct request stays within the named skill's bounded responsibility; it does not become a delivery orchestration or final acceptance activity. The independent `$eir`, `$hermod`, and `$kvasir` skills remain separate from this Odin-and-leaf model.
+
+| Role | Invocation | Responsibility |
+| --- | --- | --- |
+| **Odin** | `$asgard` (plugin) | Plans the execution graph, coordinates specialists, reviews evidence, and owns final acceptance. |
+| **Brokkr** | `$brokkr` | Implements bounded application work within an established architecture. |
+| **Sindri** | `$sindri` | Implements one inseparable application activity that requires architectural ownership. |
+| **Regin** | `$regin` | Owns database architecture and safe schema evolution, including tables, keys, constraints, indexes, relationships, migrations, and data backfills. |
+| **Ymir** | `$ymir` | Discovers, plans, applies authorized infrastructure changes, and verifies the resulting environment. |
+| **Mimir** | `$mimir` | Resolves a stated code, documentation, or technical uncertainty. |
+| **Tyr** | `$tyr` | Independently validates material rules, contracts, compatibility, and consistency. |
+| **Loki** | `$loki` | Searches adversarially for behavioral gaps and edge cases. |
+| **Bragi** | `$bragi` | Reviews completed code for human readability and maintainability using context-sensitive SOLID, DRY, KISS, YAGNI, and Tell, Don't Ask. |
+| **Heimdall** | `$heimdall` | Independently reviews security, privacy, isolation, abuse, availability, and risk-justified deep vulnerability analysis. |
+| **Forseti** | `$forseti` | Verifies repository-required delivery and release traceability, including a narrowly authorized metadata repair when policy permits it. |
 
 Specialists receive task-local context rather than the entire conversation. Their reports and passing tests are evidence; Odin still owns product decisions, inspects the candidate, and makes the acceptance decision. Mimir only resolves stated technical uncertainty read-only. Regin may design and author versioned database changes, but connecting to or mutating any durable, runtime, or non-isolated database, applying or retrying a migration, and executing a rollback each require explicit authority for the exact environment and candidate.
+
+Every leaf skill has a direct mode and an Odin-orchestrated mode. In either mode, a leaf never invokes Odin or a sibling automatically. If another boundary or authority is necessary, it returns `HANDOFF_REQUIRED` with the recommended skill, reason, evidence, prerequisites, and required authority; the direct requester or Odin decides whether to continue the handoff.
 
 On first use of each database profile, Regin requests separate read-only discovery authority and consent before persisting a local inventory. Later activities load a compact summary and only relevant object details, refreshing stale, incomplete, affected, or drifted sections instead of rediscovering the whole database. Profiles and inventories live outside the repository and installed plugin under `ASGARD_CONFIG_HOME/databases` when configured, otherwise the platform-local Asgard data directory. They contain no credentials or row data, never replace the runtime database as source of truth, and never authorize `APPLY`; live preflight remains mandatory.
 
@@ -166,6 +172,20 @@ Use $asgard to plan and coordinate this software delivery.
 
 Codex may also select Asgard automatically when a request clearly matches its scope.
 
+## Invoke a leaf skill directly
+
+With the plugin installed, invoke one of the ten leaf skills directly when the request is already bounded to that responsibility: `$brokkr`, `$sindri`, `$regin`, `$ymir`, `$mimir`, `$tyr`, `$loki`, `$bragi`, `$heimdall`, or `$forseti`.
+
+```text
+Use $brokkr to implement this small bounded change with the established architecture.
+```
+
+```text
+Use $heimdall to review this exact candidate for security and privacy risks.
+```
+
+Direct invocation does not start Odin orchestration. A leaf skill can recommend another skill only by returning `HANDOFF_REQUIRED`; it never calls Odin or a sibling automatically. Use `$asgard` when the work needs Odin to plan, select, and coordinate multiple bounded activities or independent review gates.
+
 ## Update the plugin
 
 Update the stable checkout and reinstall the marketplace entry:
@@ -201,15 +221,9 @@ Eir delivers a defined issue through a Pull Request, publishes evidence-backed r
 Use $eir to review this Pull Request and publish the findings.
 ```
 
-## Install only the skill
+## Install an independent skill
 
-To install the standalone skill instead of the plugin, ask Codex to install:
-
-```text
-https://github.com/VissotoFlavio/asgard-codex-skill/tree/master/plugins/asgard/skills/asgard
-```
-
-Start a new task after installation and invoke `$asgard`.
+Install the plugin for complete `$asgard` orchestration; installing only its `$asgard` root cannot provide Odin's distributed leaf-skill routing. Eir, Hermod, and Kvasir remain independently installable for their standalone workflows.
 
 To install only Hermod, use:
 

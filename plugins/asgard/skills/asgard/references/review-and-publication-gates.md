@@ -38,9 +38,9 @@ When multiple activities are combined, validate and review their integration sur
 
 ## Complete concisely
 
-Record the candidate, DoD result, required approvals, focused validation, deviations, out-of-scope changes, and residual risks. Omit empty fields and repeated role instructions. Distinguish precisely:
+Record the candidate, DoD result, required approvals, focused validation, deviations, out-of-scope changes, and residual risks. Omit empty fields and repeated leaf-skill guidance. Distinguish precisely:
 
-Reference the candidate revision and bounded paths instead of reproducing its full diff. For passing validation, record the command, conclusion, and artifact or run URL; include output only for a concise failure excerpt. A reviewer approval needs one decision line plus material findings, not a restatement of its packet or the complete DoD.
+Reference the candidate revision and bounded paths instead of reproducing its full diff. For passing validation, record the command, conclusion, and artifact or run URL; include output only for a concise failure excerpt. A reviewer approval needs one decision line plus material findings, not a restatement of its leaf-skill guidance or the complete DoD.
 
 ```text
 IMPLEMENTER_COMPLETE != APPROVED

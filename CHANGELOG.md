@@ -6,6 +6,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+### Changed
+
+- Split Asgard's specialist responsibilities into direct leaf skills while retaining Odin-only orchestration and explicit handoffs ([issue #156](https://github.com/VissotoFlavio/asgard-codex-skill/issues/156)).
+
 ## [0.19.0] - 2026-10-16
 
 ### Added

@@ -1,0 +1,8 @@
+interface:
+  display_name: "Bragi"
+  short_description: "Review code readability and maintainability"
+  brand_color: "#8D6E63"
+  default_prompt: "Use $bragi to independently review this completed candidate for concrete maintainability and comprehension risks."
+
+policy:
+  allow_implicit_invocation: true

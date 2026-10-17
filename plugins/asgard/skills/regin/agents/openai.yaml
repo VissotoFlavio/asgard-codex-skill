@@ -1,0 +1,8 @@
+interface:
+  display_name: "Regin"
+  short_description: "Design safe versioned database evolution"
+  brand_color: "#1565C0"
+  default_prompt: "Use $regin to design or author this bounded database-structure activity under explicit AUTHOR, VALIDATE, or APPLY authority."
+
+policy:
+  allow_implicit_invocation: true

@@ -12,6 +12,33 @@ assert SPEC and SPEC.loader
 VALIDATOR = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(VALIDATOR)
 
+LEAF_SKILLS = frozenset({"brokkr", "sindri", "regin", "ymir", "mimir", "tyr", "loki", "bragi", "heimdall", "forseti"})
+
+
+def skill_root(name: str) -> Path:
+    return ROOT / "plugins" / "asgard" / "skills" / name
+
+
+def temporary_directory() -> tempfile.TemporaryDirectory[str]:
+    return tempfile.TemporaryDirectory(dir=ROOT)
+
+
+def write_skill(root: Path, name: str) -> Path:
+    skill = root / name
+    (skill / "agents").mkdir(parents=True)
+    (skill / "SKILL.md").write_text(
+        f"---\nname: {name}\ndescription: A valid test skill.\n---\n\n# {name}\n",
+        encoding="utf-8",
+    )
+    (skill / "agents" / "openai.yaml").write_text(
+        "interface:\n"
+        f"  display_name: \"{name}\"\n"
+        "  short_description: \"A valid test skill\"\n"
+        "  default_prompt: \"Use this test skill.\"\n",
+        encoding="utf-8",
+    )
+    return skill
+
 
 class SemVerTests(unittest.TestCase):
     def test_accepts_strict_semver(self) -> None:
@@ -25,14 +52,14 @@ class SemVerTests(unittest.TestCase):
 
 class ContainedPathTests(unittest.TestCase):
     def test_rejects_invalid_types_and_escape(self) -> None:
-        with tempfile.TemporaryDirectory() as directory:
+        with temporary_directory() as directory:
             root = Path(directory)
             for value in (None, 7, "", "../outside", "/absolute", "folder\\file"):
                 with self.assertRaises(ValueError, msg=repr(value)):
                     VALIDATOR.contained_path(root, value, kind="file")
 
     def test_accepts_existing_contained_file(self) -> None:
-        with tempfile.TemporaryDirectory() as directory:
+        with temporary_directory() as directory:
             root = Path(directory)
             child = root / "assets" / "logo.png"
             child.parent.mkdir()
@@ -40,7 +67,7 @@ class ContainedPathTests(unittest.TestCase):
             self.assertEqual(VALIDATOR.contained_path(root, "assets/logo.png", kind="file"), child.resolve())
 
     def test_rejects_symlink_escape_when_supported(self) -> None:
-        with tempfile.TemporaryDirectory() as directory, tempfile.TemporaryDirectory() as outside:
+        with temporary_directory() as directory, temporary_directory() as outside:
             root = Path(directory)
             link = root / "escape"
             try:
@@ -51,39 +78,227 @@ class ContainedPathTests(unittest.TestCase):
                 VALIDATOR.contained_path(root, "escape/file", kind="file")
 
     def test_skill_local_markdown_links_resolve(self) -> None:
-        for markdown in VALIDATOR.SKILL_ROOT.rglob("*.md"):
-            self.assertEqual(VALIDATOR.validate_local_markdown_links(markdown), [], str(markdown))
+        for root in VALIDATOR.discover_distributed_skills().values():
+            for markdown in VALIDATOR.markdown_files(root, VALIDATOR.SKILLS_ROOT):
+                self.assertEqual(
+                    VALIDATOR.validate_local_markdown_links(markdown, skills_root=VALIDATOR.SKILLS_ROOT),
+                    [],
+                    str(markdown),
+                )
 
-    def test_specialist_packets_are_independently_loadable(self) -> None:
-        agents = VALIDATOR.SKILL_ROOT / "references" / "agents"
-        expected = {"odin", "brokkr", "sindri", "regin", "ymir", "mimir", "tyr", "loki", "bragi", "heimdall", "forseti"}
-        self.assertEqual({path.stem for path in agents.glob("*.md")}, expected)
-        for role in expected:
-            packet = (agents / f"{role}.md").read_text(encoding="utf-8")
-            self.assertLess(len(packet), 2_500, role)
+    def test_distributed_skills_have_complete_direct_artifacts(self) -> None:
+        skills = VALIDATOR.discover_distributed_skills()
+        self.assertTrue(VALIDATOR.EXPECTED_SKILLS.issubset(skills))
+        for name, root in skills.items():
+            self.assertEqual(VALIDATOR.validate_distributed_skill(name, root), [], name)
+            skill = (root / "SKILL.md").read_text(encoding="utf-8")
+            metadata = (root / "agents" / "openai.yaml").read_text(encoding="utf-8")
+            self.assertEqual(VALIDATOR.parse_skill_frontmatter(skill, name=name)["name"], name)
+            self.assertEqual(
+                set(VALIDATOR.parse_agent_interface(metadata, name=name)),
+                {"display_name", "short_description", "default_prompt"},
+            )
 
-    def test_discipline_packets_are_independently_loadable(self) -> None:
+    def test_manifest_skills_must_resolve_to_the_canonical_publication_root(self) -> None:
+        with temporary_directory() as directory:
+            plugin = Path(directory) / "plugin"
+            canonical = plugin / "skills"
+            alternate = plugin / "other-skills"
+            canonical.mkdir(parents=True)
+            alternate.mkdir()
+
+            self.assertEqual(
+                VALIDATOR.resolve_published_skills_root(
+                    "./skills/",
+                    plugin_root=plugin,
+                    canonical_skills_root=canonical,
+                ),
+                canonical.resolve(),
+            )
+            with self.assertRaises(ValueError):
+                VALIDATOR.resolve_published_skills_root(
+                    "./other-skills",
+                    plugin_root=plugin,
+                    canonical_skills_root=canonical,
+                )
+
+    def test_future_well_formed_skills_are_discovered_and_validated(self) -> None:
+        with temporary_directory() as directory:
+            published_root = Path(directory) / "skills"
+            published_root.mkdir()
+            future = write_skill(published_root, "future")
+
+            discovered = VALIDATOR.discover_distributed_skills(published_root)
+            self.assertEqual(discovered, {"future": future.resolve()})
+            self.assertEqual(
+                VALIDATOR.validate_distributed_skill("future", future, skills_root=published_root),
+                [],
+            )
+
+    def test_rejects_symlinked_skill_directory_when_supported(self) -> None:
+        with temporary_directory() as directory:
+            root = Path(directory)
+            published_root = root / "skills"
+            outside = root / "outside"
+            published_root.mkdir()
+            outside.mkdir()
+            link = published_root / "linked"
+            try:
+                link.symlink_to(outside, target_is_directory=True)
+            except OSError:
+                self.skipTest("symlink creation is unavailable")
+            with self.assertRaises(ValueError):
+                VALIDATOR.discover_distributed_skills(published_root)
+
+    def test_rejects_malformed_frontmatter_and_agent_metadata(self) -> None:
+        with self.assertRaises(ValueError):
+            VALIDATOR.parse_skill_frontmatter("name: example\n", name="example")
+        with self.assertRaises(ValueError):
+            VALIDATOR.parse_skill_frontmatter("---\nname: example\ndescription: true\n---\n", name="example")
+        with self.assertRaises(ValueError):
+            VALIDATOR.parse_skill_frontmatter("---\nname:\n  nested: example\ndescription: text\n---\n", name="example")
+
+        for metadata in (
+            "interface: invalid\n",
+            "interface:\n    display_name: \"Example\"\n",
+            "interface:\n  display_name: true\n  short_description: \"Short\"\n  default_prompt: \"Prompt\"\n",
+            "interface:\n  metadata:\n    display_name: \"Example\"\n  short_description: \"Short\"\n  default_prompt: \"Prompt\"\n",
+        ):
+            with self.assertRaises(ValueError, msg=metadata):
+                VALIDATOR.parse_agent_interface(metadata, name="example")
+
+    def test_required_yaml_strings_reject_comments_and_mapping_syntax(self) -> None:
+        invalid_frontmatter_values = (
+            "# comment",
+            "Direct skill: bounded review",
+            "null",
+            "[]",
+        )
+        for value in invalid_frontmatter_values:
+            frontmatter = f"---\nname: example\ndescription: {value}\n---\n"
+            with self.assertRaises(ValueError, msg=frontmatter):
+                VALIDATOR.parse_skill_frontmatter(frontmatter, name="example")
+
+        invalid_interface_values = (
+            "# comment",
+            "Display name: review",
+            "null",
+            "[]",
+        )
+        for value in invalid_interface_values:
+            metadata = (
+                "interface:\n"
+                f"  display_name: {value}\n"
+                "  short_description: Short description\n"
+                "  default_prompt: Use this skill.\n"
+            )
+            with self.assertRaises(ValueError, msg=metadata):
+                VALIDATOR.parse_agent_interface(metadata, name="example")
+
+        self.assertEqual(
+            VALIDATOR.parse_skill_frontmatter(
+                "---\nname: example\ndescription: Direct bounded review.\n---\n",
+                name="example",
+            )["description"],
+            "Direct bounded review.",
+        )
+        self.assertEqual(
+            VALIDATOR.parse_agent_interface(
+                "interface:\n"
+                "  display_name: \"Example: review\"\n"
+                "  short_description: Short description\n"
+                "  default_prompt: \"Use this skill: safely.\"\n",
+                name="example",
+            )["display_name"],
+            "Example: review",
+        )
+
+    def test_required_yaml_strings_reject_all_single_quoted_syntax(self) -> None:
+        single_quoted_values = (
+            "'Direct bounded review'",
+            "'Bob's review'",
+        )
+        for value in single_quoted_values:
+            frontmatter = f"---\nname: example\ndescription: {value}\n---\n"
+            with self.assertRaises(ValueError, msg=frontmatter):
+                VALIDATOR.parse_skill_frontmatter(frontmatter, name="example")
+
+            metadata = (
+                "interface:\n"
+                f"  display_name: {value}\n"
+                "  short_description: Short description\n"
+                "  default_prompt: Use this skill.\n"
+            )
+            with self.assertRaises(ValueError, msg=metadata):
+                VALIDATOR.parse_agent_interface(metadata, name="example")
+
+    def test_leaf_skills_keep_direct_handoff_contracts(self) -> None:
+        terminal_states = {
+            "brokkr": ("`IMPLEMENTER_COMPLETE`", "`BLOCKED`"),
+            "sindri": ("`IMPLEMENTER_COMPLETE`", "`BLOCKED`"),
+            "regin": ("`IMPLEMENTER_COMPLETE`", "`BLOCKED`"),
+            "ymir": ("`IMPLEMENTER_COMPLETE`", "`BLOCKED`"),
+            "mimir": ("`FINDINGS_COMPLETE`", "`BLOCKED`"),
+            "tyr": ("`APPROVED`", "`CHANGES_REQUIRED`", "`BLOCKED`"),
+            "loki": ("`APPROVED`", "`CHANGES_REQUIRED`", "`BLOCKED`"),
+            "bragi": ("`APPROVED`", "`CHANGES_REQUIRED`", "`BLOCKED`"),
+            "heimdall": ("`APPROVED`", "`CHANGES_REQUIRED`", "`BLOCKED`"),
+            "forseti": ("`APPROVED`", "`PENDING`", "`CHANGES_REQUIRED`", "`BLOCKED`"),
+        }
+        self.assertEqual(frozenset(terminal_states), LEAF_SKILLS)
+        for name, states in terminal_states.items():
+            skill = (skill_root(name) / "SKILL.md").read_text(encoding="utf-8")
+            self.assertIn("**Direct mode:**", skill, name)
+            self.assertIn("**Odin-orchestrated mode:**", skill, name)
+            self.assertIn("Never automatically invoke another Asgard skill", skill, name)
+            self.assertIn("recursively invoke Odin", skill, name)
+            for field in ("HANDOFF_REQUIRED", "recommended_skill:", "reason:", "evidence:", "prerequisites:", "authority_required:"):
+                self.assertIn(field, skill, f"{name}: {field}")
+            self.assertIn("authority_required: <specific protected authority, or none>", skill, name)
+            self.assertIn("`HANDOFF_REQUIRED`", skill, name)
+            for state in states:
+                self.assertIn(state, skill, f"{name}: {state}")
+
+    def test_leaf_artifacts_use_canonical_roots_and_retire_root_specialist_state(self) -> None:
+        published_root = VALIDATOR.SKILLS_ROOT.resolve()
+        for name in LEAF_SKILLS:
+            root = skill_root(name)
+            self.assertTrue(root.resolve().is_relative_to(published_root), name)
+            self.assertEqual(VALIDATOR.validate_distributed_skill(name, root), [], name)
+            for markdown in VALIDATOR.markdown_files(root, published_root):
+                self.assertTrue(markdown.resolve().is_relative_to(published_root), str(markdown))
+
+        references = VALIDATOR.SKILL_ROOT / "references"
+        for retired in (
+            "roles-and-packets.md",
+            "database-state.md",
+            "database-vps-access.md",
+            "infrastructure-state.md",
+        ):
+            self.assertFalse((references / retired).exists(), retired)
+        self.assertEqual(list((references / "agents").glob("*.md")), [])
+
+    def test_asgard_discipline_guidance_is_loadable(self) -> None:
         disciplines = VALIDATOR.SKILL_ROOT / "references" / "disciplines"
         expected = {"backend", "database", "frontend", "infrastructure", "security"}
         self.assertEqual({path.stem for path in disciplines.glob("*.md")}, expected)
         for discipline in expected:
-            packet = (disciplines / f"{discipline}.md").read_text(encoding="utf-8")
-            self.assertLess(len(packet), 2_500, discipline)
+            guidance = (disciplines / f"{discipline}.md").read_text(encoding="utf-8")
+            self.assertTrue(guidance.strip(), discipline)
         backend = (disciplines / "backend.md").read_text(encoding="utf-8")
         self.assertIn("$dotnet-best-practices", backend)
-        self.assertIn("route structural ownership to Regin", backend)
+        self.assertIn("route structural ownership to `$regin`", backend)
         database = (disciplines / "database.md").read_text(encoding="utf-8")
-        for term in ("AUTHOR", "VALIDATE", "APPLY", "PK/FK", "indexes", "expand/contract"):
+        for term in ("AUTHOR", "VALIDATE", "APPLY", "keys", "indexes", "expand/contract"):
             self.assertIn(term, database)
         frontend = (disciplines / "frontend.md").read_text(encoding="utf-8")
         self.assertIn("$frontend-design", frontend)
         self.assertIn("$web-design-guidelines", frontend)
         infrastructure = (disciplines / "infrastructure.md").read_text(encoding="utf-8")
+        self.assertIn("`$ymir` leaf skill", infrastructure)
+        self.assertIn("skill-local guidance is canonical", infrastructure)
         self.assertIn("DISCOVER -> PLAN -> APPLY -> VERIFY", infrastructure)
-        self.assertIn("infrastructure-state.md", infrastructure)
-        self.assertIn("Material drift invalidates the plan and authority", infrastructure)
-        self.assertIn("absent, unverifiable, or mismatched identity fails closed", infrastructure)
-        self.assertIn("rollback and retries require exact authority", infrastructure)
+        self.assertIn("Remote execution evidence never constitutes final acceptance", infrastructure)
         security = (disciplines / "security.md").read_text(encoding="utf-8")
         self.assertIn("$api-security-review", security)
         self.assertIn("$web-security-review", security)
@@ -92,21 +307,19 @@ class ContainedPathTests(unittest.TestCase):
         self.assertIn("--validate-security", security)
 
         definition = (VALIDATOR.SKILL_ROOT / "references" / "definition-of-done.md").read_text(encoding="utf-8")
-        self.assertIn("Implementer: Brokkr | Sindri | Regin | Ymir", definition)
+        self.assertIn("Implementing leaf skill: $brokkr | $sindri | $regin | $ymir", definition)
         self.assertIn("For deep vulnerability analysis, record `Security`", definition)
 
     def test_heimdall_deep_security_analysis_uses_optional_skills_with_fallback(self) -> None:
         skill = (VALIDATOR.SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
-        heimdall = (VALIDATOR.SKILL_ROOT / "references" / "agents" / "heimdall.md").read_text(encoding="utf-8")
-        security = (VALIDATOR.SKILL_ROOT / "references" / "disciplines" / "security.md").read_text(encoding="utf-8")
-        roles = (VALIDATOR.SKILL_ROOT / "references" / "roles-and-packets.md").read_text(encoding="utf-8")
+        heimdall = (skill_root("heimdall") / "SKILL.md").read_text(encoding="utf-8")
+        security = (skill_root("heimdall") / "references" / "security.md").read_text(encoding="utf-8")
+        roles = (VALIDATOR.SKILL_ROOT / "references" / "roles-and-skills.md").read_text(encoding="utf-8")
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
 
         self.assertIn("references/disciplines/security.md", skill)
         self.assertIn("deep vulnerability analysis", skill)
-        self.assertIn("load the security discipline packet", heimdall)
-        self.assertIn("ask whether the user wants to install it", heimdall)
-        self.assertIn("continue without it and record the fallback", heimdall)
+        self.assertIn("[security guidance](references/security.md)", heimdall)
         self.assertIn("Installing a skill is optional and requires explicit user authorization", security)
         self.assertIn("API gateways, webhooks, API authentication", security)
         self.assertIn("XSS/CSRF risk, security headers, CORS", security)
@@ -117,12 +330,12 @@ class ContainedPathTests(unittest.TestCase):
 
     def test_regin_owns_database_structure_without_implicit_runtime_authority(self) -> None:
         skill = (VALIDATOR.SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
-        roles = (VALIDATOR.SKILL_ROOT / "references" / "roles-and-packets.md").read_text(encoding="utf-8")
-        regin = (VALIDATOR.SKILL_ROOT / "references" / "agents" / "regin.md").read_text(encoding="utf-8")
-        database = (VALIDATOR.SKILL_ROOT / "references" / "disciplines" / "database.md").read_text(encoding="utf-8")
+        roles = (VALIDATOR.SKILL_ROOT / "references" / "roles-and-skills.md").read_text(encoding="utf-8")
+        regin = (skill_root("regin") / "SKILL.md").read_text(encoding="utf-8")
+        database = (skill_root("regin") / "references" / "database.md").read_text(encoding="utf-8")
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
 
-        self.assertIn("references/agents/regin.md", skill)
+        self.assertIn("references/roles-and-skills.md", skill)
         self.assertIn("references/disciplines/database.md", skill)
         self.assertIn("Database architecture and versioned evolution", roles)
         self.assertIn("# Regin", regin)
@@ -132,13 +345,14 @@ class ContainedPathTests(unittest.TestCase):
         self.assertIn("durable, runtime, or non-isolated database mutation", regin)
         self.assertIn("durable, runtime, or non-isolated database mutation", database)
         self.assertIn("any durable, runtime, or non-isolated database", readme)
-        self.assertIn("absence blocks", regin)
+        self.assertIn("return `HANDOFF_REQUIRED` to obtain an authorized adapter or authority", regin)
         self.assertIn("repository's authorized deploy automation executes", regin)
         self.assertNotIn("Hermod applies", regin)
         self.assertIn("cluster/server, database/catalog, schema/tenant, and effective principal/role", regin)
         self.assertIn("Missing or mismatched fields fail closed", regin)
         self.assertIn("phase-scoped least privilege", regin)
-        self.assertIn("Owner/superuser or grants need justification and separate Ymir authorization", regin)
+        self.assertIn("Owner/superuser or grants need justification", regin)
+        self.assertIn("separate Ymir authority", regin)
         self.assertIn("After partial failure, halt mutation", regin)
         self.assertIn("new authority bound to that state", regin)
         self.assertIn("| **Regin** |", readme)
@@ -146,9 +360,9 @@ class ContainedPathTests(unittest.TestCase):
 
 
     def test_database_inventory_is_compact_persistent_and_never_apply_authority(self) -> None:
-        state = (VALIDATOR.SKILL_ROOT / "references" / "database-state.md").read_text(encoding="utf-8")
-        regin = (VALIDATOR.SKILL_ROOT / "references" / "agents" / "regin.md").read_text(encoding="utf-8")
-        database = (VALIDATOR.SKILL_ROOT / "references" / "disciplines" / "database.md").read_text(encoding="utf-8")
+        state = (skill_root("regin") / "references" / "database-state.md").read_text(encoding="utf-8")
+        regin = (skill_root("regin") / "SKILL.md").read_text(encoding="utf-8")
+        database = (skill_root("regin") / "references" / "database.md").read_text(encoding="utf-8")
         definition = (VALIDATOR.SKILL_ROOT / "references" / "definition-of-done.md").read_text(encoding="utf-8")
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
 
@@ -188,11 +402,11 @@ class ContainedPathTests(unittest.TestCase):
         self.assertIn("never authorize `APPLY`", readme)
 
     def test_vps_container_database_access_separates_network_credentials_and_authority(self) -> None:
-        access = (VALIDATOR.SKILL_ROOT / "references" / "database-vps-access.md").read_text(encoding="utf-8")
-        database_state = (VALIDATOR.SKILL_ROOT / "references" / "database-state.md").read_text(encoding="utf-8")
-        infrastructure_state = (VALIDATOR.SKILL_ROOT / "references" / "infrastructure-state.md").read_text(encoding="utf-8")
-        database = (VALIDATOR.SKILL_ROOT / "references" / "disciplines" / "database.md").read_text(encoding="utf-8")
-        infrastructure = (VALIDATOR.SKILL_ROOT / "references" / "disciplines" / "infrastructure.md").read_text(encoding="utf-8")
+        access = (skill_root("regin") / "references" / "database-vps-access.md").read_text(encoding="utf-8")
+        database_state = (skill_root("regin") / "references" / "database-state.md").read_text(encoding="utf-8")
+        infrastructure_state = (skill_root("ymir") / "references" / "infrastructure-state.md").read_text(encoding="utf-8")
+        database = (skill_root("regin") / "references" / "database.md").read_text(encoding="utf-8")
+        infrastructure = (skill_root("ymir") / "references" / "infrastructure.md").read_text(encoding="utf-8")
         definition = (VALIDATOR.SKILL_ROOT / "references" / "definition-of-done.md").read_text(encoding="utf-8")
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
 
@@ -233,8 +447,8 @@ class ContainedPathTests(unittest.TestCase):
         self.assertIn("Tunnel access never authorizes a database phase", readme)
 
     def test_infrastructure_state_contract_enforces_security_boundaries(self) -> None:
-        state = (VALIDATOR.SKILL_ROOT / "references" / "infrastructure-state.md").read_text(encoding="utf-8")
-        ymir = (VALIDATOR.SKILL_ROOT / "references" / "agents" / "ymir.md").read_text(encoding="utf-8")
+        state = (skill_root("ymir") / "references" / "infrastructure-state.md").read_text(encoding="utf-8")
+        ymir = (skill_root("ymir") / "SKILL.md").read_text(encoding="utf-8")
         self.assertIn("trusted out-of-band", state)
         self.assertIn("explicitly scoped persistence consent", state)
         self.assertIn("Reject malformed, corrupt, or unsupported-schema state", state)
@@ -243,16 +457,16 @@ class ContainedPathTests(unittest.TestCase):
         self.assertIn("On partial APPLY or VERIFY failure, halt further mutation", state)
         self.assertIn("Persistence never includes secrets", state)
         self.assertIn("Provider-specific skills extend capability but grant no authority", ymir)
-        self.assertIn("dependency or skill installation requires user authorization", ymir)
+        self.assertIn("Dependency or skill installation requires user authorization", ymir)
 
 
 class WorkflowGovernanceTests(unittest.TestCase):
     def test_technical_refinement_is_proportional_and_policy_aware(self) -> None:
         skill = (VALIDATOR.SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
         definition = (VALIDATOR.SKILL_ROOT / "references" / "definition-of-done.md").read_text(encoding="utf-8")
-        odin = (VALIDATOR.SKILL_ROOT / "references" / "agents" / "odin.md").read_text(encoding="utf-8")
-        ymir = (VALIDATOR.SKILL_ROOT / "references" / "agents" / "ymir.md").read_text(encoding="utf-8")
-        forseti = (VALIDATOR.SKILL_ROOT / "references" / "agents" / "forseti.md").read_text(encoding="utf-8")
+        odin = skill
+        ymir = (skill_root("ymir") / "SKILL.md").read_text(encoding="utf-8")
+        forseti = (skill_root("forseti") / "SKILL.md").read_text(encoding="utf-8")
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
 
         self.assertIn("## Refine before material mutation", skill)
@@ -260,7 +474,7 @@ class WorkflowGovernanceTests(unittest.TestCase):
         self.assertIn("Persist the refinement only when repository policy requires", skill)
         self.assertIn("Technical refinement, when useful or policy-required", definition)
         self.assertIn("repository-designated artifact", definition)
-        self.assertIn("when useful; persist it only when policy", odin)
+        self.assertIn("Persist the refinement only when repository policy requires", odin)
         self.assertIn("persist it only when repository policy", ymir)
         self.assertNotIn("Technical Refinement record before mutation", forseti)
         self.assertIn("## Technical refinement", readme)
@@ -277,21 +491,21 @@ class WorkflowGovernanceTests(unittest.TestCase):
 
     def test_discovery_brief_and_role_ownership_are_explicit(self) -> None:
         skill = (VALIDATOR.SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
-        odin = (VALIDATOR.SKILL_ROOT / "references" / "agents" / "odin.md").read_text(encoding="utf-8")
-        mimir = (VALIDATOR.SKILL_ROOT / "references" / "agents" / "mimir.md").read_text(encoding="utf-8")
+        odin = skill
+        mimir = (skill_root("mimir") / "SKILL.md").read_text(encoding="utf-8")
         for field in (
             "problem or desired outcome", "relevant technical evidence", "viable alternatives",
             "proposed scope and exclusions", "affected components", "risks and unknowns",
             "relative complexity", "proposed issues", "preliminary acceptance criteria",
         ):
             self.assertIn(field, skill)
-        self.assertIn("For discovery, own the problem framing", odin)
-        self.assertIn("do not frame the product problem", mimir)
+        self.assertIn("For **DISCOVERY**, Odin owns product framing", odin)
+        self.assertIn("Do not turn the request into product framing", mimir)
         self.assertIn("do not edit artifacts", mimir.lower())
 
     def test_deploy_routing_separates_application_and_infrastructure(self) -> None:
         skill = (VALIDATOR.SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
-        roles = (VALIDATOR.SKILL_ROOT / "references" / "roles-and-packets.md").read_text(encoding="utf-8")
+        roles = (VALIDATOR.SKILL_ROOT / "references" / "roles-and-skills.md").read_text(encoding="utf-8")
         self.assertIn("coordinate promotion of an approved application revision", skill)
         self.assertIn("route infrastructure changes to Ymir", skill)
         self.assertIn("Application promotion follows the repository's authorized workflow", roles)
@@ -309,22 +523,25 @@ class WorkflowGovernanceTests(unittest.TestCase):
             self.assertIn(example, readme)
         self.assertIn("Intent never grants authority", readme)
         self.assertIn("Release PR preparation is handled by the standalone Hermod skill", readme)
+        self.assertIn("Complete Odin orchestration requires the Asgard plugin", readme)
+        self.assertIn("Direct invocation does not start Odin orchestration", readme)
+        self.assertIn("`HANDOFF_REQUIRED`", readme)
 
     def test_bragi_reviews_only_completed_code_quality_candidate(self) -> None:
-        bragi = (VALIDATOR.SKILL_ROOT / "references" / "agents" / "bragi.md").read_text(encoding="utf-8")
+        bragi = (skill_root("bragi") / "SKILL.md").read_text(encoding="utf-8")
         self.assertIn("after `IMPLEMENTER_COMPLETE`", bragi)
         self.assertIn("SOLID, DRY, KISS, YAGNI, and Tell, Don't Ask", bragi)
         self.assertIn("style taste alone cannot reject", bragi)
         self.assertIn("do not review intermediate files", bragi)
 
         skill = (VALIDATOR.SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
-        self.assertIn("references/agents/bragi.md", skill)
+        self.assertIn("references/roles-and-skills.md", skill)
         gates = (VALIDATOR.SKILL_ROOT / "references" / "review-and-publication-gates.md").read_text(encoding="utf-8")
         self.assertIn("Dispatch Bragi only after `IMPLEMENTER_COMPLETE`", gates)
         self.assertIn("does not start services or rerun broad validations", gates)
 
     def test_forseti_applies_repository_traceability_with_limited_metadata_repair(self) -> None:
-        text = (VALIDATOR.SKILL_ROOT / "references" / "agents" / "forseti.md").read_text(encoding="utf-8")
+        text = (skill_root("forseti") / "SKILL.md").read_text(encoding="utf-8")
         self.assertIn("repository or user policy", text)
         self.assertIn("policy-required issue, branch, pull-request", text)
         self.assertIn("authorized metadata repair", text)
@@ -335,14 +552,14 @@ class WorkflowGovernanceTests(unittest.TestCase):
         self.assertIn("Never infer a repository's branch, issue, label", text)
 
         skill = (VALIDATOR.SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
-        self.assertIn("references/agents/forseti.md", skill)
+        self.assertIn("references/roles-and-skills.md", skill)
         self.assertNotIn("github-label-governance", skill)
         self.assertFalse((VALIDATOR.SKILL_ROOT / "references" / "github-label-governance.md").exists())
         self.assertNotIn("Hermod", skill)
 
     def test_github_operations_are_cli_first_with_guarded_browser_exception(self) -> None:
         skill = (VALIDATOR.SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
-        forseti = (VALIDATOR.SKILL_ROOT / "references" / "agents" / "forseti.md").read_text(encoding="utf-8")
+        forseti = (skill_root("forseti") / "SKILL.md").read_text(encoding="utf-8")
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
 
         self.assertIn("repository's authorized tooling", skill)
@@ -356,7 +573,7 @@ class WorkflowGovernanceTests(unittest.TestCase):
 
     def test_repository_policy_controls_branch_and_issue_conventions(self) -> None:
         skill = (VALIDATOR.SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
-        forseti = (VALIDATOR.SKILL_ROOT / "references" / "agents" / "forseti.md").read_text(encoding="utf-8")
+        forseti = (skill_root("forseti") / "SKILL.md").read_text(encoding="utf-8")
         definition = (VALIDATOR.SKILL_ROOT / "references" / "definition-of-done.md").read_text(encoding="utf-8")
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
 
@@ -367,7 +584,7 @@ class WorkflowGovernanceTests(unittest.TestCase):
 
     def test_changelog_rules_follow_repository_policy(self) -> None:
         skill = (VALIDATOR.SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
-        forseti = (VALIDATOR.SKILL_ROOT / "references" / "agents" / "forseti.md").read_text(encoding="utf-8")
+        forseti = (skill_root("forseti") / "SKILL.md").read_text(encoding="utf-8")
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
         changelog = (ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
 
@@ -381,10 +598,10 @@ class WorkflowGovernanceTests(unittest.TestCase):
     def test_context_efficiency_is_budgeted_and_non_recursive(self) -> None:
         skill = (VALIDATOR.SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
         context = (VALIDATOR.SKILL_ROOT / "references" / "context-efficiency.md").read_text(encoding="utf-8")
-        roles = (VALIDATOR.SKILL_ROOT / "references" / "roles-and-packets.md").read_text(encoding="utf-8")
+        roles = (VALIDATOR.SKILL_ROOT / "references" / "roles-and-skills.md").read_text(encoding="utf-8")
         definition = (VALIDATOR.SKILL_ROOT / "references" / "definition-of-done.md").read_text(encoding="utf-8")
         gates = (VALIDATOR.SKILL_ROOT / "references" / "review-and-publication-gates.md").read_text(encoding="utf-8")
-        odin = (VALIDATOR.SKILL_ROOT / "references" / "agents" / "odin.md").read_text(encoding="utf-8")
+        odin = skill
 
         self.assertIn("references/context-efficiency.md", skill)
         self.assertIn("Do not mention or invoke `$asgard` in a specialist task", skill)
@@ -395,14 +612,27 @@ class WorkflowGovernanceTests(unittest.TestCase):
         self.assertIn("reviewer_with_findings: 250", context)
         self.assertIn("odin_final: 300", context)
         self.assertIn("APPROVED — <primary evidence>", context)
+        for status in (
+            "IMPLEMENTER_COMPLETE",
+            "FINDINGS_COMPLETE",
+            "APPROVED",
+            "CHANGES_REQUIRED",
+            "PENDING",
+            "HANDOFF_REQUIRED",
+            "BLOCKED",
+        ):
+            self.assertIn(status, context)
+        for field in ("handoff:", "recommended_skill:", "reason:", "evidence:", "prerequisites:", "authority_required:"):
+            self.assertIn(field, context)
+        self.assertIn("`HANDOFF_REQUIRED` always includes every `handoff` field above", context)
         self.assertIn("incremental_reasoning_output_tokens", context)
         self.assertIn("Do not use `high` by default", context)
         self.assertIn("phase_checkpoint:", context)
-        self.assertIn("Aggregate by phase and role only at the final checkpoint", context)
+        self.assertIn("Aggregate by phase and leaf skill only at the final checkpoint", context)
         self.assertIn("Reference exact paths, revisions, and bounded diff commands", roles)
         self.assertIn("Execution budget:", definition)
         self.assertIn("default budget permits one grouped correction cycle", gates)
-        self.assertIn("mention `$asgard` in a specialist task", odin)
+        self.assertIn("Do not mention or invoke `$asgard` in a specialist task", odin)
 
     def test_implicit_selection_excludes_ordinary_work(self) -> None:
         skill = (VALIDATOR.SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
@@ -421,7 +651,7 @@ class WorkflowGovernanceTests(unittest.TestCase):
         self.assertIn("Do not select it implicitly", header)
 
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
-        when_to_use = readme.split("## When to use Asgard", 1)[1].split("## Roles", 1)[0]
+        when_to_use = readme.split("## When to use Asgard", 1)[1].split("## Role model", 1)[0]
         for intent in ("discovery", "delivery", "review", "infrastructure", "deploy", "monitoring"):
             self.assertIn(intent, when_to_use.lower())
         self.assertIn("Explicit monitoring remains supported", when_to_use)

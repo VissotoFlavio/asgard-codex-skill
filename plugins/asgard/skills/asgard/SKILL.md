@@ -59,7 +59,7 @@ Do not create agents, branches, or isolated workspaces before the user approves 
 For repository changes, discover the repository's issue, branch, pull-request, and traceability policy before creating artifacts. Apply that policy when it exists; otherwise propose a lightweight convention without making it a governance blocker.
 
 Odin remains accountable for decomposition, delegation, integration, evidence review, and final acceptance. Never delegate acceptance of the complete delivery or act only as a router.
-Read [Odin's packet](references/agents/odin.md) only when a separate orchestration handoff or compact recovery context is needed.
+Read the [specialist catalog](references/roles-and-skills.md) only when routing is unclear. It identifies independent leaf skills; their instructions remain in their own skill roots and are not duplicated here.
 
 ## Select the smallest sufficient mode
 
@@ -81,29 +81,21 @@ Set a proportional execution budget and define phase boundaries. Read [context e
 
 When dispatch supports per-agent reasoning effort, apply the risk-based levels from the context-efficiency policy. Do not give every specialist the orchestrator's reasoning level; monitoring and deterministic operations stay minimal or low unless concrete ambiguity or risk requires escalation.
 
-Classify an activity by discipline only when that classification changes its implementation guidance or required capabilities. Load the [frontend discipline packet](references/disciplines/frontend.md) for user-visible interface work, the [backend discipline packet](references/disciplines/backend.md) for server-side work, the [database discipline packet](references/disciplines/database.md) for database structure or persisted-data evolution, the [infrastructure discipline packet](references/disciplines/infrastructure.md) for host, cloud, network, platform, or infrastructure-access work, and the [security discipline packet](references/disciplines/security.md) when Heimdall needs deep vulnerability analysis beyond the proportional default review. A cross-boundary activity may load multiple packets only when it cannot be decomposed without breaking ownership. Record each required skill and its availability before graph approval; do not claim that a capability was applied when it is unavailable.
+Classify an activity by discipline only when that classification changes its implementation guidance or required capabilities. Load the [frontend discipline guidance](references/disciplines/frontend.md) for user-visible interface work, the [backend discipline guidance](references/disciplines/backend.md) for server-side work, the [database discipline guidance](references/disciplines/database.md) for database structure or persisted-data evolution, the [infrastructure discipline guidance](references/disciplines/infrastructure.md) for host, cloud, network, platform, or infrastructure-access work, and the [security discipline guidance](references/disciplines/security.md) when `$heimdall` needs deep vulnerability analysis beyond the proportional default review. A cross-boundary activity may load multiple guidance documents only when it cannot be decomposed without breaking ownership. Record each required skill and its availability before graph approval; do not claim that a capability was applied when it is unavailable.
 
 ## Dispatch with minimal context
 
-Use Brokkr for bounded application implementation, Sindri instead for one inseparable application-architectural activity, Regin for database architecture and versioned database evolution, and Ymir for authorized infrastructure discovery, planning, execution, and verification. Use Mimir only to resolve a stated uncertainty. Load only the reference for each role actually dispatched:
+Use `$brokkr` for bounded application implementation, `$sindri` instead for one inseparable application-architectural activity, `$regin` for database architecture and versioned database evolution, and `$ymir` for authorized infrastructure discovery, planning, execution, and verification. Use `$mimir` only to resolve a stated uncertainty. Select review and governance leaf skills from the [specialist catalog](references/roles-and-skills.md) only when their independent boundary is required.
 
-- [Brokkr](references/agents/brokkr.md) or [Sindri](references/agents/sindri.md)
-- [Regin](references/agents/regin.md) for database activities
-- [Ymir](references/agents/ymir.md) for infrastructure activities
-- [Mimir](references/agents/mimir.md) when investigation is required
-- [Tyr](references/agents/tyr.md) for material rules, contracts, compatibility, persistence, or cross-boundary consistency
-- [Loki](references/agents/loki.md) for adversarial behavioral review
-- [Bragi](references/agents/bragi.md) for human-readable, maintainable code and context-sensitive SOLID, DRY, KISS, YAGNI, or Tell, Don't Ask review
-- [Heimdall](references/agents/heimdall.md) for security, privacy, isolation, abuse, or availability review
-- [Forseti](references/agents/forseti.md) for required issue, pull-request, and delivery traceability
+Odin dispatches each selected specialist using a task-local contract. It does not copy the specialist's complete instruction set into the task, and it does not ask one specialist to invoke another. Specialists are leaf skills: each acts only within its named boundary, returns `HANDOFF_REQUIRED` when another leaf skill is necessary, and never invokes Odin recursively. Odin alone selects and delegates specialists, routes handoffs, owns acceptance, and decides whether the user must provide more authority.
 
-Do not pass the full conversation by default. Give each agent only its role packet, activity contract, applicable workspace rules, relevant paths or candidate diff, stable dependencies, focused validation, and explicit exclusions. When the platform supports history selection, dispatch with no inherited conversation history (for example, `fork_turns="none"`) and put every required input in the task-local packet. If an agent must inherit history, justify that exception in the graph and do not use it for waiting, polling, CI observation, or other operational monitoring.
+Do not pass the full conversation by default. Give each specialist only its own skill guidance, activity contract, applicable workspace rules, relevant paths or candidate diff, stable dependencies, focused validation, and explicit exclusions. When the platform supports history selection, dispatch with no inherited conversation history (for example, `fork_turns="none"`) and put every required input in the task-local contract. If a specialist must inherit history, justify that exception in the graph and do not use it for waiting, polling, CI observation, or other operational monitoring.
 
-Do not mention or invoke `$asgard` in a specialist task. Odin has already applied the orchestration policy; specialists receive only the selected role packet and task-local contract. Require another skill only when that specialist genuinely needs its distinct discipline guidance.
+Do not mention or invoke `$asgard` in a specialist task. Odin has already applied the orchestration policy; specialists receive their own skill guidance and a task-local contract only. Require another skill only when that specialist genuinely needs its distinct discipline guidance.
 
 Treat waiting as an operational state, not a reason for another model turn. Do not dispatch reviewers while checks remain pending or restart Asgard merely to report unchanged state.
 
-When a discipline packet requires a skill, explicitly name that skill in the assigned agent's contract and require the agent to use it before making discipline-specific decisions. Repository and user instructions remain authoritative when skill guidance is generic or conflicts with established project conventions.
+When discipline guidance requires a skill, explicitly name that skill in the selected leaf skill's task-local contract and require it to be used before making discipline-specific decisions. Repository and user instructions remain authoritative when skill guidance is generic or conflicts with established project conventions.
 
 ## Validate once per activity
 

@@ -4,7 +4,7 @@ Persist profiles and inventories outside repositories and installed skills. Use 
 
 On first use of each profile, require separate read-only DISCOVER authority bound to the exact target, identity, scope, access level/principal, and credential mechanism; absence blocks connection. Keep metadata transient. Persistence consent is separate from connection authority: disclose the resolved destination and content classes and obtain explicit profile-scoped consent before writing. Record the policy; scope or destination changes require fresh consent. Refresh only consented, verified sections.
 
-For a containerized database on a VPS, also follow `references/database-vps-access.md`; tunnel availability and an opaque credential reference grant no database authority.
+For a containerized database on a VPS, also follow [VPS database access](database-vps-access.md); tunnel availability and an opaque credential reference grant no database authority.
 
 ## Profile
 
