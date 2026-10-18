@@ -308,6 +308,13 @@ class ContainedPathTests(unittest.TestCase):
             prompt = VALIDATOR.parse_agent_interface(metadata, name=name)["default_prompt"]
             self.assertIn(f"${name}", prompt, name)
 
+    def test_routing_catalog_has_one_boundary_per_direct_skill(self) -> None:
+        catalog = (VALIDATOR.SKILL_ROOT / "references" / "roles-and-skills.md").read_text(encoding="utf-8")
+
+        self.assertEqual(catalog.count("| Need | Direct skill | Boundary |"), 1)
+        for name in VALIDATOR.EXPECTED_SKILLS - {"asgard"}:
+            self.assertEqual(catalog.count(plugin_invocation(name)), 1, name)
+
     def test_asgard_discipline_guidance_is_loadable(self) -> None:
         disciplines = VALIDATOR.SKILL_ROOT / "references" / "disciplines"
         expected = {"backend", "database", "frontend", "infrastructure", "security"}
@@ -509,6 +516,22 @@ class WorkflowGovernanceTests(unittest.TestCase):
         self.assertNotIn("Technical Refinement record before mutation", forseti)
         self.assertIn("## Technical refinement", readme)
 
+    def test_kvasir_returns_the_shared_handoff_contract_when_refinement_cannot_continue(self) -> None:
+        kvasir = (skill_root("kvasir") / "SKILL.md").read_text(encoding="utf-8")
+
+        self.assertIn("never automatically invoke another Asgard skill or recursively invoke Odin", kvasir)
+        self.assertIn("Use `HANDOFF_REQUIRED` whenever the request leaves Kvasir's refinement boundary", kvasir)
+        for field in (
+            "HANDOFF_REQUIRED",
+            "recommended_skill: $asgard:<skill>",
+            "reason:",
+            "evidence:",
+            "prerequisites:",
+            "authority_required:",
+        ):
+            self.assertIn(field, kvasir)
+        self.assertIn("READY | NEEDS_DECISION | HANDOFF_REQUIRED | BLOCKED", kvasir)
+
     def test_intent_routing_preserves_authority_and_discovery_boundary(self) -> None:
         skill = (VALIDATOR.SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
         for intent in ("DISCOVERY", "DELIVERY", "REVIEW", "INFRASTRUCTURE", "DEPLOY", "MONITOR"):
@@ -556,6 +579,28 @@ class WorkflowGovernanceTests(unittest.TestCase):
         self.assertIn("Complete Odin orchestration requires the Asgard plugin", readme)
         self.assertIn("Direct invocation does not start Odin orchestration", readme)
         self.assertIn("`HANDOFF_REQUIRED`", readme)
+
+    def test_readme_explains_odin_routing_without_specialist_portraits(self) -> None:
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+
+        self.assertEqual(readme.count("<img"), 1)
+        self.assertIn('./plugins/asgard/assets/asgard-agents.png', readme)
+        self.assertIn("## Skill summary", readme)
+        self.assertIn("## Odin orchestration flow", readme)
+        self.assertIn("flowchart TD", readme)
+        for name in VALIDATOR.EXPECTED_SKILLS:
+            self.assertIn(plugin_invocation(name), readme)
+
+        flow = readme.split("```mermaid\n", 1)[1].split("\n```", 1)[0]
+        brokkr = flow.index("G[Brokkr implements or corrects the candidate]")
+        hermod = flow.index("O[Hermod opens the ready Pull Request]")
+        eir = flow.index("P[Eir reviews the Pull Request against the issue]")
+        self.assertLess(brokkr, hermod)
+        self.assertLess(hermod, eir)
+        self.assertIn("Q -->|No| S[Original implementer corrects the Pull Request candidate]", flow)
+        self.assertIn("S --> T[Eir verifies its corrected findings]", flow)
+        self.assertIn("T --> Q", flow)
+        self.assertIn("Q -->|Yes| R", flow)
 
     def test_bragi_reviews_only_completed_code_quality_candidate(self) -> None:
         bragi = (skill_root("bragi") / "SKILL.md").read_text(encoding="utf-8")

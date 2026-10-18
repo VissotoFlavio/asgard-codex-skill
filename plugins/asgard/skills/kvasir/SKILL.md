@@ -17,7 +17,18 @@ Use Kvasir for a requested technical refinement of a defined delivery. Do not us
 
 **Odin-orchestrated mode:** Treat Odin's task-local refinement packet as the complete boundary. It supplies the issue or demand, base state, decision to be resolved, relevant paths, required plan artifact, comment authority, validation expectations, exclusions, and protected-operation boundaries. Report the resulting refinement to Odin; Odin decides whether delivery proceeds.
 
-In either mode, never invoke Odin or another Asgard skill automatically. If another boundary or authority is needed, report the smallest missing decision or `BLOCKED`; the direct requester or Odin decides whether to route the work.
+In either mode, never automatically invoke another Asgard skill or recursively invoke Odin. When a different role, decision, or protected authority is needed, return:
+
+```text
+HANDOFF_REQUIRED
+recommended_skill: $asgard:<skill>
+reason: <why Kvasir cannot complete the bounded refinement>
+evidence: <issue, demand, code, decision, or policy facts>
+prerequisites: <missing scope, decision, evidence, or authority>
+authority_required: <specific protected authority, or none>
+```
+
+Use `HANDOFF_REQUIRED` whenever the request leaves Kvasir's refinement boundary or an exact protected authority is absent; do not relabel either condition as `BLOCKED`. Use `BLOCKED` only when a genuine prerequisite is unavailable and no role or authority handoff can resolve it. The direct requester or Odin decides whether to continue a recommended handoff.
 
 ## Establish scope and authority
 
@@ -47,6 +58,7 @@ Use one status in the refinement:
 
 - **READY**: scope, expected behavior, and implementation path are sufficiently clear to begin without a material decision.
 - **NEEDS_DECISION**: a named choice must be made before implementation; state the options and their effect.
+- **HANDOFF_REQUIRED**: another skill, decision owner, or protected authority must act; include the structured handoff record.
 - **BLOCKED**: required evidence, access, or an authoritative scope source is unavailable; state the blocker and the smallest next action.
 
 Do not mark a refinement `READY` while hiding a material assumption. Non-material assumptions may be recorded with their validation point.
@@ -58,7 +70,7 @@ Write in the issue's language when there is one; otherwise match the user's lang
 ```md
 ## Kvasir · Technical refinement
 
-**Status:** READY | NEEDS_DECISION | BLOCKED
+**Status:** READY | NEEDS_DECISION | HANDOFF_REQUIRED | BLOCKED
 **Analyzed base:** `<branch>` at `<revision>`
 **Relative complexity:** S | M | L — <brief reason>
 
@@ -112,4 +124,4 @@ The comment documents a recommended plan; it never grants authority to create a 
 
 ## Report
 
-Report the selected status, issue or demand source, analyzed revision, chosen minimal approach, unresolved decisions or blockers, and the comment URL when one was created. Keep the report decision-focused; do not include a broad repository summary or implementation work.
+Report the selected status, issue or demand source, analyzed revision, chosen minimal approach, unresolved decisions or blockers, required handoff and authority when applicable, and the comment URL when one was created. Keep the report decision-focused; do not include a broad repository summary or implementation work.
