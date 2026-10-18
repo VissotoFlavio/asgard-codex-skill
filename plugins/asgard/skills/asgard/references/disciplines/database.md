@@ -1,25 +1,17 @@
 # Database discipline
 
-Load for schema, migration, index, partition, or backfill work. Supplements Regin; grants no connection or mutation authority. Follow `references/database-state.md` for persisted state and `references/database-vps-access.md` for container access through a VPS.
+Load this guidance for schema, migration, index, partition, or backfill work. Route the activity to `$asgard:regin`; its skill-local guidance is canonical for database profiles, inventories, VPS container access, and phase-specific operational controls. This root guidance grants no connection or mutation authority.
 
 ## Activity contract
 
-Define engine/version, artifacts, entities, current/desired structure, compatibility, volume, sequence, and evidence. Analyze the whole model.
+Before dispatch, record engine/version, artifacts, entities, current/desired structure, compatibility, volume, sequence, and evidence in the task-local contract.
 
-Specify columns/types/nullability/defaults, PK/FK, constraints, indexes, relations, and partitions. Check integrity, query paths, referential actions, order, and compatibility. Prefer expand/contract; contract only after verified consumers/data and separate approval.
+Include the affected columns/types/nullability/defaults, keys, constraints, indexes, relations, partitions, query paths, referential actions, ordering, and compatibility assumptions. Require an expand/contract approach; contract only after verified consumers/data and separate approval.
 
-For each migration/backfill, state transactions, locks, volume, batching, idempotency, checkpoints, resumability, partial failure, verification, reversibility, and recovery. Flag lossy steps.
+For each migration/backfill, identify transactions, locks, volume, batching, idempotency, checkpoints, resumability, partial failure, verification, reversibility, recovery, and lossy steps for the `$asgard:regin` contract.
 
-## Authority phases
+## Dispatch and review boundary
 
-- `AUTHOR`: edit versioned schema, migration, backfill, and verification artifacts only; never connect or run DDL/DML.
-- Before `VALIDATE`/`APPLY`, require a clean-tree revision or canonical digest of every artifact, including untracked. Divergence invalidates evidence and authority.
-- `VALIDATE`: execute that candidate only on an authorized isolated target with synthetic or approved sanitized data.
-- `APPLY`: any durable, runtime, or non-isolated database mutation; require exact candidate/environment authority. Manual APPLY is Regin's only with a declared adapter; absence blocks. The repository's authorized deploy automation executes.
-- Before execution, freshly compare expected and observed cluster/server, database/catalog, schema/tenant, and effective principal/role. Missing or mismatched fields fail closed.
+Require `$asgard:regin` to apply its canonical `AUTHOR`/`VALIDATE`/`APPLY` authority model, target verification, least privilege, drift, partial-failure, and recovery controls. The task-local contract must state the permitted phase and its exact authority; the root guidance does not restate or grant those controls.
 
-Use least privilege per phase. Owner/superuser or grants need justification and separate Ymir authorization. Ymir owns infrastructure, roles, credentials, and connectivity. No phase implies sensitive-data access.
-
-Drift invalidates plan/authority. Stop on identity ambiguity, unsafe locks, unbounded volume, or unverifiable recovery. After partial failure, halt mutation; rediscover actual migration state, checkpoints, and commits; report them; require new authority bound to observed state before continue, repair, retry, or rollback.
-
-Route integrity/compatibility to Tyr, recovery to Loki, and security/availability to Heimdall. Regin never self-approves.
+Select `$asgard:tyr` for material integrity or compatibility review, `$asgard:loki` for recovery behavior, and `$asgard:heimdall` for security or availability review when their independent boundary is justified. Odin selects these leaf skills; `$asgard:regin` never self-approves.

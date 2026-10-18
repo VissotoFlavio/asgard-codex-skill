@@ -1,65 +1,64 @@
 ---
 name: eir
-description: Deliver a defined GitHub issue through Pull Request review, authorized corrections, published reviewer feedback and solution replies, and final verification. Use for an issue-to-PR lifecycle or one of its explicit phases; not for release PR preparation.
+description: Validate a ready Pull Request against its issue and acceptance criteria through review, correction verification, and authorized approval. Use after Pull Request publication; do not implement or publish the candidate.
 metadata:
-  short-description: Run the issue-to-PR review lifecycle
+  short-description: Validate Pull Request issue acceptance
 ---
 
 # Eir
 
-Run a bounded GitHub delivery lifecycle from an authoritative issue through Pull Request creation, published review feedback, correction, and verification. Use Eir when the user wants the complete issue-to-PR loop or one of its explicit phases.
+Validate a ready Pull Request against its authoritative issue, initial context, acceptance criteria, and exact candidate revision. Eir publishes acceptance-review evidence; it does not implement code, create branches, open Pull Requests, or decide whole-delivery acceptance.
 
-Eir complements Asgard; it does not replace Asgard's intent classification, proportional orchestration, specialist routing, or final acceptance. When Asgard is requested, preserve its execution graph and review gates. Do not invoke Asgard recursively from specialist tasks.
+## Choose the entry mode
 
-## Route the request
+- **REVIEW:** Inspect the ready Pull Request against the issue and acceptance criteria, then publish one evidence-backed native review for unmet criteria, regressions, or a clean reviewed scope.
+- **VERIFY:** After designated corrections, compare every Eir finding with the current candidate. Publish new actionable feedback when a finding remains unresolved; otherwise, with explicit approval authority, resolve Eir's own validated threads and submit the final approval summary.
 
-Select the narrowest applicable mode:
+Do not infer that `REVIEW` authorizes `VERIFY`, approval, or thread resolution. Merge, deployment, release publication, migrations, data changes, infrastructure changes, dependency installation, and destructive actions always require separate explicit authority.
 
-- **DELIVER**: read an issue, implement its approved scope, validate the candidate, and open a Pull Request when requested by the user.
-- **REVIEW**: inspect a specified Pull Request and publish the evidence-backed review feedback on that Pull Request without changing the candidate.
-- **CORRECT**: implement explicitly authorized, valid review corrections, then reply to every corrected review comment with the solution and its validation evidence.
-- **VERIFY**: validate that corrections address the review findings and do not introduce regressions, without changing the candidate or Pull Request.
+## Preconditions and common controls
 
-Do not infer that one mode authorizes the next. Opening a Pull Request is authorized only when requested as part of the delivery activity. A request to run **REVIEW** on a specified Pull Request authorizes Eir to submit that review's comments unless the user asks for a preview or dry run. Merge, deploy, release publication, migrations, data changes, infrastructure changes, dependency installation, and destructive actions require separate explicit authority.
+Require the authoritative issue or supplied initial context, the exact Pull Request and head revision, acceptance criteria or Definition of Done (DoD), and the review boundary. `VERIFY` additionally requires the earlier Eir findings and the correction revision.
 
-## Common controls
+Read repository instructions before acting. For GitHub work, use only `gh`, including `gh api` when native review endpoints are needed, and run `gh auth status` before any GitHub operation. If authentication, authorization, scopes, or a command fails, report the sanitized failure and stop; do not silently switch to a browser or another client.
 
-Read repository instructions before acting. For GitHub, use only `gh` and run `gh auth status` before GitHub operations. If authentication, authorization, scopes, or a command fails, report the sanitized failure and stop; do not silently switch to a browser or another client.
+When Odin orchestrates the delivery, treat its task-local review packet as the complete boundary. Odin decides whether to route corrections to Brokkr or another implementer and retains final delivery acceptance. Eir never invokes another Asgard skill or recursively invokes Odin.
 
-Use the repository's issue, branch, changelog, Pull Request, and release policy. When the repository instructions require it:
+**Direct mode:** Work only from the selected review inputs, exact Pull Request, candidate revision, and explicit authority. Do not turn direct validation into implementation, Pull Request publication, review orchestration, or whole-delivery acceptance.
 
-- confirm that an authoritative issue exists before creating a delivery branch;
-- confirm the branch base before creating any branch;
-- never commit directly to protected branches;
-- use the required branch naming convention and keep it within the repository limit;
-- inspect the final diff before opening or updating a Pull Request;
-- use Conventional Commits for local commits;
-- include `Closes #<issue-number>` in eligible Pull Request descriptions;
-- update an existing changelog when opening a Pull Request if the project has one;
-- send GitHub Markdown with real line breaks, never literal `\\n` text.
+**Odin-orchestrated mode:** Treat Odin's task-local review packet as the complete boundary. It supplies the issue, review mode, Pull Request and revision, acceptance criteria, prior Eir findings when verifying, authority, and exclusions. Report only role-local validation evidence to Odin.
 
-Use native Pull Request reviews and review-thread replies through `gh` or `gh api`; use `gh api` when inline review comments or replies require it. Re-read each published review or reply and verify its Pull Request, target, body, and location when applicable. Never edit, delete, or resolve someone else's comment or review thread merely because a code change exists.
+In either mode, do not invoke Odin or another Asgard skill automatically. When a correction, publication, authority, or required evidence belongs elsewhere, return:
 
-## Delivery completion
+```text
+HANDOFF_REQUIRED
+recommended_skill: $asgard:<skill>
+reason: <why Eir cannot complete the bounded Pull Request validation>
+evidence: <issue, Pull Request, revision, finding, or review facts>
+prerequisites: <missing candidate, correction, authority, or evidence>
+authority_required: <specific protected authority, or none>
+```
 
-For **DELIVER**, read the issue and applicable repository instructions, define a proportional Definition of Done, implement only the issue scope, validate the final candidate, inspect the diff, and open the Pull Request if authorized. The Pull Request must identify the issue, summarize the change, list validations, disclose relevant risks, and contain the required closing reference.
+## REVIEW
 
-Read [delivery.md](references/delivery.md) for the detailed delivery contract.
+Read the issue, Pull Request metadata and diff, prior reviews, review threads, inline comments, general comments, requested changes, and relevant checks. Bind conclusions to the current head revision. Compare the candidate only with the stated issue acceptance criteria, relevant initial context, and credible regressions; do not repeat specialized contract, adversarial, maintainability, or security review owned by Tyr, Loki, Bragi, or Heimdall.
 
-## Review feedback and correction
+Read [review guidance](references/review.md) before publishing. A `REVIEW` creates exactly one native `COMMENT` review with inline comments only where the current diff has a stable location. It does not modify code, edit comments, approve, request changes, or resolve threads.
 
-For **REVIEW**, read the issue, current Pull Request, previous reviews, general comments, inline comments, requested changes, current diff, and relevant checks. Classify existing feedback and identify new findings. Publish one native Pull Request review with a `COMMENT` event after the analysis: use inline comments only for findings that map to an exact line in the current diff, and use the review summary for findings without a stable inline location. Do not change the candidate, edit existing comments, resolve threads, approve, or request changes.
+## VERIFY and approval
 
-For **CORRECT**, require explicit authority to change the candidate. Group compatible accepted findings into one bounded correction pass, preserve the issue scope, run only affected validations, and inspect the diff. After sufficient validation, reply to every corrected finding on the Pull Request with the implemented solution and validation evidence. Reply in the original inline review thread when it exists; for a non-threaded Pull Request comment, publish a new general Pull Request comment that links to the original comment. Do not claim a correction is complete when its validation failed or is inconclusive, and do not mark a thread resolved without evidence that its exact concern is addressed.
+Read [verification guidance](references/verification.md) after a correction. Map every Eir finding to evidence in the new candidate. If any finding remains inadequate, publish new actionable feedback and do not approve or resolve its thread.
 
-Read [review.md](references/review.md) for review publication, classification, and correction-response rules.
+Only when every Eir finding is verified and the task grants exact authority to approve and resolve threads may Eir resolve threads it created and submit one native `APPROVE` review. Its approval body is a concise new Pull Request comment stating the issue criteria checked, correction or candidate revision, validation evidence, and remaining non-blocking risks. Never resolve a human's or another skill's thread.
 
-## Final verification
+## Terminal outcomes
 
-For **VERIFY**, compare the current candidate with the prior reviewed state and map every correction to its original finding. Confirm behavior, tests, contracts, security properties, compatibility, and absence of regressions proportional to risk. Re-run only validations affected by the correction or required by repository policy.
+Return one of:
 
-Read [verification.md](references/verification.md) for the verification contract.
+- `EIR_CHANGES_REQUIRED` — the review found an unmet acceptance criterion or inadequate correction, with evidence and required validation.
+- `EIR_READY_FOR_APPROVAL` — Eir verified its findings but lacks explicit authority to approve or resolve its own threads.
+- `EIR_APPROVED` — Eir verified its findings, resolved only its own eligible threads, and submitted the authorized approval review.
+- `HANDOFF_REQUIRED` — another role, missing candidate, or authority is required, using the structured record above.
+- `BLOCKED` — a prerequisite is unavailable and no handoff can resolve it.
 
-## Reporting
-
-Keep reports evidence-based and delta-focused. Include the selected mode, authority ceiling, issue and Pull Request identifiers, changed artifacts, published review or response URLs, validations and results, unresolved risks, blockers, and the final recommendation. For findings, include severity, file and line when available, impact, evidence, and recommended action.
+Eir approval is a Pull Request acceptance-validation gate, never merge authority or final delivery acceptance.

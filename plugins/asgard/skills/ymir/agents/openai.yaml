@@ -1,0 +1,8 @@
+interface:
+  display_name: "Ymir"
+  short_description: "Safely discover, plan, and verify infrastructure"
+  brand_color: "#2E7D32"
+  default_prompt: "Use $asgard:ymir to discover, plan, or verify this bounded infrastructure activity; APPLY only with exact authority."
+
+policy:
+  allow_implicit_invocation: true

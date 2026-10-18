@@ -1,6 +1,6 @@
 # Frontend discipline
 
-Load this packet for an activity that owns a user-visible web interface, interaction, responsive layout, or interface copy. It supplements Brokkr or Sindri; it does not replace the implementer's role packet or create shared ownership.
+Load this guidance for an activity that owns a user-visible web interface, interaction, responsive layout, or interface copy. It supplements the selected `$asgard:brokkr` skill; it does not replace that skill or create shared ownership.
 
 ## Design capability
 

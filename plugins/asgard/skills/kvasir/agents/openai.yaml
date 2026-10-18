@@ -3,7 +3,7 @@ interface:
   short_description: "Create evidence-backed technical refinements"
   icon_large: "./assets/kvasir.png"
   brand_color: "#C9973E"
-  default_prompt: "Use $kvasir to refine this issue into the smallest implementation-ready technical plan."
+  default_prompt: "Use $asgard:kvasir in the Asgard plugin, or $kvasir when Kvasir is installed independently, to refine this issue into the smallest implementation-ready technical plan."
 
 policy:
   allow_implicit_invocation: true

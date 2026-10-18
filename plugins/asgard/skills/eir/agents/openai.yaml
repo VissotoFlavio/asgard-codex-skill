@@ -1,8 +1,8 @@
 interface:
   display_name: "Eir"
-  short_description: "Deliver and review an issue-to-PR lifecycle"
+  short_description: "Validate Pull Request issue acceptance"
   brand_color: "#C9973E"
-  default_prompt: "Use $eir to deliver this issue through Pull Request review and final verification."
+  default_prompt: "Use $asgard:eir in the Asgard plugin, or $eir when installed independently, to validate this ready Pull Request against its issue acceptance criteria."
 
 policy:
   allow_implicit_invocation: true

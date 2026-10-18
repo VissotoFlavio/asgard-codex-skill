@@ -16,24 +16,27 @@ Primary failure mode:
 Applicable invariants:
 Focused validation and end-of-activity command:
 Rejection conditions:
-Implementer: Brokkr | Sindri | Regin | Ymir
+Implementing skill: $asgard:brokkr | $asgard:regin | $asgard:ymir
 Mode: Lean | Standard | Critical
-Required reviewers and rationale:
+Required reviewer skills and rationale:
+Bragi recommendation and Odin/direct-requester decision: $asgard:bragi | not applicable
+Pull Request publication: $asgard:hermod | not applicable
+Pull Request acceptance validation: $asgard:eir | not applicable
 Execution budget: simultaneous agents | correction cycles | report words | inherited history
-Delivery governance and traceability: Forseti | not applicable
+Delivery governance and traceability: $asgard:forseti | not applicable
 Repository-policy artifacts and edit authority:
 Excluded or unauthorized operations:
 ```
 
 Add execution directory, isolation, branch or revision, shared files, conflict risk, publication target, or external authority only when applicable.
 
-Omit discipline and required skills when they do not change execution. For a .NET backend activity, record `Backend` and `$dotnet-best-practices: AVAILABLE` before dispatch. For frontend work, record the applicable implementation and independent review skills from the frontend discipline packet. For database work, record Regin, technology, AUTHOR/VALIDATE/APPLY boundary, target class, profile and inventory state, schema base state, and migration/recovery authority. For a VPS database, also record Ymir, verified SSH/tunnel identities, exposure, per-phase credential references, and authority separation. For infrastructure work, record Ymir, the transport/provider, expected destination identity, access level, and required provider capabilities. For deep vulnerability analysis, record `Security`, Heimdall, each selected optional security skill, whether it is available, whether installation was offered, and any user-approved fallback. Treat an unavailable required skill or review source as a planning blocker unless the user approves a stated fallback.
+Omit discipline and required skills when they do not change execution. For a .NET backend activity, record `Backend` and `$dotnet-best-practices: AVAILABLE` before dispatch. For frontend work, record the applicable implementation and independent review skills from the frontend discipline guidance. For database work, record the `$asgard:regin` leaf skill, technology, AUTHOR/VALIDATE/APPLY boundary, target class, profile and inventory state, schema base state, and migration/recovery authority. For a VPS database, also record the `$asgard:ymir` leaf skill, verified SSH/tunnel identities, exposure, per-phase credential references, and authority separation. For infrastructure work, record the `$asgard:ymir` leaf skill, the transport/provider, expected destination identity, access level, and required provider capabilities. For deep vulnerability analysis, record `Security`, the `$asgard:heimdall` leaf skill, each selected optional security skill, whether it is available, whether installation was offered, and any user-approved fallback. Treat an unavailable required skill or review source as a planning blocker unless the user approves a stated fallback.
 
 ## Scale detail to risk
 
-- **Lean:** record the observable outcome, owned artifacts, focused validation, primary failure mode, and exclusions. Add a specialist reviewer only for an identified risk; use Bragi when maintainability is an explicit acceptance concern.
-- **Standard:** also record material compatibility, domain, authorization, data, concurrency, and cross-boundary invariants; require Loki and Heimdall, Tyr when contracts or rules are material, and Bragi when production code is added or structurally changed.
-- **Critical:** make every relevant security, privacy, persistence, transaction, isolation, abuse, availability, rollback, and negative-test expectation explicit; require Bragi for production-code candidates.
+- **Lean:** record the observable outcome, owned artifacts, focused validation, primary failure mode, and exclusions. Add a specialist reviewer only for an identified risk; consider Brokkr's Bragi recommendation when maintainability is an explicit acceptance concern.
+- **Standard:** also record material compatibility, domain, authorization, data, concurrency, and cross-boundary invariants; require Loki and Heimdall, Tyr when contracts or rules are material, and record Odin's or the direct requester's decision on Brokkr's Bragi recommendation when production code is added or structurally changed.
+- **Critical:** make every relevant security, privacy, persistence, transaction, isolation, abuse, availability, rollback, and negative-test expectation explicit; consider the recorded Bragi recommendation proportionate to the candidate's maintenance risk.
 
 Avoid generic invariant checklists. An invariant belongs in the contract only when the activity can affect it.
 
@@ -41,10 +44,10 @@ When refinement is useful or policy-required, record it in the repository-design
 
 Default to at most three simultaneous agents, one grouped correction cycle, 400 report words per agent, and no inherited conversation history. These are decision budgets, not acceptance gates. Increase only the field required by a documented risk or indivisible dependency, and record the reason before dispatch. A failed correction cycle stops for Odin to reassess rather than spawning an open-ended retry chain.
 
-Schedule executable validation once at the end of implementation. If an earlier run is required to reproduce a defect or test a high-risk assumption, record that exception in the contract. Bragi reviews only the completed immutable candidate and does not trigger per-file services, builds, or broad test suites.
+Schedule executable validation once at the end of implementation. If an earlier run is required to reproduce a defect or test a high-risk assumption, record that exception in the contract. Every Brokkr completion records `BRAGI_RECOMMENDED`; Odin or the direct requester decides whether to invoke Bragi. Bragi reviews only a completed immutable candidate and does not trigger per-file services, builds, or broad test suites.
 
 ## Completion evidence
 
-Record the exact candidate revision or diff, changed artifacts, DoD result, focused validation, required reviewer decisions, deviations, out-of-scope changes, and residual risks. A single `APPROVED` may cover a reviewer with no findings; do not repeat its full packet.
+Record the exact candidate revision or diff, changed artifacts, DoD result, focused validation, required reviewer decisions, deviations, out-of-scope changes, and residual risks. A single `APPROVED` may cover a reviewer leaf skill with no findings; do not repeat its full guidance.
 
 Odin accepts only evidence for the same candidate. Passing tests, implementer completion, or one reviewer approval is insufficient when other gates are required.

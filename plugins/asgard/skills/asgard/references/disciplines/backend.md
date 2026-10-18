@@ -1,6 +1,6 @@
 # Backend discipline
 
-Load this packet for an activity that owns server-side application behavior, APIs, services, persistence, integrations, or background processing. It supplements Brokkr or Sindri; it does not replace the implementer's role packet or create shared ownership.
+Load this guidance for an activity that owns server-side application behavior, APIs, services, persistence, integrations, or background processing. It supplements the selected `$asgard:brokkr` skill; it does not replace that skill or create shared ownership.
 
 ## .NET capability
 
@@ -16,4 +16,4 @@ Put only affected invariants in the DoD. Consider public contracts, authorizatio
 
 Database migrations, infrastructure changes, deployment, and new dependencies remain unauthorized unless the user explicitly grants that authority.
 
-Load the database discipline packet and route structural ownership to Regin when work changes schema, keys, constraints, indexes, relationships, migrations, backfills, or database compatibility. Backend and Database may both apply; neither subsumes the other.
+Load the database discipline guidance and route structural ownership to `$asgard:regin` when work changes schema, keys, constraints, indexes, relationships, migrations, backfills, or database compatibility. Backend and Database may both apply; neither subsumes the other.

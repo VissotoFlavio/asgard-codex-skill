@@ -1,0 +1,8 @@
+interface:
+  display_name: "Brokkr"
+  short_description: "Implement issue tasks and PR corrections"
+  brand_color: "#C9973E"
+  default_prompt: "Use $asgard:brokkr to implement this bounded issue, task, or designated Pull Request correction without publishing the Pull Request."
+
+policy:
+  allow_implicit_invocation: true

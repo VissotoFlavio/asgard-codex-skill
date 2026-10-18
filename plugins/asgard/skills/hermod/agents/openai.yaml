@@ -1,8 +1,8 @@
 interface:
   display_name: "Hermod"
-  short_description: "Prepare and open release Pull Requests"
+  short_description: "Publish normal and release Pull Requests"
   brand_color: "#4D8CFF"
-  default_prompt: "Use $hermod to prepare and open a release Pull Request from develop to master."
+  default_prompt: "Use $asgard:hermod in the Asgard plugin, or $hermod when installed independently, to publish this ready normal or release Pull Request."
 
 policy:
   allow_implicit_invocation: true

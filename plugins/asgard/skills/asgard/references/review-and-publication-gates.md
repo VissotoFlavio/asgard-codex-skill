@@ -6,13 +6,13 @@ After the implementer stops editing, bind every review to the same immutable dif
 
 Mode determines the minimum gate:
 
-- **Lean:** Odin; add Tyr, Loki, Bragi, or Heimdall only for an identified material risk.
-- **Standard:** Odin, Loki, and Heimdall; add Tyr for material rules, contracts, compatibility, persistence, or cross-boundary consistency, and Bragi when production code is added or structurally changed.
-- **Critical:** Odin plus every applicable independent specialist, with explicit negative and security evidence; Bragi is required for production-code candidates.
+- **Lean:** Odin; add Tyr, Loki, or Heimdall only for an identified material risk, and consider Brokkr's Bragi recommendation when maintainability is relevant.
+- **Standard:** Odin, Loki, and Heimdall; add Tyr for material rules, contracts, compatibility, persistence, or cross-boundary consistency, and record Odin's decision on Brokkr's Bragi recommendation when production code is added or structurally changed.
+- **Critical:** Odin plus every applicable independent specialist, with explicit negative and security evidence; consider Brokkr's recorded Bragi recommendation against the candidate's maintenance risk.
 
 Independent reviewers remain read-only and must not share the implementer's context as their only evidence. Forseti's only exception is the authorized, idempotent insertion of an unambiguous closing reference into an eligible delivery pull-request body. Disclose limitations when genuine independence is unavailable.
 
-Dispatch Bragi only after `IMPLEMENTER_COMPLETE` against the stable candidate, never after each edited file. Bragi may consume existing static-analysis evidence but does not start services or rerun broad validations. Its blocking findings require concrete comprehension or maintenance impact; preferences remain non-blocking recommendations.
+Every Brokkr completion records `BRAGI_RECOMMENDED` with the candidate, scope, and rationale. It is not a gate and does not invoke Bragi automatically: Odin or the direct requester decides whether the recommendation warrants an independent Bragi review. When selected, dispatch Bragi only after `IMPLEMENTER_COMPLETE` against the stable candidate, never after each edited file. Bragi may consume existing static-analysis evidence but does not start services or rerun broad validations. Its blocking findings require concrete comprehension or maintenance impact; preferences remain non-blocking recommendations.
 
 ## Correct proportionally
 
@@ -38,13 +38,14 @@ When multiple activities are combined, validate and review their integration sur
 
 ## Complete concisely
 
-Record the candidate, DoD result, required approvals, focused validation, deviations, out-of-scope changes, and residual risks. Omit empty fields and repeated role instructions. Distinguish precisely:
+Record the candidate, DoD result, required approvals, focused validation, deviations, out-of-scope changes, and residual risks. Omit empty fields and repeated leaf-skill guidance. Distinguish precisely:
 
-Reference the candidate revision and bounded paths instead of reproducing its full diff. For passing validation, record the command, conclusion, and artifact or run URL; include output only for a concise failure excerpt. A reviewer approval needs one decision line plus material findings, not a restatement of its packet or the complete DoD.
+Reference the candidate revision and bounded paths instead of reproducing its full diff. For passing validation, record the command, conclusion, and artifact or run URL; include output only for a concise failure excerpt. A reviewer approval needs one decision line plus material findings, not a restatement of its leaf-skill guidance or the complete DoD.
 
 ```text
-IMPLEMENTER_COMPLETE != APPROVED
-APPROVED             != PUBLISHED
+IMPLEMENTER_COMPLETE != PUBLISHED
+PUBLISHED            != EIR_APPROVED
+EIR_APPROVED         != ODIN_ACCEPTED
 CHANGE_OPEN          != INTEGRATED
 ```
 
@@ -52,4 +53,6 @@ CHANGE_OPEN          != INTEGRATED
 
 Applicable repository rules and explicit user authority control commits, pushes, change requests, merges, migrations, deployments, dependencies, infrastructure, tags, releases, and destructive operations. Internal Asgard approval grants none of them.
 
-When traceability policy applies, require Forseti to verify the policy-required artifacts available at that phase before merge or publication. Release PR preparation is handled by the standalone Hermod skill.
+When Pull Request publication is authorized, Hermod opens the ready candidate as a normal or release Pull Request. Eir then validates the ready Pull Request against the authoritative issue and acceptance criteria: `REVIEW` publishes one COMMENT review; `VERIFY` rechecks Eir's own findings after a Brokkr correction. Eir may approve only with exact approval authority and may resolve only its own threads with exact resolution authority. Eir approval is never merge authority or Odin's final delivery acceptance.
+
+When traceability policy applies, require Forseti to verify the policy-required artifacts available at that phase before merge or publication.
