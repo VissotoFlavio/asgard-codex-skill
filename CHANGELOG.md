@@ -6,15 +6,17 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+## [0.20.0] - 2026-10-18
+
 ### Fixed
 
-- Clarified plugin-qualified skill invocation and standalone workflow installation guidance ([issue #158](https://github.com/VissotoFlavio/asgard-codex-skill/issues/158)).
+- Clarified plugin-qualified skill invocation and standalone workflow installation guidance ([issue #158](https://github.com/VissotoFlavio/asgard-codex-skill/issues/158), [PR #159](https://github.com/VissotoFlavio/asgard-codex-skill/pull/159)).
 
 ### Changed
 
-- Consolidated application implementation in Brokkr, made Hermod the authorized publisher for normal and release Pull Requests, and refocused Eir on Pull Request acceptance validation ([issue #160](https://github.com/VissotoFlavio/asgard-codex-skill/issues/160)).
+- Consolidated application implementation in Brokkr, made Hermod the authorized publisher for normal and release Pull Requests, and refocused Eir on Pull Request acceptance validation ([issue #160](https://github.com/VissotoFlavio/asgard-codex-skill/issues/160), [PR #161](https://github.com/VissotoFlavio/asgard-codex-skill/pull/161)).
 
-- Split Asgard's specialist responsibilities into direct leaf skills while retaining Odin-only orchestration and explicit handoffs ([issue #156](https://github.com/VissotoFlavio/asgard-codex-skill/issues/156)).
+- Split Asgard's specialist responsibilities into direct leaf skills while retaining Odin-only orchestration and explicit handoffs ([issue #156](https://github.com/VissotoFlavio/asgard-codex-skill/issues/156), [PR #157](https://github.com/VissotoFlavio/asgard-codex-skill/pull/157)).
 
 ## [0.19.0] - 2026-10-16
 
@@ -216,7 +218,8 @@ Release tracking: [issue #40](https://github.com/VissotoFlavio/asgard-codex-skil
 
 - Add Forseti as the delivery-governance specialist, with independent issue-to-release traceability gates and official artwork ([issue #38](https://github.com/VissotoFlavio/asgard-codex-skill/issues/38), [PR #39](https://github.com/VissotoFlavio/asgard-codex-skill/pull/39)).
 
-[Unreleased]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.19.0...develop
+[Unreleased]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.20.0...develop
+[0.20.0]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.19.0...v0.20.0
 [0.19.0]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.18.0...v0.19.0
 [0.18.0]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.17.0...v0.18.0
 [0.17.0]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.16.0...v0.17.0
