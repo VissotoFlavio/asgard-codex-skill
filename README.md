@@ -167,6 +167,26 @@ When the repository requires traceability, Forseti checks the policy-required ev
 
 When policy requires a provider-recognized closing reference, Forseti may repair one absent, unambiguous reference only with authority for that exact edit. Missing evidence that cannot exist yet is `PENDING`; a violated repository invariant is `CHANGES_REQUIRED`. Forseti's approval covers governance only.
 
+## Prerequisites and conditional capabilities
+
+To use the plugin, you need a Codex environment with plugin support and the `codex plugin` command available. Start a new Codex task after installing or updating the plugin so its skills are loaded. No Python, Node.js, database client, cloud CLI, or GitHub account is required for ordinary local planning, implementation, or review work.
+
+The source-installation method below additionally requires Git. Git is not a runtime dependency after the plugin is installed.
+
+### GitHub activities
+
+GitHub access is conditional: it is required only when the selected skill must read or change GitHub artifacts. For example, Kvasir comments on an explicitly supplied issue, Hermod opens a Pull Request, and Eir reviews a Pull Request. In those cases, the environment needs:
+
+- the repository-approved GitHub tooling; when it is `gh`, the GitHub CLI must be installed and authenticated for the intended account and host;
+- access and scopes appropriate to the exact repository operation; and
+- explicit authority for any mutation, such as commenting, opening a Pull Request, approving, or resolving an Eir-owned thread.
+
+If the required GitHub capability, authentication, scope, or authority is unavailable, the selected skill reports the bounded blocker or `HANDOFF_REQUIRED`; it does not silently switch clients or broaden its authority.
+
+### Repository development only
+
+Python, PyYAML, and the repository test tooling are needed only to develop or validate this plugin repository. They are not requirements for people or agents running an installed Asgard plugin.
+
 ## Install the plugin
 
 The `master` branch contains the latest stable release:
