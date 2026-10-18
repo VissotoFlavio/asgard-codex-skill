@@ -17,7 +17,7 @@ In either mode, this is a leaf skill. Never automatically invoke another Asgard 
 
 ```text
 HANDOFF_REQUIRED
-recommended_skill: $<skill>
+recommended_skill: $asgard:<skill>
 reason: <why the uncertainty cannot be resolved read-only by Mimir>
 evidence: <paths, observed state, or source facts>
 prerequisites: <information, stable state, or artifacts required before handoff>

@@ -22,4 +22,4 @@ Use least privilege per phase. Owner/superuser or grants need justification and 
 
 Drift invalidates plan/authority. Stop on identity ambiguity, unsafe locks, unbounded volume, or unverifiable recovery. After partial failure, halt mutation; rediscover actual migration state, checkpoints, and commits; report them; require new authority bound to observed state before continue, repair, retry, or rollback.
 
-When integrity/compatibility, recovery behavior, or security/availability needs an independent role, return `HANDOFF_REQUIRED` recommending `$tyr`, `$loki`, or `$heimdall` respectively; never invoke it. Regin never self-approves.
+When integrity/compatibility, recovery behavior, or security/availability needs an independent role, return `HANDOFF_REQUIRED` recommending `$asgard:tyr`, `$asgard:loki`, or `$asgard:heimdall` respectively; never invoke it. Regin never self-approves.

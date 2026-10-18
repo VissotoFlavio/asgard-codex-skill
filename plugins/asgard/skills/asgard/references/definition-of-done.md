@@ -16,18 +16,18 @@ Primary failure mode:
 Applicable invariants:
 Focused validation and end-of-activity command:
 Rejection conditions:
-Implementing leaf skill: $brokkr | $sindri | $regin | $ymir
+Implementing leaf skill: $asgard:brokkr | $asgard:sindri | $asgard:regin | $asgard:ymir
 Mode: Lean | Standard | Critical
 Required reviewer leaf skills and rationale:
 Execution budget: simultaneous agents | correction cycles | report words | inherited history
-Delivery governance and traceability: $forseti | not applicable
+Delivery governance and traceability: $asgard:forseti | not applicable
 Repository-policy artifacts and edit authority:
 Excluded or unauthorized operations:
 ```
 
 Add execution directory, isolation, branch or revision, shared files, conflict risk, publication target, or external authority only when applicable.
 
-Omit discipline and required skills when they do not change execution. For a .NET backend activity, record `Backend` and `$dotnet-best-practices: AVAILABLE` before dispatch. For frontend work, record the applicable implementation and independent review skills from the frontend discipline guidance. For database work, record the `$regin` leaf skill, technology, AUTHOR/VALIDATE/APPLY boundary, target class, profile and inventory state, schema base state, and migration/recovery authority. For a VPS database, also record the `$ymir` leaf skill, verified SSH/tunnel identities, exposure, per-phase credential references, and authority separation. For infrastructure work, record the `$ymir` leaf skill, the transport/provider, expected destination identity, access level, and required provider capabilities. For deep vulnerability analysis, record `Security`, the `$heimdall` leaf skill, each selected optional security skill, whether it is available, whether installation was offered, and any user-approved fallback. Treat an unavailable required skill or review source as a planning blocker unless the user approves a stated fallback.
+Omit discipline and required skills when they do not change execution. For a .NET backend activity, record `Backend` and `$dotnet-best-practices: AVAILABLE` before dispatch. For frontend work, record the applicable implementation and independent review skills from the frontend discipline guidance. For database work, record the `$asgard:regin` leaf skill, technology, AUTHOR/VALIDATE/APPLY boundary, target class, profile and inventory state, schema base state, and migration/recovery authority. For a VPS database, also record the `$asgard:ymir` leaf skill, verified SSH/tunnel identities, exposure, per-phase credential references, and authority separation. For infrastructure work, record the `$asgard:ymir` leaf skill, the transport/provider, expected destination identity, access level, and required provider capabilities. For deep vulnerability analysis, record `Security`, the `$asgard:heimdall` leaf skill, each selected optional security skill, whether it is available, whether installation was offered, and any user-approved fallback. Treat an unavailable required skill or review source as a planning blocker unless the user approves a stated fallback.
 
 ## Scale detail to risk
 

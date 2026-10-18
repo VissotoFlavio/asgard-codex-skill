@@ -2,7 +2,7 @@ interface:
   display_name: "Mimir"
   short_description: "Investigate one technical uncertainty read-only"
   brand_color: "#78909C"
-  default_prompt: "Use $mimir to resolve this narrowly stated technical uncertainty with read-only evidence."
+  default_prompt: "Use $asgard:mimir to resolve this narrowly stated technical uncertainty with read-only evidence."
 
 policy:
   allow_implicit_invocation: true

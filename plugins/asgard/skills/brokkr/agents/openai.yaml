@@ -2,7 +2,7 @@ interface:
   display_name: "Brokkr"
   short_description: "Implement a bounded established-architecture activity"
   brand_color: "#C9973E"
-  default_prompt: "Use $brokkr to implement this small, bounded activity with an established architecture; stop for a handoff if another role is needed."
+  default_prompt: "Use $asgard:brokkr to implement this small, bounded activity with an established architecture; stop for a handoff if another role is needed."
 
 policy:
   allow_implicit_invocation: true

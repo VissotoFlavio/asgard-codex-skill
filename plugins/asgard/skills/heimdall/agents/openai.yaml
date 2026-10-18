@@ -2,7 +2,7 @@ interface:
   display_name: "Heimdall"
   short_description: "Review security, privacy, isolation, and abuse risks"
   brand_color: "#B71C1C"
-  default_prompt: "Use $heimdall to independently review this exact candidate for credible security and privacy risks."
+  default_prompt: "Use $asgard:heimdall to independently review this exact candidate for credible security and privacy risks."
 
 policy:
   allow_implicit_invocation: true

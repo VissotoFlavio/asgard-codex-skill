@@ -17,7 +17,7 @@ In either mode, this is a leaf skill. Never automatically invoke another Asgard 
 
 ```text
 HANDOFF_REQUIRED
-recommended_skill: $<skill>
+recommended_skill: $asgard:<skill>
 reason: <why the work is outside Regin's database-structure boundary>
 evidence: <candidate, target, inventory, or observed-state facts>
 prerequisites: <information, verified state, adapter, or artifact needed before handoff>
@@ -26,7 +26,7 @@ authority_required: <specific protected authority, or none>
 
 Use `HANDOFF_REQUIRED` whenever the request leaves Regin's boundary or an exact protected authority is absent; do not relabel either condition as `BLOCKED`. Use `BLOCKED` only when a genuine prerequisite is unavailable and no role or authority handoff can resolve it.
 
-Use `$ymir` only as the recommended handoff for infrastructure, connectivity, external credential mechanisms, SSH/VPS transport, or the separately authorized privileges it owns; never invoke it. Recommend `$tyr`, `$loki`, or `$heimdall` only when their independent review boundary is needed; never dispatch them.
+Use `$asgard:ymir` only as the recommended handoff for infrastructure, connectivity, external credential mechanisms, SSH/VPS transport, or the separately authorized privileges it owns; never invoke it. Recommend `$asgard:tyr`, `$asgard:loki`, or `$asgard:heimdall` only when their independent review boundary is needed; never dispatch them.
 
 ## Required references
 

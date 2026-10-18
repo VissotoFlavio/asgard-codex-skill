@@ -17,7 +17,7 @@ In either mode, this is a leaf skill. Never automatically invoke another Asgard 
 
 ```text
 HANDOFF_REQUIRED
-recommended_skill: $<skill>
+recommended_skill: $asgard:<skill>
 reason: <why the work is outside Ymir's infrastructure boundary>
 evidence: <profile, inventory, destination, plan, or observed-state facts>
 prerequisites: <information, stable state, adapter, or artifact needed before handoff>
@@ -26,7 +26,7 @@ authority_required: <specific protected authority, or none>
 
 Use `HANDOFF_REQUIRED` whenever the request leaves Ymir's boundary or an exact protected authority is absent; do not relabel either condition as `BLOCKED`. Use `BLOCKED` only when a genuine prerequisite is unavailable and no role or authority handoff can resolve it.
 
-Recommend `$regin` only for database identity checks, structural discovery, database principals/grants, versioned migrations, or authorized database validation/application. Recommend `$heimdall` only for independent security review. Never invoke a recommended skill.
+Recommend `$asgard:regin` only for database identity checks, structural discovery, database principals/grants, versioned migrations, or authorized database validation/application. Recommend `$asgard:heimdall` only for independent security review. Never invoke a recommended skill.
 
 ## Required references
 
@@ -42,7 +42,7 @@ Read [infrastructure guidance](references/infrastructure.md) for applicable infr
 - Load the infrastructure guidance and declare transport/provider capabilities before acting. Initial supported discovery is SSH/Linux; AWS is capability detection only until an authorized adapter and required skills exist.
 - Provider-specific skills extend capability but grant no authority. Missing tools, skills, authentication, or permissions require `HANDOFF_REQUIRED` when an authority or capability handoff can resolve them; use `BLOCKED` only when no such handoff can provide the prerequisite. Dependency or skill installation requires user authorization.
 - Provide an exact plan, impact, verification, recovery path, and protected operations before requesting `APPLY` authority. Rollback is a separate mutation requiring prior exact or fresh authority; scope privilege escalation and retries to what was approved.
-- Preserve independent security review for identity, credentials, privilege, network exposure, confidentiality, and availability risks by reporting a `$heimdall` handoff when needed.
+- Preserve independent security review for identity, credentials, privilege, network exposure, confidentiality, and availability risks by reporting a `$asgard:heimdall` handoff when needed.
 
 ## Validation and terminal outcomes
 

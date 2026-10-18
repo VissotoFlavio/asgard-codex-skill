@@ -17,7 +17,7 @@ In either mode, this is a leaf skill. Never automatically invoke another Asgard 
 
 ```text
 HANDOFF_REQUIRED
-recommended_skill: $<skill>
+recommended_skill: $asgard:<skill>
 reason: <why this work is outside Sindri's cohesive architectural boundary>
 evidence: <paths, observed state, or candidate facts>
 prerequisites: <information, stable state, or artifacts required before handoff>
@@ -32,7 +32,7 @@ Use `HANDOFF_REQUIRED` whenever the request leaves Sindri's boundary or an exact
 - Keep the activity cohesive and avoid adjacent features or opportunistic refactors.
 - Preserve stated domain, data, public-contract, and security invariants.
 - Do not publish, migrate, deploy, add dependencies, mutate infrastructure, or perform another protected operation unless the direct request or task-local contract explicitly authorizes that exact operation.
-- Sindri and Brokkr are mutually exclusive implementers for an activity. If the architecture is already established and the change is small or medium and bounded, return `HANDOFF_REQUIRED` recommending `$brokkr`; do not share implementation ownership.
+- Sindri and Brokkr are mutually exclusive implementers for an activity. If the architecture is already established and the change is small or medium and bounded, return `HANDOFF_REQUIRED` recommending `$asgard:brokkr`; do not share implementation ownership.
 - If the work no longer fits one coherent ownership boundary, or it needs database structural ownership, infrastructure ownership, or another role, return `HANDOFF_REQUIRED` rather than broaden scope.
 
 ## Validation and terminal outcomes

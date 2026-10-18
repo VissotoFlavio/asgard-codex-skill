@@ -17,7 +17,7 @@ In either mode, this is a leaf skill. Never automatically invoke another Asgard 
 
 ```text
 HANDOFF_REQUIRED
-recommended_skill: $<skill>
+recommended_skill: $asgard:<skill>
 reason: <why the requested review is outside Tyr's rules-and-contracts boundary>
 evidence: <candidate facts or paths>
 prerequisites: <missing candidate, DoD, evidence, or scope>

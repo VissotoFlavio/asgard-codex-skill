@@ -4,16 +4,16 @@ Use this catalog only for leaf-skill selection. Every listed specialist is a dir
 
 | Need | Leaf skill | Boundary |
 |---|---|---|
-| Bounded implementation with established architecture | `$brokkr` | One small or medium application activity; mutually exclusive with `$sindri`. |
-| Inseparable architectural implementation | `$sindri` | One cohesive architectural activity; mutually exclusive with `$brokkr`. |
-| Database architecture and versioned evolution | `$regin` | One database-structure activity under explicit AUTHOR, VALIDATE, or APPLY authority. |
-| Infrastructure discovery, planning, execution, and verification | `$ymir` | One infrastructure activity under explicit DISCOVER, PLAN, APPLY, or VERIFY authority. |
-| Read-only uncertainty reduction | `$mimir` | One stated technical uncertainty. |
-| Rules, contracts, compatibility, or consistency review | `$tyr` | One exact candidate and supplied DoD. |
-| Adversarial behavior and edge-case review | `$loki` | One exact candidate's credible behavioral risks. |
-| Human readability, maintainability, and code quality review | `$bragi` | One completed immutable candidate. |
-| Security, privacy, isolation, abuse, availability, or deep vulnerability review | `$heimdall` | One exact candidate and bounded attack surface. |
-| Required issue, pull-request, and delivery traceability | `$forseti` | Read-only traceability, except its narrow authorized closing-reference repair. |
+| Bounded implementation with established architecture | `$asgard:brokkr` | One small or medium application activity; mutually exclusive with `$asgard:sindri`. |
+| Inseparable architectural implementation | `$asgard:sindri` | One cohesive architectural activity; mutually exclusive with `$asgard:brokkr`. |
+| Database architecture and versioned evolution | `$asgard:regin` | One database-structure activity under explicit AUTHOR, VALIDATE, or APPLY authority. |
+| Infrastructure discovery, planning, execution, and verification | `$asgard:ymir` | One infrastructure activity under explicit DISCOVER, PLAN, APPLY, or VERIFY authority. |
+| Read-only uncertainty reduction | `$asgard:mimir` | One stated technical uncertainty. |
+| Rules, contracts, compatibility, or consistency review | `$asgard:tyr` | One exact candidate and supplied DoD. |
+| Adversarial behavior and edge-case review | `$asgard:loki` | One exact candidate's credible behavioral risks. |
+| Human readability, maintainability, and code quality review | `$asgard:bragi` | One completed immutable candidate. |
+| Security, privacy, isolation, abuse, availability, or deep vulnerability review | `$asgard:heimdall` | One exact candidate and bounded attack surface. |
+| Required issue, pull-request, and delivery traceability | `$asgard:forseti` | Read-only traceability, except its narrow authorized closing-reference repair. |
 
 Odin remains the sole orchestrator and delivery owner. Canonical intent does not itself select a mutation or grant authority. Odin owns discovery and decision-making; Mimir may supply only read-only evidence for a stated technical uncertainty. Application promotion follows the repository's authorized workflow, while infrastructure discovery or mutation routes to Ymir. A deploy request that includes both becomes coordinated, separately authorized activities.
 
@@ -28,7 +28,7 @@ Send each selected leaf skill a task-local contract containing:
 - stable dependency state and focused validation commands; and
 - authority boundaries for edits and external mutations.
 
-Do not mention or invoke `$asgard` in a specialist task; its policy has already been applied by Odin. Do not attach the full conversation when this task-local contract is sufficient. Use a fresh context without inherited history when available.
+Do not mention or invoke `$asgard:asgard` in a specialist task; its policy has already been applied by Odin. Do not attach the full conversation when this task-local contract is sufficient. Use a fresh context without inherited history when available.
 
 Reference exact paths, revisions, and bounded diff commands rather than attaching full diffs. Reference validation artifacts rather than pasting successful logs. Include a short sanitized excerpt only when a failure cannot be understood without it.
 

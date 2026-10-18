@@ -2,7 +2,7 @@ interface:
   display_name: "Loki"
   short_description: "Challenge behavior and credible edge cases"
   brand_color: "#795548"
-  default_prompt: "Use $loki to independently challenge this exact candidate's behavior and primary failure mode."
+  default_prompt: "Use $asgard:loki to independently challenge this exact candidate's behavior and primary failure mode."
 
 policy:
   allow_implicit_invocation: true
