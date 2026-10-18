@@ -59,15 +59,15 @@ Do not create agents, branches, or isolated workspaces before the user approves 
 For repository changes, discover the repository's issue, branch, pull-request, and traceability policy before creating artifacts. Apply that policy when it exists; otherwise propose a lightweight convention without making it a governance blocker.
 
 Odin remains accountable for decomposition, delegation, integration, evidence review, and final acceptance. Never delegate acceptance of the complete delivery or act only as a router.
-Read the [specialist catalog](references/roles-and-skills.md) only when routing is unclear. It identifies independent leaf skills; their instructions remain in their own skill roots and are not duplicated here.
+Read the [routing catalog](references/roles-and-skills.md) only when routing is unclear. It identifies independent implementation, review, publication, validation, and refinement skills; their instructions remain in their own skill roots and are not duplicated here.
 
 ## Select the smallest sufficient mode
 
 Choose once during planning and increase rigor if new risk appears:
 
-- **Lean:** one bounded, low-risk activity with localized impact. Use one implementer and Odin review. Add only reviewers justified by a concrete risk, including Bragi when maintainability is a stated concern.
-- **Standard:** multiple activities or material behavioral risk. Use independent Loki and Heimdall review; add Tyr for material rules or contracts, and Bragi when the candidate adds production code or changes its structure.
-- **Critical:** security-sensitive, externally exposed, persistent, concurrent, irreversible, regulated, or broad cross-boundary work. Use all applicable independent gates and strict correction loops; require Bragi for production-code candidates.
+- **Lean:** one bounded, low-risk activity with localized impact. Use one implementer and Odin review. Consider Brokkr's Bragi recommendation when maintainability is a stated concern.
+- **Standard:** multiple activities or material behavioral risk. Use independent Loki and Heimdall review; add Tyr for material rules or contracts, and consider Brokkr's Bragi recommendation when the candidate adds production code or changes its structure.
+- **Critical:** security-sensitive, externally exposed, persistent, concurrent, irreversible, regulated, or broad cross-boundary work. Use all applicable independent gates and strict correction loops; consider Brokkr's Bragi recommendation against the candidate's maintenance risk.
 
 Do not use Asgard when Lean would merely reproduce ordinary single-agent work without meaningful delegation or independent review.
 
@@ -85,13 +85,13 @@ Classify an activity by discipline only when that classification changes its imp
 
 ## Dispatch with minimal context
 
-Use `$asgard:brokkr` for bounded application implementation, `$asgard:sindri` instead for one inseparable application-architectural activity, `$asgard:regin` for database architecture and versioned database evolution, and `$asgard:ymir` for authorized infrastructure discovery, planning, execution, and verification. Use `$asgard:mimir` only to resolve a stated uncertainty. Select review and governance leaf skills from the [specialist catalog](references/roles-and-skills.md) only when their independent boundary is required.
+Use `$asgard:brokkr` for bounded application implementation or a designated Pull Request correction, `$asgard:regin` for database architecture and versioned database evolution, and `$asgard:ymir` for authorized infrastructure discovery, planning, execution, and verification. Use `$asgard:mimir` only to resolve a stated uncertainty. Select review, governance, publication, validation, and refinement skills from the [routing catalog](references/roles-and-skills.md) only when their independent boundary is required.
 
-Odin dispatches each selected specialist using a task-local contract. It does not copy the specialist's complete instruction set into the task, and it does not ask one specialist to invoke another. Specialists are leaf skills: each acts only within its named boundary, returns `HANDOFF_REQUIRED` when another leaf skill is necessary, and never invokes Odin recursively. Odin alone selects and delegates specialists, routes handoffs, owns acceptance, and decides whether the user must provide more authority.
+Odin dispatches each selected skill using a task-local contract. It does not copy the specialist's complete instruction set into the task, and it does not ask one skill to invoke another. Each acts only within its named boundary, returns `HANDOFF_REQUIRED` when another skill is necessary, and never invokes Odin recursively. Odin alone selects and delegates skills, routes handoffs, owns acceptance, and decides whether the user must provide more authority.
 
 Do not pass the full conversation by default. Give each specialist only its own skill guidance, activity contract, applicable workspace rules, relevant paths or candidate diff, stable dependencies, focused validation, and explicit exclusions. When the platform supports history selection, dispatch with no inherited conversation history (for example, `fork_turns="none"`) and put every required input in the task-local contract. If a specialist must inherit history, justify that exception in the graph and do not use it for waiting, polling, CI observation, or other operational monitoring.
 
-Do not mention or invoke `$asgard:asgard` in a specialist task. Odin has already applied the orchestration policy; specialists receive their own skill guidance and a task-local contract only. Require another skill only when that specialist genuinely needs its distinct discipline guidance.
+Do not mention or invoke `$asgard:asgard` in a delegated skill task. Odin has already applied the orchestration policy; skills receive their own guidance and a task-local contract only. Require another skill only when that activity genuinely needs its distinct boundary.
 
 Treat waiting as an operational state, not a reason for another model turn. Do not dispatch reviewers while checks remain pending or restart Asgard merely to report unchanged state.
 
@@ -115,11 +115,17 @@ Odin grants final approval only when all required evidence refers to the same ca
 
 At a material phase boundary, replace accumulated narrative with the compact checkpoint defined in [context efficiency](references/context-efficiency.md). Pass the checkpoint forward instead of replaying completed discussion, logs, diffs, or reviewer reports.
 
+## Coordinate Pull Request publication and acceptance validation
+
+For an application delivery that requires a Pull Request, Odin sequences `$asgard:brokkr` to a ready candidate, `$asgard:hermod` to publish the authorized Pull Request, and `$asgard:eir` to validate that ready Pull Request against the issue and acceptance criteria. If Eir finds a defect, route the bounded correction to Brokkr, then use Eir `VERIFY` for Eir's original findings. Eir's authorized approval closes the Pull Request validation gate only; Odin still owns final delivery acceptance and no skill merges automatically.
+
+Brokkr's `BRAGI_RECOMMENDED` report is a non-blocking recommendation. Odin decides whether to select `$asgard:bragi`; Brokkr neither invokes Bragi nor makes it an automatic gate.
+
 ## Publish only when authorized
 
 Approval never grants authority to commit, push, open or merge changes, publish, migrate, deploy, mutate infrastructure, add dependencies, or perform destructive operations. When repository or user policy requires delivery traceability, dispatch Forseti at the lifecycle phases where the relevant evidence exists. A closing-reference repair is permitted only when that policy requires it and authority covers the exact edit.
 
-Follow the repository's versioning, changelog, merge, tag, backport, and publication policy when a delivery workflow reaches those artifacts. If it is absent or ambiguous, present the available options and obtain the user's decision rather than imposing a workflow.
+Use `$asgard:hermod` when an authorized normal or release Pull Request must be opened. Follow the repository's versioning, changelog, merge, tag, backport, and publication policy when a delivery workflow reaches those artifacts. If it is absent or ambiguous, present the available options and obtain the user's decision rather than imposing a workflow.
 
 Stop after exhausting safe read-only investigation when required authority, product direction, independent review, or meaningful validation is unavailable.
 

@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./assets/asgard-agents.png" alt="Asgard agents, responsibilities, and delivery flow" width="760">
+  <img src="./plugins/asgard/assets/asgard-agents.png" alt="Asgard agents, responsibilities, and delivery flow" width="760">
 </p>
 
 # Asgard plugin for Codex
@@ -24,32 +24,37 @@ Do not select it implicitly for routine single-file edits, isolated diagnosis, o
 
 ## Role model
 
-`$asgard:asgard` is Odin-only: it plans the execution graph, selects specialists, coordinates their evidence, and owns final acceptance. Complete Odin orchestration requires the Asgard plugin to be installed, because its routing catalog and the leaf skills are distributed with that plugin.
+`$asgard:asgard` is Odin-only: it plans the execution graph, selects specialists, coordinates their evidence, and owns final acceptance. Complete Odin orchestration requires the Asgard plugin to be installed, because its routing catalog and skills are distributed with that plugin.
 
-The ten leaf skills are also direct entry points. A direct request stays within the named skill's bounded responsibility; it does not become a delivery orchestration or final acceptance activity. The plugin also distributes Eir, Hermod, and Kvasir outside Odin's orchestration graph.
+Every specialist is a direct entry point. A direct request stays within the named skill's responsibility: it does not invoke a sibling, become delivery orchestration, or take final acceptance. Odin is the only skill that can select and sequence other Asgard skills.
 
-The plugin distributes all 14 skills. Invoke every plugin-provided Asgard skill with the `asgard:` namespace. Eir, Hermod, and Kvasir remain independent workflows by behavior: they are outside Odin's orchestration graph. They can also be installed individually, using their unqualified registered names; these are separate distribution modes and must not be mixed in one task.
+The plugin distributes 13 skills. Invoke every plugin-provided Asgard skill with the `asgard:` namespace. Odin can sequence the skills in a governed delivery, but direct invocation remains independent. Eir, Hermod, and Kvasir can also be installed individually, using their unqualified registered names; these are separate distribution modes and must not be mixed in one task.
 
-| Role | Invocation | Responsibility |
+### What Odin does
+
+Odin turns a request into a proportional delivery graph. It establishes the intent, authority ceiling, Definition of Done, dependencies, and applicable risk gates; selects only the specialists that the evidence and risk justify; routes findings to the original implementer; and accepts the delivery only after the relevant evidence is complete. Odin does not make a direct skill call another skill, and an approval from Eir, Forseti, or another specialist never replaces Odin's final delivery acceptance.
+
+### Skill summary
+
+| Skill | Invocation | Direct responsibility |
 | --- | --- | --- |
 | **Odin** | `$asgard:asgard` | Plans the execution graph, coordinates specialists, reviews evidence, and owns final acceptance. |
-| **Brokkr** | `$asgard:brokkr` | Implements bounded application work within an established architecture. |
-| **Sindri** | `$asgard:sindri` | Implements one inseparable application activity that requires architectural ownership. |
+| **Kvasir** | `$asgard:kvasir` | Refines one defined issue or delivery demand into a minimal technical plan; it never implements that plan. |
+| **Mimir** | `$asgard:mimir` | Resolves one stated technical uncertainty with read-only evidence. |
+| **Brokkr** | `$asgard:brokkr` | Implements one bounded application candidate for an authoritative issue, with task context or a designated Pull Request correction. |
 | **Regin** | `$asgard:regin` | Owns database architecture and safe schema evolution, including tables, keys, constraints, indexes, relationships, migrations, and data backfills. |
 | **Ymir** | `$asgard:ymir` | Discovers, plans, applies authorized infrastructure changes, and verifies the resulting environment. |
-| **Mimir** | `$asgard:mimir` | Resolves a stated code, documentation, or technical uncertainty. |
 | **Tyr** | `$asgard:tyr` | Independently validates material rules, contracts, compatibility, and consistency. |
 | **Loki** | `$asgard:loki` | Searches adversarially for behavioral gaps and edge cases. |
 | **Bragi** | `$asgard:bragi` | Reviews completed code for human readability and maintainability using context-sensitive SOLID, DRY, KISS, YAGNI, and Tell, Don't Ask. |
 | **Heimdall** | `$asgard:heimdall` | Independently reviews security, privacy, isolation, abuse, availability, and risk-justified deep vulnerability analysis. |
 | **Forseti** | `$asgard:forseti` | Verifies repository-required delivery and release traceability, including a narrowly authorized metadata repair when policy permits it. |
-| **Eir** | `$asgard:eir` | Delivers a defined issue through Pull Request review, correction, and final verification. |
-| **Hermod** | `$asgard:hermod` | Prepares and opens a release Pull Request from `develop` to `master`. |
-| **Kvasir** | `$asgard:kvasir` | Refines a defined issue or delivery demand into a minimal technical plan. |
+| **Hermod** | `$asgard:hermod` | Opens an authorized normal or release Pull Request from a ready candidate. |
+| **Eir** | `$asgard:eir` | Validates a ready Pull Request against its issue and acceptance criteria through review and correction verification. |
 
 Specialists receive task-local context rather than the entire conversation. Their reports and passing tests are evidence; Odin still owns product decisions, inspects the candidate, and makes the acceptance decision. Mimir only resolves stated technical uncertainty read-only. Regin may design and author versioned database changes, but connecting to or mutating any durable, runtime, or non-isolated database, applying or retrying a migration, and executing a rollback each require explicit authority for the exact environment and candidate.
 
-Every leaf skill has a direct mode and an Odin-orchestrated mode. In either mode, a leaf never invokes Odin or a sibling automatically. If another boundary or authority is necessary, it returns `HANDOFF_REQUIRED` with the recommended skill, reason, evidence, prerequisites, and required authority; the direct requester or Odin decides whether to continue the handoff.
+Every direct skill has a direct mode and, when applicable, an Odin-orchestrated mode. In either mode, a skill never invokes Odin or a sibling automatically. If another boundary or authority is necessary, it returns `HANDOFF_REQUIRED` with the recommended skill, reason, evidence, prerequisites, and required authority; the direct requester or Odin decides whether to continue the handoff. Brokkr also records `BRAGI_RECOMMENDED` for each ready candidate; this is a non-blocking recommendation, not an automatic Bragi call.
 
 On first use of each database profile, Regin requests separate read-only discovery authority and consent before persisting a local inventory. Later activities load a compact summary and only relevant object details, refreshing stale, incomplete, affected, or drifted sections instead of rediscovering the whole database. Profiles and inventories live outside the repository and installed plugin under `ASGARD_CONFIG_HOME/databases` when configured, otherwise the platform-local Asgard data directory. They contain no credentials or row data, never replace the runtime database as source of truth, and never authorize `APPLY`; live preflight remains mandatory.
 
@@ -69,10 +74,6 @@ When repository policy or the user requires a persisted plan, Asgard uses the de
 
 For a standalone, implementation-ready refinement of a specific delivery, invoke **Kvasir**. Kvasir inspects the issue and only the necessary code, selects the smallest adequate approach, and records the resulting plan in a new issue comment when the issue and comment authority are explicit. It does not implement the plan or alter Asgard's general refinement policy.
 
-<p align="center">
-  <img src="./plugins/asgard/skills/kvasir/assets/kvasir.png" alt="Kvasir, the Technical Cartographer" width="460">
-</p>
-
 ```text
 Use $asgard:kvasir to refine issue #123 before implementation.
 ```
@@ -83,7 +84,7 @@ Use $asgard:kvasir to refine issue #123 before implementation.
 - It reads repository instructions and only the issue context, code, tests, contracts, configuration, and documentation that can change the recommended plan.
 - With an explicitly named, open issue, Kvasir creates exactly one new Markdown comment after the refinement is final. It never edits the issue body, title, labels, or existing comments. A related issue discovered during analysis is not enough to authorize a comment.
 - Without an issue, Kvasir returns the refinement in the conversation and does not create a GitHub artifact.
-- The result is `READY` only when implementation can begin without a material decision. Otherwise it is `NEEDS_DECISION` or `BLOCKED`, with the unresolved choice or smallest next action stated explicitly.
+- The result is `READY` only when implementation can begin without a material decision. Otherwise it is `NEEDS_DECISION`, `HANDOFF_REQUIRED`, or `BLOCKED`, with the unresolved choice, required specialist or authority, or smallest next action stated explicitly.
 - Kvasir records the analyzed base, evidence, minimal recommended approach, implementation map, acceptance scenarios, validation, exclusions, risks, dependencies, and authority boundaries. Database, infrastructure, security, release, and operational work also include observed state, impact, recovery or rollback, and required approvals.
 - A refinement never authorizes branches, implementation, commits, Pull Requests, dependency installation, migrations, data changes, infrastructure changes, deployment, or publication.
 
@@ -91,7 +92,7 @@ Use $asgard:kvasir to refine issue #123 before implementation.
 
 Asgard recognizes natural-language requests as `DISCOVERY`, `DELIVERY`, `REVIEW`, `INFRASTRUCTURE`, `DEPLOY`, or `MONITOR`. It infers a clear intent and asks only when ambiguity would materially change the result, scope, environment, or authority.
 
-Intent never grants authority. Discovery produces a concise, decision-ready brief and stops for approval; it does not create issues or implement. After approval, Asgard may prepare or create issues only when authorized, then enter delivery. Application promotion follows the repository's authorized workflow, while infrastructure work belongs to Ymir. Release PR preparation is handled by the standalone Hermod skill.
+Intent never grants authority. Discovery produces a concise, decision-ready brief and stops for approval; it does not create issues or implement. After approval, Asgard may prepare or create issues only when authorized, then enter delivery. Application promotion follows the repository's authorized workflow through Hermod when a Pull Request must be opened, while infrastructure work belongs to Ymir.
 
 Natural examples:
 
@@ -106,35 +107,45 @@ Natural examples:
 
 ## Delivery modes
 
-- **Lean:** one bounded, low-risk activity with an implementer and Odin review. Add a specialist gate only for an identified risk, including Bragi when maintainability is a stated concern.
-- **Standard:** multiple activities or material behavioral risk, with independent Loki and Heimdall review, Tyr when contracts or rules are affected, and Bragi when production code is added or structurally changed.
-- **Critical:** security-sensitive, persistent, concurrent, irreversible, regulated, or broadly exposed work, using every applicable independent gate.
+- **Lean:** one bounded, low-risk activity with an implementer and Odin review. Add a specialist gate only for an identified risk; Odin or the direct requester considers Brokkr's Bragi recommendation when maintainability is a stated concern.
+- **Standard:** multiple activities or material behavioral risk, with independent Loki and Heimdall review, Tyr when contracts or rules are affected, and a recorded Odin or direct-requester decision on Brokkr's Bragi recommendation when production code is added or structurally changed.
+- **Critical:** security-sensitive, persistent, concurrent, irreversible, regulated, or broadly exposed work, using every applicable independent gate. Odin considers Brokkr's Bragi recommendation proportionate to the candidate's maintenance risk.
 
-## Core flow
+## Odin orchestration flow
 
-```text
-Natural-language request
-  -> Odin infers intent and records the separate authority ceiling
-  -> DISCOVERY produces a decision-ready brief and stops for approval, when requested
-  -> repository-policy artifacts are prepared only when authorized
-  -> Odin prepares proportional Technical Refinement when useful or policy-required
-  -> Odin defines the delivery execution graph and Definition of Done
-  -> Brokkr or Sindri implements application work,
-     Regin authors database evolution,
-     and/or Ymir performs authorized infrastructure work
-  -> implementers validate their final activity once
-  -> Odin reviews the exact candidate
-  -> Tyr validates material contracts when applicable
-  -> Loki tests adversarially
-  -> Bragi reviews the completed candidate for readability and maintainability when applicable
-  -> Heimdall reviews security
-  -> Forseti validates required delivery traceability
-  -> Odin grants final approval
+Odin selects only the paths that apply to the request. Kvasir, Mimir, individual reviewers, Pull Request publication, and acceptance validation are conditional; they are not automatic work added to every delivery.
 
-Any confirmed finding
-  -> Odin routes a bounded correction to the original implementer
-  -> only affected validations and approvals are repeated
+```mermaid
+flowchart TD
+    A[Request asks for Asgard] --> B[Odin classifies intent, authority, risks, and Definition of Done]
+    B --> C{Technical refinement or uncertainty needed?}
+    C -->|Refinement| D[Kvasir produces the minimal plan]
+    C -->|Read-only uncertainty| E[Mimir returns bounded evidence]
+    C -->|Neither| F{Implementation boundary}
+    D --> F
+    E --> F
+    F -->|Application| G[Brokkr implements or corrects the candidate]
+    F -->|Database| H[Regin authors the authorized evolution]
+    F -->|Infrastructure| I[Ymir performs the authorized activity]
+    G --> J[Implementer validates the exact candidate]
+    H --> J
+    I --> J
+    J --> K[Odin selects applicable Tyr, Loki, Bragi, Heimdall, and Forseti gates]
+    K --> L{Any actionable finding?}
+    L -->|Yes| M[Odin routes a bounded correction to the original implementer]
+    M --> J
+    L -->|No| N{Pull Request publication required and authorized?}
+    N -->|No| R[Odin evaluates all evidence and accepts or stops]
+    N -->|Yes| O[Hermod opens the ready Pull Request]
+    O --> P[Eir reviews the Pull Request against the issue]
+    P --> Q{Acceptance criteria met?}
+    Q -->|No| S[Original implementer corrects the Pull Request candidate]
+    S --> T[Eir verifies its corrected findings]
+    T --> Q
+    Q -->|Yes| R
 ```
+
+In a Pull Request correction cycle, Eir verifies its own findings after the original implementer returns a corrected candidate. Odin repeats only the affected validations, then remains the final acceptance authority. Brokkr emits a non-blocking Bragi recommendation for each ready application candidate; Odin or the direct requester decides whether to request Bragi.
 
 Asgard classifies dependencies as sequential, parallel-safe, parallel-with-coordination, or deferred. It does not parallelize work merely to fill agent slots, and it avoids repeating complete reviews when integration creates no new diff or invariant.
 
@@ -155,6 +166,26 @@ For GitHub, Asgard uses the repository's authorized tooling. It does not silentl
 When the repository requires traceability, Forseti checks the policy-required evidence available at each lifecycle phase. That can include issues, branches, pull requests, closing relationships, labels, changelogs, release notes, or checks, but Asgard does not define the taxonomy or make any of them universal.
 
 When policy requires a provider-recognized closing reference, Forseti may repair one absent, unambiguous reference only with authority for that exact edit. Missing evidence that cannot exist yet is `PENDING`; a violated repository invariant is `CHANGES_REQUIRED`. Forseti's approval covers governance only.
+
+## Prerequisites and conditional capabilities
+
+To use the plugin, you need a Codex environment with plugin support and the `codex plugin` command available. Start a new Codex task after installing or updating the plugin so its skills are loaded. No Python, Node.js, database client, cloud CLI, or GitHub account is required for ordinary local planning, implementation, or review work.
+
+The source-installation method below additionally requires Git. Git is not a runtime dependency after the plugin is installed.
+
+### GitHub activities
+
+GitHub access is conditional: it is required only when the selected skill must read or change GitHub artifacts. For example, Kvasir comments on an explicitly supplied issue, Hermod opens a Pull Request, and Eir reviews a Pull Request. In those cases, the environment needs:
+
+- the repository-approved GitHub tooling; when it is `gh`, the GitHub CLI must be installed and authenticated for the intended account and host;
+- access and scopes appropriate to the exact repository operation; and
+- explicit authority for any mutation, such as commenting, opening a Pull Request, approving, or resolving an Eir-owned thread.
+
+If the required GitHub capability, authentication, scope, or authority is unavailable, the selected skill reports the bounded blocker or `HANDOFF_REQUIRED`; it does not silently switch clients or broaden its authority.
+
+### Repository development only
+
+Python, PyYAML, and the repository test tooling are needed only to develop or validate this plugin repository. They are not requirements for people or agents running an installed Asgard plugin.
 
 ## Install the plugin
 
@@ -177,9 +208,9 @@ Use $asgard:asgard to plan and coordinate this software delivery.
 
 Codex may also select Asgard automatically when a request clearly matches its scope.
 
-## Invoke a leaf skill directly
+## Invoke a skill directly
 
-With the plugin installed, invoke one of the ten leaf skills directly when the request is already bounded to that responsibility: `$asgard:brokkr`, `$asgard:sindri`, `$asgard:regin`, `$asgard:ymir`, `$asgard:mimir`, `$asgard:tyr`, `$asgard:loki`, `$asgard:bragi`, `$asgard:heimdall`, or `$asgard:forseti`.
+With the plugin installed, invoke a skill directly when the request is already bounded to that responsibility: `$asgard:brokkr`, `$asgard:regin`, `$asgard:ymir`, `$asgard:mimir`, `$asgard:tyr`, `$asgard:loki`, `$asgard:bragi`, `$asgard:heimdall`, `$asgard:forseti`, `$asgard:hermod`, `$asgard:eir`, or `$asgard:kvasir`.
 
 ```text
 Use $asgard:brokkr to implement this small bounded change with the established architecture.
@@ -189,7 +220,7 @@ Use $asgard:brokkr to implement this small bounded change with the established a
 Use $asgard:heimdall to review this exact candidate for security and privacy risks.
 ```
 
-Direct invocation does not start Odin orchestration. A leaf skill can recommend another skill only by returning `HANDOFF_REQUIRED`; it never calls Odin or a sibling automatically. Use `$asgard:asgard` when the work needs Odin to plan, select, and coordinate multiple bounded activities or independent review gates.
+Direct invocation does not start Odin orchestration. A skill can recommend another skill only by returning `HANDOFF_REQUIRED`; it never calls Odin or a sibling automatically. Brokkr's `BRAGI_RECOMMENDED` is likewise only a recommendation. Use `$asgard:asgard` when the work needs Odin to plan, select, and coordinate multiple bounded activities or independent review gates.
 
 ## Update the plugin
 
@@ -204,23 +235,19 @@ codex plugin add asgard@asgard-community
 
 Open a new Codex task after reinstalling.
 
-## Use a plugin workflow skill
+## Use Hermod through the plugin
 
-Hermod is a direct workflow skill distributed by the plugin. Use it when the task is to prepare and open a release Pull Request without invoking Asgard or Odin:
+Hermod is a direct workflow skill distributed by the plugin. Use it when a ready candidate needs an authorized normal Pull Request or release Pull Request, without invoking Odin:
 
 ```text
-Use $asgard:hermod to prepare and open the release Pull Request from develop to master.
+Use $asgard:hermod to open the Pull Request for this ready branch and issue.
 ```
 
-Hermod analyzes the candidate changes, selects the next Semantic Version, updates the changelog, validates the final diff, and opens the Pull Request. Merge, tag, publication, deploy, and infrastructure changes require separate authorization.
+For a normal Pull Request, Hermod checks the ready candidate, authoritative issue, target branch, validation evidence, and publication authority, then opens it. For a release Pull Request, it additionally selects the next Semantic Version, updates the changelog, and targets `develop` to `master`. Hermod does not implement or validate issue acceptance. Merge, tag, publication, deploy, and infrastructure changes require separate authorization.
 
 ## Use Eir through the plugin
 
-Eir delivers a defined issue through a Pull Request, publishes evidence-backed review feedback on the Pull Request, applies authorized corrections, replies to the addressed feedback with the solution and validation evidence, and verifies the resulting candidate. It does not merge, deploy, release, or resolve review threads automatically.
-
-<p align="center">
-  <img src="./plugins/asgard/skills/eir/assets/eir.png" alt="Eir, the delivery corrector" width="460">
-</p>
+Eir validates a ready Pull Request against its authoritative issue, initial context, acceptance criteria, and exact candidate revision. `REVIEW` publishes one evidence-backed COMMENT review. If Brokkr corrects an Eir finding, `VERIFY` checks that correction. Eir can resolve only its own threads and approve only when exact authority is supplied; it never implements, opens Pull Requests, merges, deploys, or makes final delivery acceptance.
 
 ```text
 Use $asgard:eir to review this Pull Request and publish the findings.
@@ -228,7 +255,7 @@ Use $asgard:eir to review this Pull Request and publish the findings.
 
 ## Install an independent workflow
 
-Install the plugin when you need Odin or any of the ten leaf skills; all of those invocations use `$asgard:<skill>`. Eir, Hermod, and Kvasir can instead be installed individually when the task needs only that workflow. After a standalone installation, invoke the registered skill as `$eir`, `$hermod`, or `$kvasir`; do not use the `asgard:` namespace for that installation.
+Install the plugin when you need Odin or any of its 12 direct skills; all of those invocations use `$asgard:<skill>`. Eir, Hermod, and Kvasir can instead be installed individually when the task needs only that workflow. After a standalone installation, invoke the registered skill as `$eir`, `$hermod`, or `$kvasir`; do not use the `asgard:` namespace for that installation.
 
 Use one of these direct skill sources with the Codex skill-installation flow:
 

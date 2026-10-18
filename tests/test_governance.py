@@ -12,7 +12,7 @@ assert SPEC and SPEC.loader
 VALIDATOR = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(VALIDATOR)
 
-LEAF_SKILLS = frozenset({"brokkr", "sindri", "regin", "ymir", "mimir", "tyr", "loki", "bragi", "heimdall", "forseti"})
+LEAF_SKILLS = frozenset({"brokkr", "regin", "ymir", "mimir", "tyr", "loki", "bragi", "heimdall", "forseti"})
 
 
 def skill_root(name: str) -> Path:
@@ -239,7 +239,6 @@ class ContainedPathTests(unittest.TestCase):
     def test_leaf_skills_keep_direct_handoff_contracts(self) -> None:
         terminal_states = {
             "brokkr": ("`IMPLEMENTER_COMPLETE`", "`BLOCKED`"),
-            "sindri": ("`IMPLEMENTER_COMPLETE`", "`BLOCKED`"),
             "regin": ("`IMPLEMENTER_COMPLETE`", "`BLOCKED`"),
             "ymir": ("`IMPLEMENTER_COMPLETE`", "`BLOCKED`"),
             "mimir": ("`FINDINGS_COMPLETE`", "`BLOCKED`"),
@@ -299,7 +298,7 @@ class ContainedPathTests(unittest.TestCase):
         for name in LEAF_SKILLS:
             self.assertIn(plugin_invocation(name), catalog, name)
         self.assertIn(
-            "The plugin distributes all 14 skills. Invoke every plugin-provided Asgard skill with the `asgard:` namespace.",
+            "The plugin distributes 13 skills. Invoke every plugin-provided Asgard skill with the `asgard:` namespace.",
             readme,
         )
         self.assertIn("## Install an independent workflow", readme)
@@ -308,6 +307,13 @@ class ContainedPathTests(unittest.TestCase):
             metadata = (skill_root(name) / "agents" / "openai.yaml").read_text(encoding="utf-8")
             prompt = VALIDATOR.parse_agent_interface(metadata, name=name)["default_prompt"]
             self.assertIn(f"${name}", prompt, name)
+
+    def test_routing_catalog_has_one_boundary_per_direct_skill(self) -> None:
+        catalog = (VALIDATOR.SKILL_ROOT / "references" / "roles-and-skills.md").read_text(encoding="utf-8")
+
+        self.assertEqual(catalog.count("| Need | Direct skill | Boundary |"), 1)
+        for name in VALIDATOR.EXPECTED_SKILLS - {"asgard"}:
+            self.assertEqual(catalog.count(plugin_invocation(name)), 1, name)
 
     def test_asgard_discipline_guidance_is_loadable(self) -> None:
         disciplines = VALIDATOR.SKILL_ROOT / "references" / "disciplines"
@@ -338,7 +344,7 @@ class ContainedPathTests(unittest.TestCase):
         self.assertIn("--validate-security", security)
 
         definition = (VALIDATOR.SKILL_ROOT / "references" / "definition-of-done.md").read_text(encoding="utf-8")
-        self.assertIn("Implementing leaf skill: $asgard:brokkr | $asgard:sindri | $asgard:regin | $asgard:ymir", definition)
+        self.assertIn("Implementing skill: $asgard:brokkr | $asgard:regin | $asgard:ymir", definition)
         self.assertIn("For deep vulnerability analysis, record `Security`", definition)
 
     def test_heimdall_deep_security_analysis_uses_optional_skills_with_fallback(self) -> None:
@@ -510,6 +516,22 @@ class WorkflowGovernanceTests(unittest.TestCase):
         self.assertNotIn("Technical Refinement record before mutation", forseti)
         self.assertIn("## Technical refinement", readme)
 
+    def test_kvasir_returns_the_shared_handoff_contract_when_refinement_cannot_continue(self) -> None:
+        kvasir = (skill_root("kvasir") / "SKILL.md").read_text(encoding="utf-8")
+
+        self.assertIn("never automatically invoke another Asgard skill or recursively invoke Odin", kvasir)
+        self.assertIn("Use `HANDOFF_REQUIRED` whenever the request leaves Kvasir's refinement boundary", kvasir)
+        for field in (
+            "HANDOFF_REQUIRED",
+            "recommended_skill: $asgard:<skill>",
+            "reason:",
+            "evidence:",
+            "prerequisites:",
+            "authority_required:",
+        ):
+            self.assertIn(field, kvasir)
+        self.assertIn("READY | NEEDS_DECISION | HANDOFF_REQUIRED | BLOCKED", kvasir)
+
     def test_intent_routing_preserves_authority_and_discovery_boundary(self) -> None:
         skill = (VALIDATOR.SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
         for intent in ("DISCOVERY", "DELIVERY", "REVIEW", "INFRASTRUCTURE", "DEPLOY", "MONITOR"):
@@ -553,10 +575,32 @@ class WorkflowGovernanceTests(unittest.TestCase):
         ):
             self.assertIn(example, readme)
         self.assertIn("Intent never grants authority", readme)
-        self.assertIn("Release PR preparation is handled by the standalone Hermod skill", readme)
+        self.assertIn("Application promotion follows the repository's authorized workflow through Hermod", readme)
         self.assertIn("Complete Odin orchestration requires the Asgard plugin", readme)
         self.assertIn("Direct invocation does not start Odin orchestration", readme)
         self.assertIn("`HANDOFF_REQUIRED`", readme)
+
+    def test_readme_explains_odin_routing_without_specialist_portraits(self) -> None:
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+
+        self.assertEqual(readme.count("<img"), 1)
+        self.assertIn('./plugins/asgard/assets/asgard-agents.png', readme)
+        self.assertIn("## Skill summary", readme)
+        self.assertIn("## Odin orchestration flow", readme)
+        self.assertIn("flowchart TD", readme)
+        for name in VALIDATOR.EXPECTED_SKILLS:
+            self.assertIn(plugin_invocation(name), readme)
+
+        flow = readme.split("```mermaid\n", 1)[1].split("\n```", 1)[0]
+        brokkr = flow.index("G[Brokkr implements or corrects the candidate]")
+        hermod = flow.index("O[Hermod opens the ready Pull Request]")
+        eir = flow.index("P[Eir reviews the Pull Request against the issue]")
+        self.assertLess(brokkr, hermod)
+        self.assertLess(hermod, eir)
+        self.assertIn("Q -->|No| S[Original implementer corrects the Pull Request candidate]", flow)
+        self.assertIn("S --> T[Eir verifies its corrected findings]", flow)
+        self.assertIn("T --> Q", flow)
+        self.assertIn("Q -->|Yes| R", flow)
 
     def test_bragi_reviews_only_completed_code_quality_candidate(self) -> None:
         bragi = (skill_root("bragi") / "SKILL.md").read_text(encoding="utf-8")
@@ -568,7 +612,7 @@ class WorkflowGovernanceTests(unittest.TestCase):
         skill = (VALIDATOR.SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
         self.assertIn("references/roles-and-skills.md", skill)
         gates = (VALIDATOR.SKILL_ROOT / "references" / "review-and-publication-gates.md").read_text(encoding="utf-8")
-        self.assertIn("Dispatch Bragi only after `IMPLEMENTER_COMPLETE`", gates)
+        self.assertIn("Every Brokkr completion records `BRAGI_RECOMMENDED`", gates)
         self.assertIn("does not start services or rerun broad validations", gates)
 
     def test_forseti_applies_repository_traceability_with_limited_metadata_repair(self) -> None:
@@ -586,7 +630,7 @@ class WorkflowGovernanceTests(unittest.TestCase):
         self.assertIn("references/roles-and-skills.md", skill)
         self.assertNotIn("github-label-governance", skill)
         self.assertFalse((VALIDATOR.SKILL_ROOT / "references" / "github-label-governance.md").exists())
-        self.assertNotIn("Hermod", skill)
+        self.assertIn("$asgard:hermod", skill)
 
     def test_github_operations_are_cli_first_with_guarded_browser_exception(self) -> None:
         skill = (VALIDATOR.SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
@@ -635,7 +679,7 @@ class WorkflowGovernanceTests(unittest.TestCase):
         odin = skill
 
         self.assertIn("references/context-efficiency.md", skill)
-        self.assertIn("Do not mention or invoke `$asgard:asgard` in a specialist task", skill)
+        self.assertIn("Do not mention or invoke `$asgard:asgard` in a delegated skill task", skill)
         self.assertIn("simultaneous_agents: 3", context)
         self.assertIn("correction_cycles: 1", context)
         self.assertIn("monitor_or_status: 50", context)
@@ -659,11 +703,11 @@ class WorkflowGovernanceTests(unittest.TestCase):
         self.assertIn("incremental_reasoning_output_tokens", context)
         self.assertIn("Do not use `high` by default", context)
         self.assertIn("phase_checkpoint:", context)
-        self.assertIn("Aggregate by phase and leaf skill only at the final checkpoint", context)
+        self.assertIn("Aggregate by phase and selected skill only at the final checkpoint", context)
         self.assertIn("Reference exact paths, revisions, and bounded diff commands", roles)
         self.assertIn("Execution budget:", definition)
         self.assertIn("default budget permits one grouped correction cycle", gates)
-        self.assertIn("Do not mention or invoke `$asgard:asgard` in a specialist task", odin)
+        self.assertIn("Do not mention or invoke `$asgard:asgard` in a delegated skill task", odin)
 
     def test_implicit_selection_excludes_ordinary_work(self) -> None:
         skill = (VALIDATOR.SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
@@ -688,35 +732,48 @@ class WorkflowGovernanceTests(unittest.TestCase):
         self.assertIn("Explicit monitoring remains supported", when_to_use)
         self.assertIn("Do not select it implicitly", when_to_use)
 
-    def test_hermod_is_independent_and_owns_release_pr_preparation(self) -> None:
+    def test_hermod_publishes_normal_and_release_pull_requests(self) -> None:
         hermod_root = ROOT / "plugins" / "asgard" / "skills" / "hermod"
         skill = (hermod_root / "SKILL.md").read_text(encoding="utf-8")
         metadata = (hermod_root / "agents" / "openai.yaml").read_text(encoding="utf-8")
         asgard = (VALIDATOR.SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
 
         self.assertIn("name: hermod", skill)
-        self.assertIn("without invoking Asgard or Odin", skill)
-        for term in ("develop", "release/<version>", "master", "Semantic Version", "CHANGELOG.md", "gh auth status", "gh pr create"):
+        self.assertIn("**OPEN_PR:**", skill)
+        self.assertIn("**RELEASE_PR:**", skill)
+        for term in ("authoritative issue", "develop", "release/<version>", "master", "Semantic Version", "CHANGELOG.md", "gh auth status", "gh pr create"):
             self.assertIn(term, skill)
         self.assertIn("display_name: \"Hermod\"", metadata)
-        self.assertNotIn("Hermod", asgard)
+        self.assertIn("$asgard:hermod", asgard)
         self.assertNotIn((VALIDATOR.SKILL_ROOT / "references" / "agents" / "hermod.md").as_posix(), asgard)
 
-    def test_eir_publishes_review_feedback_and_correction_replies(self) -> None:
+    def test_eir_validates_pull_request_acceptance_and_corrections(self) -> None:
         eir_root = ROOT / "plugins" / "asgard" / "skills" / "eir"
         skill = (eir_root / "SKILL.md").read_text(encoding="utf-8")
         metadata = (eir_root / "agents" / "openai.yaml").read_text(encoding="utf-8")
         review = (eir_root / "references" / "review.md").read_text(encoding="utf-8")
 
         self.assertIn("name: eir", skill)
-        self.assertIn("**REVIEW**", skill)
+        self.assertIn("**REVIEW:**", skill)
         self.assertNotIn("REVIEW_COMMENTS", skill)
-        for term in ("gh auth status", "gh api", "COMMENT", "reply to every corrected finding"):
+        for term in ("gh auth status", "gh api", "COMMENT", "APPROVE", "does not implement code", "open Pull Requests"):
             self.assertIn(term, skill)
         self.assertIn('display_name: "Eir"', metadata)
         self.assertIn("Create exactly one native Pull Request review", review)
-        self.assertIn("post a reply in its original review thread", review)
-        self.assertIn("general Pull Request comment that links to the original comment", review)
+        verification = (eir_root / "references" / "verification.md").read_text(encoding="utf-8")
+        self.assertIn("Eir's original findings", verification)
+        self.assertIn("only an Eir-created thread", verification)
+        self.assertIn("one native `APPROVE` review", verification)
+
+    def test_brokkr_records_non_blocking_bragi_recommendation(self) -> None:
+        brokkr = (skill_root("brokkr") / "SKILL.md").read_text(encoding="utf-8")
+        gates = (VALIDATOR.SKILL_ROOT / "references" / "review-and-publication-gates.md").read_text(encoding="utf-8")
+        self.assertIn("**ISSUE:**", brokkr)
+        self.assertIn("**TASK:**", brokkr)
+        self.assertIn("**CORRECT:**", brokkr)
+        self.assertIn("`BRAGI_RECOMMENDED`", brokkr)
+        self.assertIn("never invokes Bragi", brokkr)
+        self.assertIn("It is not a gate and does not invoke Bragi automatically", gates)
 
     def test_release_runs_from_master_push_without_checkout(self) -> None:
         text = (ROOT / ".github" / "workflows" / "release.yml").read_text(encoding="utf-8")

@@ -33,7 +33,6 @@ EXPECTED_SKILLS = frozenset(
         "loki",
         "mimir",
         "regin",
-        "sindri",
         "tyr",
         "ymir",
     }
