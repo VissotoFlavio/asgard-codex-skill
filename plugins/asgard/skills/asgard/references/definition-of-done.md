@@ -16,9 +16,12 @@ Primary failure mode:
 Applicable invariants:
 Focused validation and end-of-activity command:
 Rejection conditions:
-Implementing leaf skill: $asgard:brokkr | $asgard:sindri | $asgard:regin | $asgard:ymir
+Implementing skill: $asgard:brokkr | $asgard:regin | $asgard:ymir
 Mode: Lean | Standard | Critical
-Required reviewer leaf skills and rationale:
+Required reviewer skills and rationale:
+Bragi recommendation and Odin/direct-requester decision: $asgard:bragi | not applicable
+Pull Request publication: $asgard:hermod | not applicable
+Pull Request acceptance validation: $asgard:eir | not applicable
 Execution budget: simultaneous agents | correction cycles | report words | inherited history
 Delivery governance and traceability: $asgard:forseti | not applicable
 Repository-policy artifacts and edit authority:
@@ -31,9 +34,9 @@ Omit discipline and required skills when they do not change execution. For a .NE
 
 ## Scale detail to risk
 
-- **Lean:** record the observable outcome, owned artifacts, focused validation, primary failure mode, and exclusions. Add a specialist reviewer only for an identified risk; use Bragi when maintainability is an explicit acceptance concern.
-- **Standard:** also record material compatibility, domain, authorization, data, concurrency, and cross-boundary invariants; require Loki and Heimdall, Tyr when contracts or rules are material, and Bragi when production code is added or structurally changed.
-- **Critical:** make every relevant security, privacy, persistence, transaction, isolation, abuse, availability, rollback, and negative-test expectation explicit; require Bragi for production-code candidates.
+- **Lean:** record the observable outcome, owned artifacts, focused validation, primary failure mode, and exclusions. Add a specialist reviewer only for an identified risk; consider Brokkr's Bragi recommendation when maintainability is an explicit acceptance concern.
+- **Standard:** also record material compatibility, domain, authorization, data, concurrency, and cross-boundary invariants; require Loki and Heimdall, Tyr when contracts or rules are material, and record Odin's or the direct requester's decision on Brokkr's Bragi recommendation when production code is added or structurally changed.
+- **Critical:** make every relevant security, privacy, persistence, transaction, isolation, abuse, availability, rollback, and negative-test expectation explicit; consider the recorded Bragi recommendation proportionate to the candidate's maintenance risk.
 
 Avoid generic invariant checklists. An invariant belongs in the contract only when the activity can affect it.
 
@@ -41,7 +44,7 @@ When refinement is useful or policy-required, record it in the repository-design
 
 Default to at most three simultaneous agents, one grouped correction cycle, 400 report words per agent, and no inherited conversation history. These are decision budgets, not acceptance gates. Increase only the field required by a documented risk or indivisible dependency, and record the reason before dispatch. A failed correction cycle stops for Odin to reassess rather than spawning an open-ended retry chain.
 
-Schedule executable validation once at the end of implementation. If an earlier run is required to reproduce a defect or test a high-risk assumption, record that exception in the contract. Bragi reviews only the completed immutable candidate and does not trigger per-file services, builds, or broad test suites.
+Schedule executable validation once at the end of implementation. If an earlier run is required to reproduce a defect or test a high-risk assumption, record that exception in the contract. Every Brokkr completion records `BRAGI_RECOMMENDED`; Odin or the direct requester decides whether to invoke Bragi. Bragi reviews only a completed immutable candidate and does not trigger per-file services, builds, or broad test suites.
 
 ## Completion evidence
 

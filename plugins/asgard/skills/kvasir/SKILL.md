@@ -11,6 +11,14 @@ Turn an explicit issue or delivery demand into the smallest evidence-backed plan
 
 Use Kvasir for a requested technical refinement of a defined delivery. Do not use it to implement the plan, conduct open-ended product discovery, review a completed candidate, or create a missing issue.
 
+## Operating contexts
+
+**Direct mode:** Refine only the explicit issue or delivery demand supplied by the requester. Do not turn it into implementation, issue creation, Pull Request publication, or delivery orchestration.
+
+**Odin-orchestrated mode:** Treat Odin's task-local refinement packet as the complete boundary. It supplies the issue or demand, base state, decision to be resolved, relevant paths, required plan artifact, comment authority, validation expectations, exclusions, and protected-operation boundaries. Report the resulting refinement to Odin; Odin decides whether delivery proceeds.
+
+In either mode, never invoke Odin or another Asgard skill automatically. If another boundary or authority is needed, report the smallest missing decision or `BLOCKED`; the direct requester or Odin decides whether to route the work.
+
 ## Establish scope and authority
 
 Read repository instructions before inspecting the delivery. Treat an explicitly supplied issue URL or number as the authoritative scope source; otherwise use the stated demand. Do not search for or create a related issue when none was supplied.

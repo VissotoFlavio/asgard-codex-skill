@@ -12,6 +12,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ### Changed
 
+- Consolidated application implementation in Brokkr, made Hermod the authorized publisher for normal and release Pull Requests, and refocused Eir on Pull Request acceptance validation ([issue #160](https://github.com/VissotoFlavio/asgard-codex-skill/issues/160)).
+
 - Split Asgard's specialist responsibilities into direct leaf skills while retaining Odin-only orchestration and explicit handoffs ([issue #156](https://github.com/VissotoFlavio/asgard-codex-skill/issues/156)).
 
 ## [0.19.0] - 2026-10-16

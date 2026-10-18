@@ -1,6 +1,6 @@
 # Backend discipline
 
-Load this guidance for an activity that owns server-side application behavior, APIs, services, persistence, integrations, or background processing. It supplements the selected `$asgard:brokkr` or `$asgard:sindri` leaf skill; it does not replace that leaf skill or create shared ownership.
+Load this guidance for an activity that owns server-side application behavior, APIs, services, persistence, integrations, or background processing. It supplements the selected `$asgard:brokkr` skill; it does not replace that skill or create shared ownership.
 
 ## .NET capability
 

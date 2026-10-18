@@ -25,7 +25,7 @@ After the allowed grouped correction cycle, unresolved material findings return 
 
 ## Dispatch without orchestration recursion
 
-Odin applies Asgard once. Specialist prompts must not mention or invoke `$asgard:asgard`; doing so can reload the orchestration entrypoint and conditional references inside every child context. Dispatch only the chosen leaf skill with its task-local activity contract, applicable repository rules, bounded paths or revision, validation, and exclusions.
+Odin applies Asgard once. Delegated skill prompts must not mention or invoke `$asgard:asgard`; doing so can reload the orchestration entrypoint and conditional references inside every child context. Dispatch only the chosen bounded skill with its task-local activity contract, applicable repository rules, bounded paths or revision, validation, and exclusions.
 
 Use no inherited conversation history when the platform supports it. If a specialist needs prior evidence, include the compact checkpoint or an exact artifact reference. Never solve missing context by attaching the entire parent transcript.
 
@@ -40,7 +40,7 @@ phase_checkpoint:
   decisions: concise list
   changed_artifacts: bounded paths
   validation: command and conclusion or artifact reference
-  approvals: leaf skill and decision
+  approvals: skill and decision
   deviations: material delta only
   open_risks: actionable items only
   next_activity: objective and owner
@@ -102,4 +102,4 @@ usage_observed:
   incremental_reasoning_output_tokens: integer | unavailable
 ```
 
-Aggregate by phase and leaf skill only at the final checkpoint. Telemetry is diagnostic: do not spend additional model turns polling, reconstructing, or explaining unavailable usage.
+Aggregate by phase and selected skill only at the final checkpoint. Telemetry is diagnostic: do not spend additional model turns polling, reconstructing, or explaining unavailable usage.

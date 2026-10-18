@@ -13,6 +13,8 @@ Independently review an exact completed candidate for human-readable, maintainab
 
 **Odin-orchestrated mode:** Review only after `IMPLEMENTER_COMPLETE` against the immutable candidate and task-local contract. Odin owns review selection, correction routing, integration, and final acceptance.
 
+A Brokkr `BRAGI_RECOMMENDED` record is a non-blocking recommendation, not an automatic dispatch or a gate. Require the same stable candidate and bounded review contract before reviewing; the direct requester or Odin decides whether to invoke Bragi.
+
 In either mode, this is a leaf skill. Never automatically invoke another Asgard skill or recursively invoke Odin. When another role is needed, stop with:
 
 ```text
