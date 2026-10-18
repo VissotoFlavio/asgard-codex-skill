@@ -6,6 +6,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+### Changed
+
+- Link each skill name in the README summary table directly to its `SKILL.md` definition ([issue #164](https://github.com/VissotoFlavio/asgard-codex-skill/issues/164)).
+
 ## [0.20.0] - 2026-10-18
 
 ### Fixed

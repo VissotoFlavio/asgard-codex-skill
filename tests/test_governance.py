@@ -392,7 +392,7 @@ class ContainedPathTests(unittest.TestCase):
         self.assertIn("separate Ymir authority", regin)
         self.assertIn("After partial failure, halt mutation", regin)
         self.assertIn("new authority bound to that state", regin)
-        self.assertIn("| **Regin** |", readme)
+        self.assertRegex(readme, r"\|\s*(?:\[\*\*Regin\*\*\]\([^)]*/SKILL\.md\)|\*\*Regin\*\*)\s*\|")
         self.assertNotIn("reginpng.png", readme.lower())
 
 

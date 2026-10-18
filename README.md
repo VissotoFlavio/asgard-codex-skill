@@ -38,19 +38,19 @@ Odin turns a request into a proportional delivery graph. It establishes the inte
 
 | Skill | Invocation | Direct responsibility |
 | --- | --- | --- |
-| **Odin** | `$asgard:asgard` | Plans the execution graph, coordinates specialists, reviews evidence, and owns final acceptance. |
-| **Kvasir** | `$asgard:kvasir` | Refines one defined issue or delivery demand into a minimal technical plan; it never implements that plan. |
-| **Mimir** | `$asgard:mimir` | Resolves one stated technical uncertainty with read-only evidence. |
-| **Brokkr** | `$asgard:brokkr` | Implements one bounded application candidate for an authoritative issue, with task context or a designated Pull Request correction. |
-| **Regin** | `$asgard:regin` | Owns database architecture and safe schema evolution, including tables, keys, constraints, indexes, relationships, migrations, and data backfills. |
-| **Ymir** | `$asgard:ymir` | Discovers, plans, applies authorized infrastructure changes, and verifies the resulting environment. |
-| **Tyr** | `$asgard:tyr` | Independently validates material rules, contracts, compatibility, and consistency. |
-| **Loki** | `$asgard:loki` | Searches adversarially for behavioral gaps and edge cases. |
-| **Bragi** | `$asgard:bragi` | Reviews completed code for human readability and maintainability using context-sensitive SOLID, DRY, KISS, YAGNI, and Tell, Don't Ask. |
-| **Heimdall** | `$asgard:heimdall` | Independently reviews security, privacy, isolation, abuse, availability, and risk-justified deep vulnerability analysis. |
-| **Forseti** | `$asgard:forseti` | Verifies repository-required delivery and release traceability, including a narrowly authorized metadata repair when policy permits it. |
-| **Hermod** | `$asgard:hermod` | Opens an authorized normal or release Pull Request from a ready candidate. |
-| **Eir** | `$asgard:eir` | Validates a ready Pull Request against its issue and acceptance criteria through review and correction verification. |
+| [**Odin**](plugins/asgard/skills/asgard/SKILL.md) | `$asgard:asgard` | Plans the execution graph, coordinates specialists, reviews evidence, and owns final acceptance. |
+| [**Kvasir**](plugins/asgard/skills/kvasir/SKILL.md) | `$asgard:kvasir` | Refines one defined issue or delivery demand into a minimal technical plan; it never implements that plan. |
+| [**Mimir**](plugins/asgard/skills/mimir/SKILL.md) | `$asgard:mimir` | Resolves one stated technical uncertainty with read-only evidence. |
+| [**Brokkr**](plugins/asgard/skills/brokkr/SKILL.md) | `$asgard:brokkr` | Implements one bounded application candidate for an authoritative issue, with task context or a designated Pull Request correction. |
+| [**Regin**](plugins/asgard/skills/regin/SKILL.md) | `$asgard:regin` | Owns database architecture and safe schema evolution, including tables, keys, constraints, indexes, relationships, migrations, and data backfills. |
+| [**Ymir**](plugins/asgard/skills/ymir/SKILL.md) | `$asgard:ymir` | Discovers, plans, applies authorized infrastructure changes, and verifies the resulting environment. |
+| [**Tyr**](plugins/asgard/skills/tyr/SKILL.md) | `$asgard:tyr` | Independently validates material rules, contracts, compatibility, and consistency. |
+| [**Loki**](plugins/asgard/skills/loki/SKILL.md) | `$asgard:loki` | Searches adversarially for behavioral gaps and edge cases. |
+| [**Bragi**](plugins/asgard/skills/bragi/SKILL.md) | `$asgard:bragi` | Reviews completed code for human readability and maintainability using context-sensitive SOLID, DRY, KISS, YAGNI, and Tell, Don't Ask. |
+| [**Heimdall**](plugins/asgard/skills/heimdall/SKILL.md) | `$asgard:heimdall` | Independently reviews security, privacy, isolation, abuse, availability, and risk-justified deep vulnerability analysis. |
+| [**Forseti**](plugins/asgard/skills/forseti/SKILL.md) | `$asgard:forseti` | Verifies repository-required delivery and release traceability, including a narrowly authorized metadata repair when policy permits it. |
+| [**Hermod**](plugins/asgard/skills/hermod/SKILL.md) | `$asgard:hermod` | Opens an authorized normal or release Pull Request from a ready candidate. |
+| [**Eir**](plugins/asgard/skills/eir/SKILL.md) | `$asgard:eir` | Validates a ready Pull Request against its issue and acceptance criteria through review and correction verification. |
 
 Specialists receive task-local context rather than the entire conversation. Their reports and passing tests are evidence; Odin still owns product decisions, inspects the candidate, and makes the acceptance decision. Mimir only resolves stated technical uncertainty read-only. Regin may design and author versioned database changes, but connecting to or mutating any durable, runtime, or non-isolated database, applying or retrying a migration, and executing a rollback each require explicit authority for the exact environment and candidate.
 
