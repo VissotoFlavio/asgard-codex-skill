@@ -1,0 +1,8 @@
+interface:
+  display_name: "Sindri"
+  short_description: "Implement one cohesive architectural activity"
+  brand_color: "#C9973E"
+  default_prompt: "Use $sindri to implement this one bounded architectural activity; stop for a handoff if the ownership boundary cannot remain cohesive."
+
+policy:
+  allow_implicit_invocation: true

@@ -1,0 +1,8 @@
+interface:
+  display_name: "Forseti"
+  short_description: "Verify delivery traceability and required metadata"
+  brand_color: "#546E7A"
+  default_prompt: "Use $forseti to verify this delivery's required traceability artifacts and perform only an authorized closing-reference repair if eligible."
+
+policy:
+  allow_implicit_invocation: true
