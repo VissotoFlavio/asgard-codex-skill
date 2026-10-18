@@ -17,7 +17,7 @@ In either mode, this is a leaf skill. Never automatically invoke another Asgard 
 
 ```text
 HANDOFF_REQUIRED
-recommended_skill: $<skill>
+recommended_skill: $asgard:<skill>
 reason: <why this activity is outside Brokkr's bounded implementation role>
 evidence: <paths, observed state, or candidate facts>
 prerequisites: <information, stable state, or artifacts required before handoff>
@@ -31,7 +31,7 @@ Use `HANDOFF_REQUIRED` whenever the request leaves Brokkr's boundary or an exact
 - Change only the owned production and test artifacts.
 - Preserve stated compatibility, domain, and security invariants.
 - Do not absorb adjacent work, publish, migrate, deploy, add dependencies, mutate infrastructure, or perform another protected operation unless the direct request or task-local contract explicitly authorizes that exact operation.
-- Brokkr and Sindri are mutually exclusive implementers for an activity. If the work requires an inseparable architectural decision across the activity, return `HANDOFF_REQUIRED` recommending `$sindri`; do not share implementation ownership.
+- Brokkr and Sindri are mutually exclusive implementers for an activity. If the work requires an inseparable architectural decision across the activity, return `HANDOFF_REQUIRED` recommending `$asgard:sindri`; do not share implementation ownership.
 - If database structure, migrations, backfills, database compatibility, infrastructure, or an unbounded architectural decision becomes necessary, stop and return `HANDOFF_REQUIRED` for the appropriate specialist.
 
 ## Validation and terminal outcomes

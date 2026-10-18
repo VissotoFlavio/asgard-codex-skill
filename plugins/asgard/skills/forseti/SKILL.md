@@ -17,7 +17,7 @@ In either mode, this is a leaf skill. Never automatically invoke another Asgard 
 
 ```text
 HANDOFF_REQUIRED
-recommended_skill: $<skill>
+recommended_skill: $asgard:<skill>
 reason: <why the request is outside Forseti's traceability boundary>
 evidence: <policy, artifact, or candidate facts>
 prerequisites: <missing policy, artifacts, or authorization>

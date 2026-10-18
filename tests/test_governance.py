@@ -19,6 +19,10 @@ def skill_root(name: str) -> Path:
     return ROOT / "plugins" / "asgard" / "skills" / name
 
 
+def plugin_invocation(name: str) -> str:
+    return f"$asgard:{name}"
+
+
 def temporary_directory() -> tempfile.TemporaryDirectory[str]:
     return tempfile.TemporaryDirectory(dir=ROOT)
 
@@ -254,6 +258,7 @@ class ContainedPathTests(unittest.TestCase):
             self.assertIn("recursively invoke Odin", skill, name)
             for field in ("HANDOFF_REQUIRED", "recommended_skill:", "reason:", "evidence:", "prerequisites:", "authority_required:"):
                 self.assertIn(field, skill, f"{name}: {field}")
+            self.assertIn("recommended_skill: $asgard:<skill>", skill, name)
             self.assertIn("authority_required: <specific protected authority, or none>", skill, name)
             self.assertIn("`HANDOFF_REQUIRED`", skill, name)
             for state in states:
@@ -278,6 +283,32 @@ class ContainedPathTests(unittest.TestCase):
             self.assertFalse((references / retired).exists(), retired)
         self.assertEqual(list((references / "agents").glob("*.md")), [])
 
+    def test_plugin_invocation_guidance_uses_qualified_skill_names(self) -> None:
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+        manifest = (ROOT / "plugins" / "asgard" / ".codex-plugin" / "plugin.json").read_text(encoding="utf-8")
+        catalog = (VALIDATOR.SKILL_ROOT / "references" / "roles-and-skills.md").read_text(encoding="utf-8")
+
+        for name in VALIDATOR.EXPECTED_SKILLS:
+            invocation = plugin_invocation(name)
+            metadata = (skill_root(name) / "agents" / "openai.yaml").read_text(encoding="utf-8")
+            prompt = VALIDATOR.parse_agent_interface(metadata, name=name)["default_prompt"]
+            self.assertIn(invocation, prompt, name)
+            self.assertIn(invocation, readme, name)
+
+        self.assertIn(plugin_invocation("asgard"), manifest)
+        for name in LEAF_SKILLS:
+            self.assertIn(plugin_invocation(name), catalog, name)
+        self.assertIn(
+            "The plugin distributes all 14 skills. Invoke every plugin-provided Asgard skill with the `asgard:` namespace.",
+            readme,
+        )
+        self.assertIn("## Install an independent workflow", readme)
+        self.assertIn("$eir`, `$hermod`, or `$kvasir`", readme)
+        for name in ("eir", "hermod", "kvasir"):
+            metadata = (skill_root(name) / "agents" / "openai.yaml").read_text(encoding="utf-8")
+            prompt = VALIDATOR.parse_agent_interface(metadata, name=name)["default_prompt"]
+            self.assertIn(f"${name}", prompt, name)
+
     def test_asgard_discipline_guidance_is_loadable(self) -> None:
         disciplines = VALIDATOR.SKILL_ROOT / "references" / "disciplines"
         expected = {"backend", "database", "frontend", "infrastructure", "security"}
@@ -287,7 +318,7 @@ class ContainedPathTests(unittest.TestCase):
             self.assertTrue(guidance.strip(), discipline)
         backend = (disciplines / "backend.md").read_text(encoding="utf-8")
         self.assertIn("$dotnet-best-practices", backend)
-        self.assertIn("route structural ownership to `$regin`", backend)
+        self.assertIn("route structural ownership to `$asgard:regin`", backend)
         database = (disciplines / "database.md").read_text(encoding="utf-8")
         for term in ("AUTHOR", "VALIDATE", "APPLY", "keys", "indexes", "expand/contract"):
             self.assertIn(term, database)
@@ -295,7 +326,7 @@ class ContainedPathTests(unittest.TestCase):
         self.assertIn("$frontend-design", frontend)
         self.assertIn("$web-design-guidelines", frontend)
         infrastructure = (disciplines / "infrastructure.md").read_text(encoding="utf-8")
-        self.assertIn("`$ymir` leaf skill", infrastructure)
+        self.assertIn("`$asgard:ymir` leaf skill", infrastructure)
         self.assertIn("skill-local guidance is canonical", infrastructure)
         self.assertIn("DISCOVER -> PLAN -> APPLY -> VERIFY", infrastructure)
         self.assertIn("Remote execution evidence never constitutes final acceptance", infrastructure)
@@ -307,7 +338,7 @@ class ContainedPathTests(unittest.TestCase):
         self.assertIn("--validate-security", security)
 
         definition = (VALIDATOR.SKILL_ROOT / "references" / "definition-of-done.md").read_text(encoding="utf-8")
-        self.assertIn("Implementing leaf skill: $brokkr | $sindri | $regin | $ymir", definition)
+        self.assertIn("Implementing leaf skill: $asgard:brokkr | $asgard:sindri | $asgard:regin | $asgard:ymir", definition)
         self.assertIn("For deep vulnerability analysis, record `Security`", definition)
 
     def test_heimdall_deep_security_analysis_uses_optional_skills_with_fallback(self) -> None:
@@ -604,7 +635,7 @@ class WorkflowGovernanceTests(unittest.TestCase):
         odin = skill
 
         self.assertIn("references/context-efficiency.md", skill)
-        self.assertIn("Do not mention or invoke `$asgard` in a specialist task", skill)
+        self.assertIn("Do not mention or invoke `$asgard:asgard` in a specialist task", skill)
         self.assertIn("simultaneous_agents: 3", context)
         self.assertIn("correction_cycles: 1", context)
         self.assertIn("monitor_or_status: 50", context)
@@ -632,7 +663,7 @@ class WorkflowGovernanceTests(unittest.TestCase):
         self.assertIn("Reference exact paths, revisions, and bounded diff commands", roles)
         self.assertIn("Execution budget:", definition)
         self.assertIn("default budget permits one grouped correction cycle", gates)
-        self.assertIn("Do not mention or invoke `$asgard` in a specialist task", odin)
+        self.assertIn("Do not mention or invoke `$asgard:asgard` in a specialist task", odin)
 
     def test_implicit_selection_excludes_ordinary_work(self) -> None:
         skill = (VALIDATOR.SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")

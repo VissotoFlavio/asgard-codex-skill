@@ -17,7 +17,7 @@ In either mode, this is a leaf skill. Never automatically invoke another Asgard 
 
 ```text
 HANDOFF_REQUIRED
-recommended_skill: $<skill>
+recommended_skill: $asgard:<skill>
 reason: <why the requested work is outside Heimdall's security-review boundary>
 evidence: <candidate facts, paths, or observed attack surface>
 prerequisites: <missing candidate, DoD, evidence, scope, or capability>

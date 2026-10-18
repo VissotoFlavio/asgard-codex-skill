@@ -2,7 +2,7 @@ interface:
   display_name: "Tyr"
   short_description: "Review contracts, compatibility, and consistency"
   brand_color: "#607D8B"
-  default_prompt: "Use $tyr to independently review this exact candidate's material rules, contracts, or compatibility."
+  default_prompt: "Use $asgard:tyr to independently review this exact candidate's material rules, contracts, or compatibility."
 
 policy:
   allow_implicit_invocation: true

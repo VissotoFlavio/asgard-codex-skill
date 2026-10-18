@@ -1,6 +1,6 @@
 # Frontend discipline
 
-Load this guidance for an activity that owns a user-visible web interface, interaction, responsive layout, or interface copy. It supplements the selected `$brokkr` or `$sindri` leaf skill; it does not replace that leaf skill or create shared ownership.
+Load this guidance for an activity that owns a user-visible web interface, interaction, responsive layout, or interface copy. It supplements the selected `$asgard:brokkr` or `$asgard:sindri` leaf skill; it does not replace that leaf skill or create shared ownership.
 
 ## Design capability
 
