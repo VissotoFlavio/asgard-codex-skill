@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./assets/asgard-agents.png" alt="Asgard agents, responsibilities, and delivery flow" width="760">
+  <img src="./plugins/asgard/assets/asgard-agents.png" alt="Asgard agents, responsibilities, and delivery flow" width="760">
 </p>
 
 # Asgard plugin for Codex
