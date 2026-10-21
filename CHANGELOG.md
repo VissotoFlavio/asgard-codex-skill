@@ -6,6 +6,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+### Added
+
+- Require Asgard-created Git worktrees to use a canonical sibling location, reject tool-managed and `.git` destinations, and verify the policy in governance tests ([issue #174](https://github.com/VissotoFlavio/asgard-codex-skill/issues/174)).
+
 ## [0.22.0] - 2026-10-21
 
 ### Changed

@@ -61,6 +61,14 @@ For repository changes, discover the repository's issue, branch, pull-request, a
 Odin remains accountable for decomposition, delegation, integration, evidence review, and final acceptance. Never delegate acceptance of the complete delivery or act only as a router.
 Read the [routing catalog](references/roles-and-skills.md) only when routing is unclear. It identifies independent implementation, review, publication, validation, and refinement skills; their instructions remain in their own skill roots and are not duplicated here.
 
+## Canonical Git worktree location
+
+When Odin selects a Git worktree for an approved repository activity, it must keep that worktree beside the primary repository. Discover the primary worktree with `git rev-parse --show-toplevel`; for a repository at `<parent>/<repository>`, the only permitted root is `<parent>/.worktrees/<repository>` and an activity worktree must be `<parent>/.worktrees/<repository>/<activity-slug>`. The activity slug must be a stable, filesystem-safe identifier that includes the authoritative issue ID when one exists.
+
+Resolve the primary repository, canonical root, and candidate destination to absolute paths before creation. Reject a destination unless it is strictly below the canonical root; on case-insensitive filesystems, compare canonical paths case-insensitively. Never create a worktree inside the primary worktree, under `.git`, under `.git/worktrees`, in a user home or tool-managed directory, or at a path selected implicitly by a platform API. `.git/worktrees` is Git-owned metadata, never a location for a working copy.
+
+Before creation, inspect `git worktree list --porcelain` and the candidate path. Do not overwrite, reuse, or manually delete an existing worktree directory; report a collision for an explicit decision. Use an operation that accepts the exact canonical destination, such as `git worktree add <destination> ...`. If a platform worktree API cannot accept that destination, do not use it for this activity; choose another approved isolation mechanism or continue without a worktree. Remove a completed worktree only through `git worktree remove` after the applicable retention and authority checks.
+
 ## Select the smallest sufficient mode
 
 Choose once during planning and increase rigor if new risk appears:

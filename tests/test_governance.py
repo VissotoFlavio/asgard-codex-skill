@@ -657,6 +657,24 @@ class WorkflowGovernanceTests(unittest.TestCase):
         self.assertIn("Never infer a repository's branch", forseti)
         self.assertIn("does not define the taxonomy", readme)
 
+    def test_odin_enforces_a_canonical_worktree_location(self) -> None:
+        skill = (VALIDATOR.SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+
+        self.assertIn("## Canonical Git worktree location", skill)
+        self.assertIn("`git rev-parse --show-toplevel`", skill)
+        self.assertIn("<parent>/.worktrees/<repository>/<activity-slug>", skill)
+        self.assertIn("strictly below the canonical root", skill)
+        self.assertIn("`.git/worktrees` is Git-owned metadata", skill)
+        self.assertIn("`git worktree list --porcelain`", skill)
+        self.assertIn("`git worktree add <destination> ...`", skill)
+        self.assertIn("cannot accept that destination, do not use it", skill)
+
+        self.assertIn("## Git worktree location", readme)
+        self.assertIn("D:\\Git\\source-mesh", readme)
+        self.assertIn(".worktrees", readme)
+        self.assertIn("Git reserves `.git/worktrees` for metadata", readme)
+
     def test_changelog_rules_follow_repository_policy(self) -> None:
         skill = (VALIDATOR.SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
         forseti = (skill_root("forseti") / "SKILL.md").read_text(encoding="utf-8")
