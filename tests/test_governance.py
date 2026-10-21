@@ -758,12 +758,20 @@ class WorkflowGovernanceTests(unittest.TestCase):
         self.assertNotIn("REVIEW_COMMENTS", skill)
         for term in ("gh auth status", "gh api", "COMMENT", "APPROVE", "does not implement code", "open Pull Requests"):
             self.assertIn(term, skill)
+        self.assertIn("A successful `VERIFY` authorizes its required Pull Request approval", skill)
         self.assertIn('display_name: "Eir"', metadata)
         self.assertIn("Create exactly one native Pull Request review", review)
         verification = (eir_root / "references" / "verification.md").read_text(encoding="utf-8")
         self.assertIn("Eir's original findings", verification)
-        self.assertIn("only an Eir-created thread", verification)
+        self.assertIn("inspect every open Pull Request thread", verification)
+        self.assertIn(
+            "Resolve every open thread only after verifying that its exact concern is addressed",
+            verification,
+        )
+        self.assertIn("if any thread remains unresolved", verification)
+        self.assertIn("and do not approve", verification)
         self.assertIn("one native `APPROVE` review", verification)
+        self.assertIn("confirm that no Pull Request threads remain open", verification)
 
     def test_brokkr_records_non_blocking_bragi_recommendation(self) -> None:
         brokkr = (skill_root("brokkr") / "SKILL.md").read_text(encoding="utf-8")
