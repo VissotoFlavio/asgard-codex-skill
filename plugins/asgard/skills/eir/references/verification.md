@@ -19,8 +19,6 @@ For every Eir finding:
 
 If a finding is partially corrected, not corrected, inadequate, or inconclusive, publish one new evidence-backed `COMMENT` review or current-diff inline comment for the remaining concern. Keep the original Eir thread open and do not approve.
 
-When every Eir finding is corrected or obsolete, resolve only an Eir-created thread after verifying that its exact concern is addressed. Confirm the thread author and original finding before resolution; never resolve threads created by a person or another skill. This mutation and the final approval require explicit authority for the exact Pull Request and candidate revision.
+When every Eir finding is corrected or obsolete, inspect every open Pull Request thread. Resolve every open thread only after verifying that its exact concern is addressed; if any thread remains unresolved, inconclusive, or out of scope to validate, keep it open, publish actionable feedback where needed, and do not approve. A successful `VERIFY` authorizes these thread resolutions for the verified candidate revision.
 
-Submit one native `APPROVE` review with a concise summary of the issue criteria checked, correction revision, validation evidence, resolved Eir threads, and remaining non-blocking risks. Re-read the approval review and resolved-thread state before reporting `EIR_APPROVED`.
-
-If approval or thread-resolution authority is absent, report `EIR_READY_FOR_APPROVAL` with the same evidence and leave all thread state unchanged.
+Submit one native `APPROVE` review with a concise summary of the issue criteria checked, correction revision, validation evidence, all resolved threads, and remaining non-blocking risks. Re-read the approval review and confirm that no Pull Request threads remain open before reporting `EIR_APPROVED`.
