@@ -6,6 +6,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+### Changed
+
+- Make Eir's successful `VERIFY` automatically approve the Pull Request and resolve every verified open review thread, while blocking approval for unresolved or inconclusive threads ([issue #170](https://github.com/VissotoFlavio/asgard-codex-skill/issues/170)).
+
 ## [0.21.0] - 2026-10-21
 
 ### Changed
