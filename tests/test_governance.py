@@ -392,7 +392,7 @@ class ContainedPathTests(unittest.TestCase):
         self.assertIn("separate Ymir authority", regin)
         self.assertIn("After partial failure, halt mutation", regin)
         self.assertIn("new authority bound to that state", regin)
-        self.assertIn("| **Regin** |", readme)
+        self.assertRegex(readme, r"\|\s*(?:\[\*\*Regin\*\*\]\([^)]*/SKILL\.md\)|\*\*Regin\*\*)\s*\|")
         self.assertNotIn("reginpng.png", readme.lower())
 
 
@@ -774,6 +774,26 @@ class WorkflowGovernanceTests(unittest.TestCase):
         self.assertIn("`BRAGI_RECOMMENDED`", brokkr)
         self.assertIn("never invokes Bragi", brokkr)
         self.assertIn("It is not a gate and does not invoke Bragi automatically", gates)
+
+    def test_brokkr_correct_replies_only_to_designated_threads_without_resolving(self) -> None:
+        brokkr = (skill_root("brokkr") / "SKILL.md").read_text(encoding="utf-8")
+        gates = (VALIDATOR.SKILL_ROOT / "references" / "review-and-publication-gates.md").read_text(encoding="utf-8")
+
+        for term in (
+            "reply concisely to every designated review thread",
+            "exact correction, candidate revision, and relevant validation",
+            "use `gh` only",
+            "run `gh auth status` before the first GitHub operation",
+            "explicit authority covers comments on the exact Pull Request and every designated thread",
+            "return `HANDOFF_REQUIRED` instead of claiming completion",
+            "never create a native review",
+            "reply to an undesignated or general comment",
+            "approve, resolve, or otherwise change thread state",
+        ):
+            self.assertIn(term, brokkr)
+        self.assertIn("Odin routes each designated review-thread reply to Brokkr", gates)
+        self.assertIn("Eir retains ownership only of verifying, approving, and resolving Eir's own threads", gates)
+        self.assertIn("Brokkr does not approve, resolve, or change thread state", gates)
 
     def test_release_runs_from_master_push_without_checkout(self) -> None:
         text = (ROOT / ".github" / "workflows" / "release.yml").read_text(encoding="utf-8")
