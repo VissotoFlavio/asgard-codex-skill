@@ -6,6 +6,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+## [0.22.0] - 2026-10-21
+
+### Changed
+
+- Make Eir's successful `VERIFY` automatically approve the Pull Request and resolve every verified open review thread, while blocking approval for unresolved or inconclusive threads ([issue #170](https://github.com/VissotoFlavio/asgard-codex-skill/issues/170), [PR #171](https://github.com/VissotoFlavio/asgard-codex-skill/pull/171)).
+
 ## [0.21.0] - 2026-10-21
 
 ### Changed
@@ -226,7 +232,8 @@ Release tracking: [issue #40](https://github.com/VissotoFlavio/asgard-codex-skil
 
 - Add Forseti as the delivery-governance specialist, with independent issue-to-release traceability gates and official artwork ([issue #38](https://github.com/VissotoFlavio/asgard-codex-skill/issues/38), [PR #39](https://github.com/VissotoFlavio/asgard-codex-skill/pull/39)).
 
-[Unreleased]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.21.0...develop
+[Unreleased]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.22.0...develop
+[0.22.0]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.21.0...v0.22.0
 [0.21.0]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.20.0...v0.21.0
 [0.20.0]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.19.0...v0.20.0
 [0.19.0]: https://github.com/VissotoFlavio/asgard-codex-skill/compare/v0.18.0...v0.19.0

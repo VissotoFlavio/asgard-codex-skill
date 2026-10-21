@@ -12,9 +12,9 @@ Validate a ready Pull Request against its authoritative issue, initial context, 
 ## Choose the entry mode
 
 - **REVIEW:** Inspect the ready Pull Request against the issue and acceptance criteria, then publish one evidence-backed native review for unmet criteria, regressions, or a clean reviewed scope.
-- **VERIFY:** After designated corrections, compare every Eir finding with the current candidate. Publish new actionable feedback when a finding remains unresolved; otherwise, with explicit approval authority, resolve Eir's own validated threads and submit the final approval summary.
+- **VERIFY:** After designated corrections, compare every Eir finding with the current candidate and inspect every open Pull Request thread. Publish new actionable feedback when a finding remains unresolved; otherwise, resolve all open threads and submit the final approval summary.
 
-Do not infer that `REVIEW` authorizes `VERIFY`, approval, or thread resolution. Merge, deployment, release publication, migrations, data changes, infrastructure changes, dependency installation, and destructive actions always require separate explicit authority.
+Do not infer that `REVIEW` authorizes `VERIFY`. A successful `VERIFY` authorizes its required Pull Request approval and thread resolution. Merge, deployment, release publication, migrations, data changes, infrastructure changes, dependency installation, and destructive actions always require separate explicit authority.
 
 ## Preconditions and common controls
 
@@ -49,15 +49,14 @@ Read [review guidance](references/review.md) before publishing. A `REVIEW` creat
 
 Read [verification guidance](references/verification.md) after a correction. Map every Eir finding to evidence in the new candidate. If any finding remains inadequate, publish new actionable feedback and do not approve or resolve its thread.
 
-Only when every Eir finding is verified and the task grants exact authority to approve and resolve threads may Eir resolve threads it created and submit one native `APPROVE` review. Its approval body is a concise new Pull Request comment stating the issue criteria checked, correction or candidate revision, validation evidence, and remaining non-blocking risks. Never resolve a human's or another skill's thread.
+Only when every Eir finding is verified and every open Pull Request thread is confirmed addressed may Eir resolve all open threads and submit one native `APPROVE` review. Its approval body is a concise new Pull Request comment stating the issue criteria checked, correction or candidate revision, validation evidence, resolved threads, and remaining non-blocking risks. A successful `VERIFY` grants this authority; do not require a separate request to approve or resolve threads.
 
 ## Terminal outcomes
 
 Return one of:
 
 - `EIR_CHANGES_REQUIRED` — the review found an unmet acceptance criterion or inadequate correction, with evidence and required validation.
-- `EIR_READY_FOR_APPROVAL` — Eir verified its findings but lacks explicit authority to approve or resolve its own threads.
-- `EIR_APPROVED` — Eir verified its findings, resolved only its own eligible threads, and submitted the authorized approval review.
+- `EIR_APPROVED` — Eir verified its findings, resolved every verified open Pull Request thread, and submitted the approval review.
 - `HANDOFF_REQUIRED` — another role, missing candidate, or authority is required, using the structured record above.
 - `BLOCKED` — a prerequisite is unavailable and no handoff can resolve it.
 
