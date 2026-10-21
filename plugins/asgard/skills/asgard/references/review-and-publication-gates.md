@@ -20,6 +20,8 @@ Odin confirms actionable findings, groups compatible corrections into one bounde
 
 The default budget permits one grouped correction cycle. If material findings remain afterward, Odin stops, records the delta and cause, and proposes a revised graph or explicit budget increase instead of automatically repeating implementer and reviewer loops.
 
+For a designated Pull Request correction, Odin routes each designated review-thread reply to Brokkr as part of the correction contract, with explicit authority to comment on that exact Pull Request and those exact threads. Brokkr corrects the candidate, runs focused validation, and replies to every designated thread before Eir verifies. Eir retains ownership only of verifying, approving, and resolving Eir's own threads; Brokkr does not approve, resolve, or change thread state.
+
 After a correction:
 
 1. compare the candidate with the previously reviewed revision;
@@ -53,6 +55,6 @@ CHANGE_OPEN          != INTEGRATED
 
 Applicable repository rules and explicit user authority control commits, pushes, change requests, merges, migrations, deployments, dependencies, infrastructure, tags, releases, and destructive operations. Internal Asgard approval grants none of them.
 
-When Pull Request publication is authorized, Hermod opens the ready candidate as a normal or release Pull Request. Eir then validates the ready Pull Request against the authoritative issue and acceptance criteria: `REVIEW` publishes one COMMENT review; `VERIFY` rechecks Eir's own findings after a Brokkr correction. Eir may approve only with exact approval authority and may resolve only its own threads with exact resolution authority. Eir approval is never merge authority or Odin's final delivery acceptance.
+When Pull Request publication is authorized, Hermod opens the ready candidate as a normal or release Pull Request. Eir then validates the ready Pull Request against the authoritative issue and acceptance criteria: `REVIEW` publishes one COMMENT review; `VERIFY` rechecks Eir's own findings after a Brokkr correction and its designated thread replies. Eir may approve only with exact approval authority and may resolve only its own threads with exact resolution authority. Eir approval is never merge authority or Odin's final delivery acceptance.
 
 When traceability policy applies, require Forseti to verify the policy-required artifacts available at that phase before merge or publication.

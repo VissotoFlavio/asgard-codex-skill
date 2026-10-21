@@ -8,6 +8,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ### Changed
 
+- Require Brokkr to reply to designated Pull Request review threads after correcting the candidate and running focused validation, while preserving Eir's verification and resolution boundary ([issue #166](https://github.com/VissotoFlavio/asgard-codex-skill/issues/166)).
+
 - Link each skill name in the README summary table directly to its `SKILL.md` definition ([issue #164](https://github.com/VissotoFlavio/asgard-codex-skill/issues/164)).
 
 ## [0.20.0] - 2026-10-18
