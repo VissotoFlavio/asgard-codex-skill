@@ -161,6 +161,20 @@ Approval never grants authority to commit, push, open or merge pull requests, pu
 
 For GitHub, Asgard uses the repository's authorized tooling. It does not silently fall back to an unapproved client when authentication, authorization, scopes, or commands fail. Browser operation is reserved for a documented capability gap and requires an explanation plus explicit user authorization for that exceptional operation.
 
+## Git worktree location
+
+When Odin uses a Git worktree, it keeps the working copy beside the repository rather than in a tool-owned directory. For a primary repository at `D:\Git\source-mesh`, the canonical layout is:
+
+```text
+D:\Git\
+|- source-mesh\
+`- .worktrees\
+   `- source-mesh\
+      `- issue-17\
+```
+
+Odin discovers the primary worktree, resolves absolute paths, and permits only `<repository-parent>/.worktrees/<repository>/<activity-slug>`. It rejects destinations inside the primary worktree, `.git`, `.git/worktrees`, user-home or tool-managed directories, and any path selected implicitly by a platform API. Git reserves `.git/worktrees` for metadata; it is never a location for a working copy. A creation mechanism must accept the exact destination, and existing worktree directories are inspected rather than overwritten or removed manually.
+
 ## Delivery governance
 
 When the repository requires traceability, Forseti checks the policy-required evidence available at each lifecycle phase. That can include issues, branches, pull requests, closing relationships, labels, changelogs, release notes, or checks, but Asgard does not define the taxonomy or make any of them universal.
