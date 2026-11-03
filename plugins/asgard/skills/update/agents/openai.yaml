@@ -1,0 +1,7 @@
+interface:
+  display_name: "Update Asgard"
+  short_description: "Check Asgard and guide a consented plugin update"
+  default_prompt: "Use $asgard:update to check my installed Asgard version and show any official update commands before asking for explicit confirmation."
+
+policy:
+  allow_implicit_invocation: true

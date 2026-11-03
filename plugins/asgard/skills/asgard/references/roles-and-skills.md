@@ -16,6 +16,7 @@ Use this catalog to select a direct skill or an Odin-orchestrated activity. Ever
 | Required issue, pull-request, and delivery traceability | `$asgard:forseti` | Read-only traceability, except its narrow authorized closing-reference repair. |
 | Pull Request publication | `$asgard:hermod` | Open one authorized normal or release Pull Request from a ready candidate. |
 | Pull Request acceptance validation | `$asgard:eir` | Review or verify one ready Pull Request against its issue and acceptance criteria. |
+| Asgard version check and consented update | `$asgard:update` | Check the installed plugin and guide an explicitly confirmed update without changing the installation automatically. |
 
 Odin remains the sole orchestrator and delivery owner. Canonical intent does not itself select a mutation or grant authority. Odin owns discovery and decision-making; Mimir may supply only read-only evidence for a stated technical uncertainty. Application promotion follows the repository's authorized workflow through Hermod when Pull Request publication is authorized, while infrastructure discovery or mutation routes to Ymir. A deploy request that includes both becomes coordinated, separately authorized activities.
 

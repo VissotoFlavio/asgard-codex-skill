@@ -7,6 +7,12 @@ description: Independently review one exact candidate read-only for credible sec
 
 Independently review the exact candidate, read-only, for security risks applicable to its attack surface.
 
+## Version-check preflight
+
+At entry, run the shared helper `../../scripts/check_version.py` with Python, resolving it from this installed skill's directory, not the workspace. The helper owns version comparison, networking, and the shared cooldown; do not duplicate that logic. If the helper or runtime is absent, fails, or returns `current`, `cooldown`, `unavailable`, or an unrecognized result, continue silently.
+
+Only when `status` is `update_available`, tell the user the `installed_version` and `latest_version` and ask whether they want to update Asgard. Continue the primary task without waiting for that answer. This notice does not authorize an update or invocation of another skill; preserve this skill's direct and orchestrated boundaries.
+
 ## Operating modes
 
 **Direct mode:** Require the exact candidate or bounded diff, the relevant DoD, and the attack surface or stated security concern. For user-requested or risk-justified deep vulnerability analysis, read [security guidance](references/security.md). Do not infer a broad security audit from an incomplete candidate.

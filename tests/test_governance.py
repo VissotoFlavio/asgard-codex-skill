@@ -298,7 +298,7 @@ class ContainedPathTests(unittest.TestCase):
         for name in LEAF_SKILLS:
             self.assertIn(plugin_invocation(name), catalog, name)
         self.assertIn(
-            "The plugin distributes 13 skills. Invoke every plugin-provided Asgard skill with the `asgard:` namespace.",
+            "The plugin distributes 14 skills. Invoke every plugin-provided Asgard skill with the `asgard:` namespace.",
             readme,
         )
         self.assertIn("## Install an independent workflow", readme)
@@ -495,6 +495,41 @@ class ContainedPathTests(unittest.TestCase):
         self.assertIn("Persistence never includes secrets", state)
         self.assertIn("Provider-specific skills extend capability but grant no authority", ymir)
         self.assertIn("Dependency or skill installation requires user authorization", ymir)
+
+
+class VersionCheckPreflightTests(unittest.TestCase):
+    def test_bundled_skills_share_a_nonblocking_helper_preflight(self) -> None:
+        preflights = {}
+        for name in VALIDATOR.EXPECTED_SKILLS | {"update"}:
+            text = (skill_root(name) / "SKILL.md").read_text(encoding="utf-8")
+            marker = "## Version-check preflight\n\n"
+            self.assertEqual(text.count(marker), 1, name)
+            section = text.split(marker, 1)[1].split("\n## ", 1)[0]
+            preflights[name] = section
+            self.assertIn("`../../scripts/check_version.py`", section, name)
+            self.assertIn("this installed skill's directory", section, name)
+            for status in ("current", "cooldown", "unavailable"):
+                self.assertIn(f"`{status}`", section, name)
+            self.assertIn("continue silently", section, name)
+            self.assertIn("Only when `status` is `update_available`", section, name)
+            self.assertIn("`installed_version` and `latest_version`", section, name)
+            self.assertIn("without waiting for that answer", section, name)
+            self.assertIn("does not authorize an update or invocation of another skill", section, name)
+            self.assertNotIn("$asgard:", section, name)
+            self.assertNotIn("gh api", section, name)
+        self.assertEqual(len(set(preflights.values())), 1)
+
+    def test_update_skill_has_direct_metadata_and_catalog_entry(self) -> None:
+        update = skill_root("update")
+        self.assertEqual(VALIDATOR.validate_distributed_skill("update", update), [])
+        metadata = (update / "agents" / "openai.yaml").read_text(encoding="utf-8")
+        skill = (update / "SKILL.md").read_text(encoding="utf-8")
+        readme = (ROOT / "README.md").read_text(encoding="utf-8")
+        catalog = (VALIDATOR.SKILL_ROOT / "references" / "roles-and-skills.md").read_text(encoding="utf-8")
+        self.assertIn("$asgard:update", metadata)
+        self.assertIn("$asgard:update", skill)
+        self.assertIn("$asgard:update", readme)
+        self.assertIn("$asgard:update", catalog)
 
 
 class WorkflowGovernanceTests(unittest.TestCase):
