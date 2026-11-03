@@ -4,6 +4,7 @@ from concurrent.futures import ThreadPoolExecutor
 import importlib.util
 import json
 import os
+import sqlite3
 import subprocess
 from pathlib import Path
 import tempfile
@@ -77,12 +78,28 @@ class VersionCheckTests(unittest.TestCase):
             self.assertEqual(CHECK.check_version(), {"status": "cooldown"})
             fetch.assert_called_once()
 
-    def test_corrupt_or_unwritable_state_fails_open_without_network(self) -> None:
+    def test_corrupt_state_is_recovered_once_then_throttled(self) -> None:
         self.state.parent.mkdir()
         self.state.write_bytes(b"not a sqlite database")
-        with patch.object(CHECK, "fetch_release") as fetch:
-            self.assertEqual(CHECK.check_version(), {"status": "unavailable"})
-            fetch.assert_not_called()
+        with patch.object(CHECK, "fetch_release", return_value=self.release()) as fetch:
+            self.assertEqual(CHECK.check_version()["status"], "update_available")
+            self.assertEqual(CHECK.check_version(), {"status": "cooldown"})
+            fetch.assert_called_once()
+        self.assertEqual(len(list(self.state.parent.glob("version-check.sqlite3.corrupt-*"))), 1)
+
+    def test_invalid_attempt_state_is_recovered_once_then_throttled(self) -> None:
+        self.state.parent.mkdir()
+        connection = sqlite3.connect(self.state)
+        connection.execute("CREATE TABLE attempts (id INTEGER PRIMARY KEY CHECK (id = 1), attempted_at REAL NOT NULL)")
+        connection.execute("INSERT INTO attempts VALUES (1, ?)", ("invalid",))
+        connection.commit()
+        connection.close()
+        with patch.object(CHECK, "fetch_release", return_value=self.release()) as fetch:
+            self.assertEqual(CHECK.check_version()["status"], "update_available")
+            self.assertEqual(CHECK.check_version(), {"status": "cooldown"})
+            fetch.assert_called_once()
+
+    def test_unwritable_state_fails_open_without_network(self) -> None:
         with patch.object(CHECK, "claim_attempt", side_effect=PermissionError), patch.object(CHECK, "fetch_release") as fetch:
             self.assertEqual(CHECK.check_version(), {"status": "unavailable"})
             fetch.assert_not_called()
@@ -92,6 +109,16 @@ class VersionCheckTests(unittest.TestCase):
             with ThreadPoolExecutor(max_workers=8) as pool:
                 results = list(pool.map(lambda _: CHECK.check_version(), range(16)))
             fetch.assert_called_once()
+            self.assertEqual(sum(result["status"] == "update_available" for result in results), 1)
+            self.assertTrue(all(result["status"] in {"update_available", "cooldown", "unavailable"} for result in results))
+
+    def test_concurrent_recovery_from_corrupt_state_makes_one_network_attempt(self) -> None:
+        self.state.parent.mkdir()
+        self.state.write_bytes(b"not a sqlite database")
+        with patch.object(CHECK, "fetch_release", return_value=self.release()) as fetch:
+            with ThreadPoolExecutor(max_workers=8) as pool:
+                results = list(pool.map(lambda _: CHECK.check_version(), range(16)))
+            self.assertEqual(fetch.call_count, 1)
             self.assertEqual(sum(result["status"] == "update_available" for result in results), 1)
             self.assertTrue(all(result["status"] in {"update_available", "cooldown", "unavailable"} for result in results))
 
