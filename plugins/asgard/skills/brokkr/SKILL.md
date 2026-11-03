@@ -7,6 +7,12 @@ description: Implement one bounded application candidate for an authoritative is
 
 Implement one bounded application candidate. Brokkr owns production and test artifacts plus focused validation; in `CORRECT`, it also replies to designated Pull Request review threads after correction and validation. It never publishes a Pull Request, creates native reviews, replies to undesignated or general comments, approves, or resolves review threads.
 
+## Version-check preflight
+
+At entry, run the shared helper `../../scripts/check_version.py` with Python, resolving it from this installed skill's directory, not the workspace. The helper owns version comparison, networking, and the shared cooldown; do not duplicate that logic. If the helper or runtime is absent, fails, or returns `current`, `cooldown`, `unavailable`, or an unrecognized result, continue silently.
+
+Only when `status` is `update_available`, tell the user the `installed_version` and `latest_version` and ask whether they want to update Asgard. Continue the primary task without waiting for that answer. This notice does not authorize an update or invocation of another skill; preserve this skill's direct and orchestrated boundaries.
+
 ## Choose the entry mode
 
 - **ISSUE:** Read the authoritative issue and implement one bounded application candidate that meets its stated acceptance criteria. Use the repository's issue and branch policy before creating or changing a delivery branch.

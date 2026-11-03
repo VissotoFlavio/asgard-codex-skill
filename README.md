@@ -28,7 +28,7 @@ Do not select it implicitly for routine single-file edits, isolated diagnosis, o
 
 Every specialist is a direct entry point. A direct request stays within the named skill's responsibility: it does not invoke a sibling, become delivery orchestration, or take final acceptance. Odin is the only skill that can select and sequence other Asgard skills.
 
-The plugin distributes 13 skills. Invoke every plugin-provided Asgard skill with the `asgard:` namespace. Odin can sequence the skills in a governed delivery, but direct invocation remains independent. Eir, Hermod, and Kvasir can also be installed individually, using their unqualified registered names; these are separate distribution modes and must not be mixed in one task.
+The plugin distributes 14 skills. Invoke every plugin-provided Asgard skill with the `asgard:` namespace. Odin can sequence the skills in a governed delivery, but direct invocation remains independent. Eir, Hermod, and Kvasir can also be installed individually, using their unqualified registered names; Update is likewise available as `$update`; these are separate distribution modes and must not be mixed in one task.
 
 ### What Odin does
 
@@ -51,6 +51,7 @@ Odin turns a request into a proportional delivery graph. It establishes the inte
 | [**Forseti**](plugins/asgard/skills/forseti/SKILL.md) | `$asgard:forseti` | Verifies repository-required delivery and release traceability, including a narrowly authorized metadata repair when policy permits it. |
 | [**Hermod**](plugins/asgard/skills/hermod/SKILL.md) | `$asgard:hermod` | Opens an authorized normal or release Pull Request from a ready candidate. |
 | [**Eir**](plugins/asgard/skills/eir/SKILL.md) | `$asgard:eir` | Validates a ready Pull Request against its issue and acceptance criteria through review and correction verification. |
+| [**Update**](plugins/asgard/skills/update/SKILL.md) | `$asgard:update` | Checks the installed Asgard version and guides an explicitly confirmed plugin update. |
 
 Specialists receive task-local context rather than the entire conversation. Their reports and passing tests are evidence; Odin still owns product decisions, inspects the candidate, and makes the acceptance decision. Mimir only resolves stated technical uncertainty read-only. Regin may design and author versioned database changes, but connecting to or mutating any durable, runtime, or non-isolated database, applying or retrying a migration, and executing a rollback each require explicit authority for the exact environment and candidate.
 
@@ -183,7 +184,7 @@ When policy requires a provider-recognized closing reference, Forseti may repair
 
 ## Prerequisites and conditional capabilities
 
-To use the plugin, you need a Codex environment with plugin support and the `codex plugin` command available. Start a new Codex task after installing or updating the plugin so its skills are loaded. No Python, Node.js, database client, cloud CLI, or GitHub account is required for ordinary local planning, implementation, or review work.
+To use the plugin, you need a Codex environment with plugin support and the `codex plugin` command available. Start a new Codex task after installing or updating the plugin so its skills are loaded. No Python, Node.js, database client, cloud CLI, or GitHub account is required for ordinary local planning, implementation, or review work. The optional daily version check additionally needs Python and an authenticated `gh` CLI; if either is unavailable, the check skips silently and the primary skill continues.
 
 The source-installation method below additionally requires Git. Git is not a runtime dependency after the plugin is installed.
 
@@ -214,6 +215,10 @@ codex plugin add asgard@asgard-community
 
 Start a new Codex task after installation so the plugin and its skill are loaded.
 
+### Daily version checks
+
+Every bundled Asgard skill runs the same best-effort version preflight when it starts. The helper reads the installed manifest, consults the official stable GitHub Release at most once every 24 hours, and persists its cooldown outside the installed plugin. It is silent when the installation is current, the cooldown is active, the network is unavailable, or the required checker tooling is missing. When a newer stable release is found, Asgard asks whether you want to update; it never installs or changes the plugin without explicit confirmation. The check runs only while a skill is being used, not as a background service.
+
 Invoke Asgard explicitly:
 
 ```text
@@ -224,7 +229,7 @@ Codex may also select Asgard automatically when a request clearly matches its sc
 
 ## Invoke a skill directly
 
-With the plugin installed, invoke a skill directly when the request is already bounded to that responsibility: `$asgard:brokkr`, `$asgard:regin`, `$asgard:ymir`, `$asgard:mimir`, `$asgard:tyr`, `$asgard:loki`, `$asgard:bragi`, `$asgard:heimdall`, `$asgard:forseti`, `$asgard:hermod`, `$asgard:eir`, or `$asgard:kvasir`.
+With the plugin installed, invoke a skill directly when the request is already bounded to that responsibility: `$asgard:brokkr`, `$asgard:regin`, `$asgard:ymir`, `$asgard:mimir`, `$asgard:tyr`, `$asgard:loki`, `$asgard:bragi`, `$asgard:heimdall`, `$asgard:forseti`, `$asgard:hermod`, `$asgard:eir`, `$asgard:kvasir`, or `$asgard:update`.
 
 ```text
 Use $asgard:brokkr to implement this small bounded change with the established architecture.
@@ -269,7 +274,7 @@ Use $asgard:eir to review this Pull Request and publish the findings.
 
 ## Install an independent workflow
 
-Install the plugin when you need Odin or any of its 12 direct skills; all of those invocations use `$asgard:<skill>`. Eir, Hermod, and Kvasir can instead be installed individually when the task needs only that workflow. After a standalone installation, invoke the registered skill as `$eir`, `$hermod`, or `$kvasir`; do not use the `asgard:` namespace for that installation.
+Install the plugin when you need Odin or any of its 13 direct skills; all of those invocations use `$asgard:<skill>`. Eir, Hermod, Kvasir, and Update can instead be installed individually when the task needs only that workflow. After a standalone installation, invoke the registered skill as `$eir`, `$hermod`, or `$kvasir`; `$update` is available as well; do not use the `asgard:` namespace for that installation.
 
 Use one of these direct skill sources with the Codex skill-installation flow:
 
@@ -277,6 +282,7 @@ Use one of these direct skill sources with the Codex skill-installation flow:
 https://github.com/VissotoFlavio/asgard-codex-skill/tree/master/plugins/asgard/skills/eir
 https://github.com/VissotoFlavio/asgard-codex-skill/tree/master/plugins/asgard/skills/hermod
 https://github.com/VissotoFlavio/asgard-codex-skill/tree/master/plugins/asgard/skills/kvasir
+https://github.com/VissotoFlavio/asgard-codex-skill/tree/master/plugins/asgard/skills/update
 ```
 
 ## Repository and release workflow

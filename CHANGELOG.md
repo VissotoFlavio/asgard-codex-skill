@@ -6,6 +6,10 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+### Added
+
+- Add a shared daily Asgard version check across bundled skills, with persistent cooldown state, explicit update consent, and an optional `$asgard:update` workflow ([issue #178](https://github.com/VissotoFlavio/asgard-codex-skill/issues/178), [PR #183](https://github.com/VissotoFlavio/asgard-codex-skill/pull/183)).
+
 ## [0.23.0] - 2026-10-21
 
 ### Added

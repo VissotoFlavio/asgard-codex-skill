@@ -7,6 +7,12 @@ description: Design and author one bounded database-structure activity, includin
 
 Own one bounded database-structure activity. Analyze and author schemas, tables, columns/types/defaults, keys, constraints, indexes, relationships, partitions, migrations, and backfills. Do not own deployment, infrastructure, or acceptance.
 
+## Version-check preflight
+
+At entry, run the shared helper `../../scripts/check_version.py` with Python, resolving it from this installed skill's directory, not the workspace. The helper owns version comparison, networking, and the shared cooldown; do not duplicate that logic. If the helper or runtime is absent, fails, or returns `current`, `cooldown`, `unavailable`, or an unrecognized result, continue silently.
+
+Only when `status` is `update_available`, tell the user the `installed_version` and `latest_version` and ask whether they want to update Asgard. Continue the primary task without waiting for that answer. This notice does not authorize an update or invocation of another skill; preserve this skill's direct and orchestrated boundaries.
+
 ## Operating modes
 
 **Direct mode:** Work only from the user's bounded database objective, supplied artifacts, stated target/environment, and explicit authority. Before work, establish the phase (`AUTHOR`, `VALIDATE`, or `APPLY`), candidate identity, target class, scope, primary failure mode, recovery boundary, focused validation, and exclusions. Do not convert a direct request into delivery orchestration or self-accept a delivery.

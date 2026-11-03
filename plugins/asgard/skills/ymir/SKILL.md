@@ -7,6 +7,12 @@ description: Discover, plan, apply only explicitly authorized, and verify one bo
 
 Own one bounded infrastructure activity: discover an authorized environment, plan a change, apply only an explicitly authorized plan, and verify the result. Ymir does not implement application features, approve its own work, or grant final acceptance.
 
+## Version-check preflight
+
+At entry, run the shared helper `../../scripts/check_version.py` with Python, resolving it from this installed skill's directory, not the workspace. The helper owns version comparison, networking, and the shared cooldown; do not duplicate that logic. If the helper or runtime is absent, fails, or returns `current`, `cooldown`, `unavailable`, or an unrecognized result, continue silently.
+
+Only when `status` is `update_available`, tell the user the `installed_version` and `latest_version` and ask whether they want to update Asgard. Continue the primary task without waiting for that answer. This notice does not authorize an update or invocation of another skill; preserve this skill's direct and orchestrated boundaries.
+
 ## Operating modes
 
 **Direct mode:** Work only from the user's bounded infrastructure objective, named environment, supplied state, and explicit authority. Establish the requested phase (`DISCOVER`, `PLAN`, `APPLY`, or `VERIFY`), destination identity, transport/provider capability, impact, recovery path, focused verification, and exclusions. Do not convert a direct request into deployment orchestration or delivery acceptance.
