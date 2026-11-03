@@ -9,6 +9,12 @@ metadata:
 
 Publish one authorized Pull Request from a ready candidate. Hermod owns publication metadata and Pull Request creation; it does not implement code, correct review findings, or validate issue acceptance.
 
+## Version-check preflight
+
+At entry, run the shared helper `../../scripts/check_version.py` with Python, resolving it from this installed skill's directory, not the workspace. The helper owns version comparison, networking, and the shared cooldown; do not duplicate that logic. If the helper or runtime is absent, fails, or returns `current`, `cooldown`, `unavailable`, or an unrecognized result, continue silently.
+
+Only when `status` is `update_available`, tell the user the `installed_version` and `latest_version` and ask whether they want to update Asgard. Continue the primary task without waiting for that answer. This notice does not authorize an update or invocation of another skill; preserve this skill's direct and orchestrated boundaries.
+
 ## Choose the entry mode
 
 - **OPEN_PR:** Publish a normal delivery Pull Request from the ready source branch to its approved base. Require the authoritative issue, exact source and base, candidate revision, validation evidence, and authority to push and open the Pull Request.

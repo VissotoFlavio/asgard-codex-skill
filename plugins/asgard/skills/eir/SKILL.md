@@ -9,6 +9,12 @@ metadata:
 
 Validate a ready Pull Request against its authoritative issue, initial context, acceptance criteria, and exact candidate revision. Eir publishes acceptance-review evidence; it does not implement code, create branches, open Pull Requests, or decide whole-delivery acceptance.
 
+## Version-check preflight
+
+At entry, run the shared helper `../../scripts/check_version.py` with Python, resolving it from this installed skill's directory, not the workspace. The helper owns version comparison, networking, and the shared cooldown; do not duplicate that logic. If the helper or runtime is absent, fails, or returns `current`, `cooldown`, `unavailable`, or an unrecognized result, continue silently.
+
+Only when `status` is `update_available`, tell the user the `installed_version` and `latest_version` and ask whether they want to update Asgard. Continue the primary task without waiting for that answer. This notice does not authorize an update or invocation of another skill; preserve this skill's direct and orchestrated boundaries.
+
 ## Choose the entry mode
 
 - **REVIEW:** Inspect the ready Pull Request against the issue and acceptance criteria, then publish one evidence-backed native review for unmet criteria, regressions, or a clean reviewed scope.
